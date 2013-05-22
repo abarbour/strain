@@ -24,3 +24,7 @@
 NULL
 .strainEnvName = ".strnEnv"
 .strnEnv = new.env()
+.constants = list(
+  deg2rad=pi/180,
+  rad2deg=180/pi
+)
