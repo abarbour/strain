@@ -17,6 +17,7 @@ NULL
 #' The mapping is relative to the zero-angle.  The mapping uses 
 #' \code{\link{.az_wrap}} with \code{wraps=180}.
 #' 
+#' @rdname azimuth
 #' @param Az numeric; an angle, in degrees
 #' @param wraps numeric; the bounding range to map angles into.
 #' @export
@@ -37,7 +38,7 @@ strain_azimuth <- function(Az){
   Az[ai] <- Az[ai] - w.ang
   return(Az)
 }
-#' @rdname strain_azimuth
+#' @rdname azimuth
 #' @export
 .az_wrap <- function(Az, wraps=c(360)){
   FUN <- function(X, w) X %% w

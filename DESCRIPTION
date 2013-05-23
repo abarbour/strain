@@ -15,8 +15,15 @@ Depends:
     utils,
     graphics,
     grDevices
+Imports:
+    Matrix,
+    corpcor
 Collate:
     'bsm.R'
     'strain-package.R'
     'utilities.R'
     'zzz.R'
+    'getters.R'
+    'misc.R'
+    'rotations.R'
+    'calibrate.R'

@@ -1,0 +1,19 @@
+\name{gaugeOrientations}
+\alias{gaugeOrientations}
+\title{Return gauge orientations, restricted or not.}
+\usage{
+  gaugeOrientations(B, restrict.range = TRUE)
+}
+\arguments{
+  \item{B}{object}
+
+  \item{restrict.range}{logical; should the values be in
+  strain azimuths}
+}
+\description{
+  Return gauge orientations, restricted or not.
+}
+\details{
+  The restriction is done with \code{\link{strain_azimuth}}
+}
+

@@ -12,11 +12,28 @@ NULL
 #' @rdname strain-getters
 #' @export
 get_az <- function(B) UseMethod("get_az")
+#' @rdname bsm-methods
+#' @method get_itype bsm
 #' @S3method get_itype bsm
 get_az.bsm <- function(B){
   aXi <- attributes(B)$g0az
   if (is.null(aXi)){
-    warning("Cannot find an instrument orientation!")
+    warning("Couldn't find an instrument orientation!")
+  } else {
+    return(aXi)
+  }
+}
+
+#' @rdname strain-getters
+#' @export
+get_station <- function(B) UseMethod("get_station")
+#' @rdname bsm-methods
+#' @method get_station bsm
+#' @S3method get_station bsm
+get_station.bsm <- function(B){
+  aXi <- attributes(B)$station
+  if (is.null(aXi)){
+    warning("Couldn't find a station name!")
   } else {
     return(aXi)
   }
@@ -25,11 +42,13 @@ get_az.bsm <- function(B){
 #' @rdname strain-getters
 #' @export
 get_itype <- function(B) UseMethod("get_itype")
+#' @rdname bsm-methods
+#' @method get_itype bsm
 #' @S3method get_itype bsm
 get_itype.bsm <- function(B){
   aXi <- attributes(B)$i.type
   if (is.null(aXi)){
-    warning("Cannot find an instrument type!")
+    warning("Couldn't find an instrument type!")
   } else {
     return(aXi)
   }

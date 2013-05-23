@@ -1,0 +1,38 @@
+\name{plot_gaugeline}
+\alias{plot_gaugeline}
+\alias{plot_gaugeline.default}
+\alias{plot_guageline}
+\title{Plots lines for gauge orientations}
+\usage{
+  plot_gaugeline(theta.deg = 0, gauge.label = NULL,
+    x = c(0, 0), y = c(-1, 1), ...)
+
+  \method{plot_gaugeline}{default} (theta.deg = 0,
+    gauge.label = NULL, x = c(0, 0), y = c(-1, 1), ...)
+}
+\arguments{
+  \item{theta.deg}{numeric; the angle to rotate from
+  \eqn{x,y}}
+
+  \item{gauge.label}{character; the label to associate with
+  the line}
+
+  \item{x}{numeric; default 1-axis range}
+
+  \item{y}{numeric; default 2-axis range}
+
+  \item{...}{additional parameters passed to \code{lines}}
+
+  \item{restrict.range}{logical; should the values be in
+  strain azimuths}
+}
+\description{
+  Plots lines for gauge orientations
+}
+\details{
+  The rotation is in a left-hand (cw) sense with zero being
+  the y-axis. This is because in the field the gauges are
+  generally oriented from magnetic North in the East
+  direction.
+}
+
