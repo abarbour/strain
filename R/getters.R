@@ -11,10 +11,25 @@ NULL
 
 #' @rdname strain-getters
 #' @export
+get_rawstrain <- function(B) UseMethod("get_gaugestrain")
+#' @rdname bsm-methods
+#' @method get_rawstrain bsm
+#' @S3method get_rawstrain bsm
+get_rawstrain.bsm <- function(B){
+  aXi <- B$G
+  if (is.null(aXi) | !is.raw_strain(aXi)){
+    warning("Couldn't find gauge strains!")
+  } else {
+    return(aXi)
+  }
+}
+
+#' @rdname strain-getters
+#' @export
 get_az <- function(B) UseMethod("get_az")
 #' @rdname bsm-methods
-#' @method get_itype bsm
-#' @S3method get_itype bsm
+#' @method get_az bsm
+#' @S3method get_az bsm
 get_az.bsm <- function(B){
   aXi <- attributes(B)$g0az
   if (is.null(aXi)){

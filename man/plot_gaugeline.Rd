@@ -4,8 +4,7 @@
 \alias{plot_guageline}
 \title{Plots lines for gauge orientations}
 \usage{
-  plot_gaugeline(theta.deg = 0, gauge.label = NULL,
-    x = c(0, 0), y = c(-1, 1), ...)
+  plot_gaugeline(...)
 
   \method{plot_gaugeline}{default} (theta.deg = 0,
     gauge.label = NULL, x = c(0, 0), y = c(-1, 1), ...)

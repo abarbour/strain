@@ -3,7 +3,7 @@
 \alias{plot_orientations.default}
 \title{Plot the orientations of the instrument gauges.}
 \usage{
-  plot_orientations(angs, name = "", opar = TRUE, ...)
+  plot_orientations(angs, ...)
 
   \method{plot_orientations}{default} (angs,
     gauge.labels = seq_along(angs), name = "", opar = TRUE,

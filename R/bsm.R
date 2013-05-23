@@ -1,34 +1,81 @@
 #' Methods for borehole strainmeter (bsm) data
-#' 
-#' @aliases bsm
+#'
+#' @name bsm-methods
+#' @aliases bsm_methods
 #' @rdname bsm-methods
-#' @export
+#' 
 #' @param X  generic object
 #' @param g0az numeric; the orientation of the zeroth gauge
 #' @param station character; name of the station associated with the data
 #' @param i.type character; instrument type
+#' @param linearize logical; Should \code{X} be linearized?
+# @param x.type character; type of data associated with object \code{X}
 #' @param B  object of class \code{bsm}
 #' @param ...  additional arguments
-as.bsm <- function(X, g0az=0, station="", i.type="GTSM", ...) UseMethod("as.bsm")
-#' @S3method as.bsm default
-as.bsm.default <- function(X, g0az=0, station="", i.type="GTSM", ...){
-  i.type <- match.arg(i.type)
-  # class, inherits
-  class(X) <- c("bsm")
-  attr(X, "station") <- station
-  attr(X, "g0az") <- strain_azimuth(g0az)
-  attr(X, "i.type") <- i.type
-  return(X)
-}
-#' @rdname bsm-methods
-#' @export
-is.bsm <- function(X) inherits(X, "bsm")
+NULL
 
 #' @rdname bsm-methods
 #' @export
 print.bsm <- function(B, ...){
-  cat(paste0(get_itype(B),"-style borehole strainmeter data\n:\t"), head(B), "\t...")
+  cat(paste0(get_itype(B),"-style borehole strainmeter data.\nStructure:\n"))
+  str(B, nest.lev=1)
 }
+
+#' Convert an object to one with class \code{'bsm'}
+#' 
+#' @name as.bsm
+#' @aliases bsm
+#' 
+#' @param X  generic object
+#' @param g0az numeric; the orientation of the zeroth gauge
+#' @param station character; name of the station associated with the data
+#' @param i.type character; instrument type
+#' @param linearize logical; Should \code{X} be linearized?
+#' @param ...  additional arguments
+#' @export
+as.bsm <- function(X, ...) UseMethod("as.bsm")
+#' @rdname as.bsm
+#' @method as.bsm default
+#' @S3method as.bsm default
+as.bsm.default <- function(X, g0az=0, station="", i.type="GTSM", linearize=TRUE, ...){
+  i.type <- match.arg(i.type)
+  if (linearize) X <- linearize(X)
+  B <- list(G=X, #gauge strain
+            E=NA, # calibrated strain
+            calmat=NA, # gauge strains
+            P=NA) # principal strains
+  # cannot set attributes on NULL!
+  attr(B$G, "straintype") <- "gauge"
+  attr(B$G, "linear") <- linearize
+  attr(B$E, "straintype") <- "calib"
+  attr(B, "station") <- station
+  attr(B, "g0az") <- strain_azimuth(g0az)
+  attr(B, "i.type") <- i.type
+  class(B) <- c("bsm")
+  return(B)
+}
+
+#' @rdname as.bsm
+#' @export
+is.bsm <- function(X) inherits(X, "bsm")
+
+#' @rdname as.bsm
+#' @export
+is.raw_strain <- function(X) inherits(X, "gauge")
+
+#' @rdname as.bsm
+#' @export
+is.calibrated_strain <- function(X) inherits(X, "calib")
+
+#' Test whether strain is calibrated
+#' 
+#' @param X object to test
+#' @export
+is.calibrated <- function(X) UseMethod("is.calibrated")
+#' @rdname bsm-methods
+#' @method is.calibrated bsm
+#' @S3method is.calibrated bsm
+is.calibrated.bsm <- function(X) !is.null(X$calmat)
 
 #' Return gauge orientations, restricted or not.
 #' 
@@ -38,7 +85,7 @@ print.bsm <- function(B, ...){
 #' @param B object
 #' @param restrict.range logical; should the values be in strain azimuths
 #' @export
-gaugeOrientations <- function(B, restrict.range=TRUE) UseMethod("gaugeOrientations")
+gaugeOrientations <- function(B, ...) UseMethod("gaugeOrientations")
 
 #' @rdname bsm-methods
 #' @method gaugeOrientations bsm
@@ -58,7 +105,7 @@ gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
 #' @param opar logical; should the original graphics parameter be set upon exit?
 #' @param ... additional parameters
 #' @export
-plot_orientations <- function(angs, name="", opar=TRUE, ...) UseMethod("plot_orientations")
+plot_orientations <- function(angs, ...) UseMethod("plot_orientations")
 #' @rdname plot_orientations
 #' @method plot_orientations default
 #' @S3method plot_orientations default
@@ -80,7 +127,7 @@ plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="
 #' @rdname bsm-methods
 #' @method plot_orientations bsm
 #' @S3method plot_orientations bsm
-plot_orientations.bsm <- function(B, opar=TRUE, ...){
+plot_orientations.bsm <- function(B, ...){
   angs <- gaugeOrientations(B, restrict.range=TRUE)
   plot_orientations(angs, 
                     gauge.labels=c("CH0","CH1","CH2","CH3"), 
@@ -105,7 +152,7 @@ plot_orientations.bsm <- function(B, opar=TRUE, ...){
 #' @param ... additional parameters passed to \code{lines}
 #' @param restrict.range logical; should the values be in strain azimuths
 #' @export
-plot_gaugeline <- function(theta.deg=0, gauge.label=NULL, x=c(0,0), y=c(-1,1), ...) UseMethod("plot_gaugeline")
+plot_gaugeline <- function(...) UseMethod("plot_gaugeline")
 #' @rdname plot_gaugeline
 #' @method plot_gaugeline default
 #' @S3method plot_gaugeline default

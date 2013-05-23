@@ -27,3 +27,4 @@ Collate:
     'misc.R'
     'rotations.R'
     'calibrate.R'
+    'principals.R'

@@ -26,5 +26,8 @@ NULL
 .strnEnv = new.env()
 .constants = list(
   deg2rad=pi/180,
-  rad2deg=180/pi
+  rad2deg=180/pi,
+  bsm.R=1e8,
+  bsm.diam=87e-3,
+  bsm.gaps=c(100,200)*1e-6
 )
