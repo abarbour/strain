@@ -9,7 +9,6 @@
 #' @param station character; name of the station associated with the data
 #' @param i.type character; instrument type
 #' @param linearize logical; Should \code{X} be linearized?
-# @param x.type character; type of data associated with object \code{X}
 #' @param B  object of class \code{bsm}
 #' @param ...  additional arguments
 NULL
