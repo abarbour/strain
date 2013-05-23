@@ -23,10 +23,15 @@ gap_distance <- function(gap=NULL){
   switch(gap, one=gaps[1], two=gaps[2])
 }
 
-#' Make raw strain linear
+#' Make raw strain linear or linear strain raw
 #' 
 #' @name linearize
 #' @param X numeric; gauge strains
+#' @param gap numeric or character; the gap distance
+#' @param ref.strn logical; should the results be centered?
+#' @param constant numeric; value to use for de-linearizing
+#' @param unref.strn logical; should the centering be reversed?
+#' @param ... additional parameters
 #' @export
 linearize <- function(X, ...) UseMethod("linearize")
 #' @rdname linearize
@@ -38,34 +43,66 @@ linearize.default <- function(X, gap=NULL, ref.strn=FALSE){
   #
   X <- as.matrix(X)
   #
-  gapd <- gap_distance(gap)
+  if (is.numeric(gap)){
+    gapd <- gap
+  } else {
+    gapd <- gap_distance(gap)
+  }
   diam <- strain:::.constants$bsm.diam
   #
-  LIN <- function(d, i.gap=gapd, i.diam=diam, ref=ref.strn) {
+  LIN <- function(d, i.gap=gapd, i.diam=diam) {
     dc <- strain:::.constants$bsm.R
     D. <- d/dc
     C. <- i.gap/i.diam
     E. <- C. * D. / (1 - D.)
-    if (ref & length(E.)>1) E. <- E. - E.[1]
     return(E.)
   }
-  #
-  return(apply(X,MARGIN=2,FUN=LIN))
+  X <- apply(X, MARGIN=2, FUN=LIN)
+  if (ref.strn) X <- scale(X, scale=F)
+  return(X)
 }
-# # @rdname linearize
-# # @export
-# invert_linear_strain.default <- function(linbsm, gap=100e-6, diam=87e-3, constant=0){
-#   #
-#   # inverts linearized gauge strain to
-#   # raw counts
-#   #
-#   D <- diam
-#   d <- gap
-#   E <- linbsm + constant
-#   dR <- 1e8
-#   toret <- dR*D*E/(d + D*E)
-#   return(toret)
-# }
+#' @rdname linearize
+#' @export
+unlinearize <- function(X, ...) UseMethod("unlinearize")
+#' @rdname linearize
+#' @method unlinearize default
+#' @S3method unlinearize default
+unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE){
+  #
+  # inverts linearized gauge strain to
+  # raw counts
+  #
+  X <- as.matrix(X)
+  Xcenters <- attr(X,"scaled:center")
+  #
+  if (is.numeric(gap)){
+    gapd <- gap
+  } else {
+    gapd <- gap_distance(gap)
+  }
+  diam <- strain:::.constants$bsm.diam
+  #
+  UNLIN <- function(ld, ldc=constant, i.gap=gapd, i.diam=diam) {
+    dc <- strain:::.constants$bsm.R
+    E. <- ld + ldc
+    d <- dc * i.diam * E. / (i.gap + i.diam*E.)
+    return(d)
+  }
+  #
+  X <- apply(X, MARGIN=2, FUN=UNLIN)
+  #
+  if (!is.null(Xcenters)){
+    xcenters <- UNLIN(Xcenters)
+    if (unref.strn){
+      X <- round(t(apply(X, 1, function(x){x + xcenters})))
+    } else {
+      X <- signif(X)
+      attr(X,"scaled:center") <- xcenters
+    }
+  }
+  #if (ref.strn) X <- scale(X, scale=F)
+  return(X)
+}
 
 #' Map an angle into the corresponding strain angle.
 #' 

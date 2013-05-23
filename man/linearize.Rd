@@ -1,17 +1,35 @@
 \name{linearize}
 \alias{linearize}
 \alias{linearize.default}
-\title{Make raw strain linear}
+\alias{unlinearize}
+\alias{unlinearize.default}
+\title{Make raw strain linear or linear strain raw}
 \usage{
   linearize(X, ...)
 
   \method{linearize}{default} (X, gap = NULL,
     ref.strn = FALSE)
+
+  unlinearize(X, ...)
+
+  \method{unlinearize}{default} (X, gap = NULL,
+    constant = 0, unref.strn = TRUE)
 }
 \arguments{
   \item{X}{numeric; gauge strains}
+
+  \item{gap}{numeric or character; the gap distance}
+
+  \item{ref.strn}{logical; should the results be centered?}
+
+  \item{constant}{numeric; value to use for de-linearizing}
+
+  \item{unref.strn}{logical; should the centering be
+  reversed?}
+
+  \item{...}{additional parameters}
 }
 \description{
-  Make raw strain linear
+  Make raw strain linear or linear strain raw
 }
 

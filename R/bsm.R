@@ -16,7 +16,7 @@ NULL
 #' @rdname bsm-methods
 #' @export
 print.bsm <- function(B, ...){
-  cat(paste0(get_itype(B),"-style borehole strainmeter data.\nStructure:\n"))
+  cat(paste0(get_itype(B),"-style borehole strainmeter data:\n"))
   str(B, nest.lev=1)
 }
 
