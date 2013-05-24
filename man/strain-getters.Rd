@@ -3,12 +3,9 @@
 \alias{get_az}
 \alias{get_itype}
 \alias{get_station}
-\alias{get_strains}
 \alias{strain-getters}
 \title{Functions to get information about a \code{bsm} object.}
 \usage{
-  get_strains(B, ...)
-
   get_az(B)
 
   get_station(B)

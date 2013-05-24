@@ -3,9 +3,9 @@
 \alias{calibrate.default}
 \title{Apply a calibration to strain data}
 \usage{
-  calibrate(B, ...)
+  calibrate(G, ...)
 
-  \method{calibrate}{default} (G, calmat, invert = FALSE)
+  \method{calibrate}{default} (G, Cmat, invert = FALSE)
 }
 \description{
   Apply a calibration to strain data

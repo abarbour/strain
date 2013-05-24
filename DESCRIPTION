@@ -19,13 +19,12 @@ Imports:
     Matrix,
     corpcor
 Collate:
-    'bsm.R'
     'strain-package.R'
-    'utilities.R'
     'zzz.R'
+    'utilities.R'
+    'bsm.R'
     'getters.R'
     'misc.R'
     'rotations.R'
     'calibrate.R'
-    'principals.R'
-    'strcomb.R'
+    'strains.R'

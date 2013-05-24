@@ -12,28 +12,6 @@ NULL
 
 #' @rdname strain-getters
 #' @export
-get_strains <- function(B, ...) UseMethod("get_strains")
-#' @rdname bsm-methods
-#' @method get_strains bsm
-#' @S3method get_strains bsm
-get_strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
-  strn.type <- match.arg(strn.type)
-  if (strn.type=="gauge"){
-    aXi <- B$G
-  } else {
-    ##: if (!is.calibrated(B)) B <- calibrate(B, ...)
-    aXi <- B$E
-    aXi[is.na(aXi)] <- 0
-  }
-  if (is.null(aXi)){
-    warning(sprtinf("Couldn't find %s strains!",strn.type))
-  } else {
-    return(aXi)
-  }
-}
-
-#' @rdname strain-getters
-#' @export
 get_az <- function(B) UseMethod("get_az")
 #' @rdname bsm-methods
 #' @method get_az bsm

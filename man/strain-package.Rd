@@ -2,9 +2,7 @@
 \name{strain-package}
 \alias{strain-package}
 \alias{strain,}
-\alias{straindata}
-\alias{strainmeter,}
-\alias{strains,}
+\alias{strainmeter}
 \title{Tools to work with geodetic strainmeter data.}
 \description{
   Some description
@@ -16,6 +14,6 @@
   Andrew J. Barbour <andy.barbour@gmail.com>
 }
 \seealso{
-  \code{\link{bsm}}
+  \code{\link{bsm-methods}}
 }
 

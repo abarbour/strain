@@ -9,7 +9,8 @@
   as.bsm(X, ...)
 
   \method{as.bsm}{default} (X, g0az = 0, station = "",
-    i.type = "GTSM", linearize = TRUE, ...)
+    i.type = "GTSM", linearize = TRUE, cal.tbl = c("pbou"),
+    ...)
 
   is.bsm(X)
 
@@ -26,6 +27,9 @@
   \item{i.type}{character; instrument type}
 
   \item{linearize}{logical; Should \code{X} be linearized?}
+
+  \item{cal.tbl}{character; retrieve calibration
+  coefficients from this table}
 
   \item{...}{additional arguments}
 }

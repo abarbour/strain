@@ -4,13 +4,11 @@
 #' @aliases bsm_methods
 #' @rdname bsm-methods
 #' 
-#' @param X  generic object
-#' @param g0az numeric; the orientation of the zeroth gauge
-#' @param station character; name of the station associated with the data
-#' @param i.type character; instrument type
-#' @param linearize logical; Should \code{X} be linearized?
 #' @param B  object of class \code{bsm}
 #' @param ...  additional arguments
+#'
+#' @author A.J. Barbour <andy.barbour@@gmail.com>
+#' @docType methods
 NULL
 
 #' @rdname bsm-methods
@@ -30,18 +28,26 @@ print.bsm <- function(B, ...){
 #' @param station character; name of the station associated with the data
 #' @param i.type character; instrument type
 #' @param linearize logical; Should \code{X} be linearized?
+#' @param cal.tbl character; retrieve calibration coefficients from this table
 #' @param ...  additional arguments
 #' @export
 as.bsm <- function(X, ...) UseMethod("as.bsm")
 #' @rdname as.bsm
 #' @method as.bsm default
 #' @S3method as.bsm default
-as.bsm.default <- function(X, g0az=0, station="", i.type="GTSM", linearize=TRUE, ...){
+as.bsm.default <- function(X, 
+                           g0az=0, 
+                           station="", 
+                           i.type="GTSM", 
+                           linearize=TRUE, 
+                           cal.tbl=c("pbou"), ...){
   i.type <- match.arg(i.type)
   if (linearize) X <- linearize(X)
+  cal.tbl <- paste("bsm.", match.arg(cal.tbl))
+  do.call("data", list(datname))
   B <- list(G=X, #gauge strain
+            calib=calmat(caltbl, station), # gauge calib coeffs
             E=matrix(rep(NA,3),ncol=3), # calibrated strain
-            calmat=NA, # gauge strains
             P=NA) # principal strains
   # cannot set attributes on NULL!
   attr(B$G, "straintype") <- "gauge"
@@ -73,6 +79,7 @@ is.raw_strain <- function(X) inherits(X, "gauge")
 gaugeOrientations <- function(B, ...) UseMethod("gaugeOrientations")
 
 #' @rdname bsm-methods
+#' @param restrict.range logical; should the orientiations be plotted in appropriate uniaxial directions?
 #' @method gaugeOrientations bsm
 #' @S3method gaugeOrientations bsm
 gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
