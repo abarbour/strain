@@ -3,7 +3,6 @@
 \alias{as.bsm.default}
 \alias{bsm}
 \alias{is.bsm}
-\alias{is.calibrated_strain}
 \alias{is.raw_strain}
 \title{Convert an object to one with class \code{'bsm'}}
 \usage{
@@ -15,8 +14,6 @@
   is.bsm(X)
 
   is.raw_strain(X)
-
-  is.calibrated_strain(X)
 }
 \arguments{
   \item{X}{generic object}

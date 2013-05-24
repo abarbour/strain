@@ -127,6 +127,7 @@ strain_azimuth <- function(Az){
   # to 
   # (-90 --- 0 --- 90]
   #  
+  Az <- as.numeric(Az)
   w.ang <- 180
   Az <- .az_wrap(Az, w.ang)
   ai <- (Az > (w.ang/2))

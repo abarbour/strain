@@ -40,7 +40,7 @@ as.bsm.default <- function(X, g0az=0, station="", i.type="GTSM", linearize=TRUE,
   i.type <- match.arg(i.type)
   if (linearize) X <- linearize(X)
   B <- list(G=X, #gauge strain
-            E=NA, # calibrated strain
+            E=matrix(rep(NA,3),ncol=3), # calibrated strain
             calmat=NA, # gauge strains
             P=NA) # principal strains
   # cannot set attributes on NULL!
@@ -61,20 +61,6 @@ is.bsm <- function(X) inherits(X, "bsm")
 #' @rdname as.bsm
 #' @export
 is.raw_strain <- function(X) inherits(X, "gauge")
-
-#' @rdname as.bsm
-#' @export
-is.calibrated_strain <- function(X) inherits(X, "calib")
-
-#' Test whether strain is calibrated
-#' 
-#' @param X object to test
-#' @export
-is.calibrated <- function(X) UseMethod("is.calibrated")
-#' @rdname bsm-methods
-#' @method is.calibrated bsm
-#' @S3method is.calibrated bsm
-is.calibrated.bsm <- function(X) !is.null(X$calmat)
 
 #' Return gauge orientations, restricted or not.
 #' 
@@ -131,7 +117,7 @@ plot_orientations.bsm <- function(B, ...){
   plot_orientations(angs, 
                     gauge.labels=c("CH0","CH1","CH2","CH3"), 
                     name=paste(get_station(B), get_itype(B)), 
-                    opar, ...)
+                    ...)
   return(invisible(angs))
 }
 

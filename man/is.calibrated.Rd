@@ -1,8 +1,11 @@
 \name{is.calibrated}
 \alias{is.calibrated}
+\alias{is.calibrated.default}
 \title{Test whether strain is calibrated}
 \usage{
   is.calibrated(X)
+
+  \method{is.calibrated}{default} (X)
 }
 \arguments{
   \item{X}{object to test}

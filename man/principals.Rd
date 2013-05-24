@@ -1,17 +1,21 @@
 \name{principals}
 \alias{principals}
+\alias{principals.default}
 \alias{principals.lsm2}
 \alias{principals.lsm3}
 \title{Calculate principal strains}
 \usage{
   principals(S, ...)
 
+  \method{principals}{default} (A, B, alpha,
+    is.radians = TRUE)
+
   principals.lsm3(L)
 
   principals.lsm2(L)
 }
 \arguments{
-  \item{S}{a strain object}
+  \item{S}{strain information}
 
   \item{...}{additional parameters}
 }
@@ -23,6 +27,9 @@
 \details{
   If there are only two components of the LSM the angle of
   maximum shear cannot be solved for.
+
+  The calculation is based on 2-D Mohr's circle with the
+  1-axis being normal and the 2-axis being shear.
 }
 \section{Rosette classifications}{
   \itemize{ \item{BSM}{T-Delta} \item{LSM-3}{Rectangular

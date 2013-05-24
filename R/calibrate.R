@@ -1,9 +1,37 @@
+
+
+#' Test whether strain is calibrated
+#' 
+#' @param X object to test
+#' @export
+is.calibrated <- function(X) UseMethod("is.calibrated")
+#' @rdname bsm-methods
+#' @method is.calibrated bsm
+#' @S3method is.calibrated bsm
+is.calibrated.bsm <- function(X) !is.na(X$calmat)
+#' @rdname is.calibrated
+#' @method is.calibrated default
+#' @S3method is.calibrated default
+is.calibrated.default <- function(X) attr(X, "straintype") == "calib"
+
+#' Apply a calibration to strain data
+#' @export
+calibrate <- function(B, ...) UseMethod("calibrate")
+#' @rdname calibrate
+#' @method calibrate default
+#' @S3method calibrate default
+calibrate.default <- function(G, calmat, invert=FALSE){
+  if (invert) calmat <- corpcor::pseudoinverse(calmat)
+  E. <- calmat %*% G
+  return(E)
+}
+
 #' Return a calibration matrix, inverted or not
 #' 
 #' @details
-#' The argument \code{C} may be a matrix 4with three columns representing
-#' \code{C}, \code{D}, and \code{H} respectively.  If that's the case, any
-#' arguments given for \code{D}, and \code{H} are ignored.
+#' The argument \code{MC} may be a matrix 4with three columns representing
+#' \code{MC}, \code{MD}, and \code{MH} respectively.  If that's the case, any
+#' arguments given for \code{MD}, and \code{MH} are ignored.
 #' 
 #' Coefficients are in the form presented by Roeloffs 2010.
 #' 
@@ -11,20 +39,20 @@
 #' default tolerances.
 #' 
 #' @name calibMatrix
-#' @param C numeric; 
-#' @param D numeric; 
-#' @param H numeric; 
+#' @param MC numeric; 
+#' @param MD numeric; 
+#' @param MH numeric; 
 #' @param axis_deg numeric; 
 #' @param delta_deg numeric;
 #' @param pinvert logical; should the matrix be (pseudo-)inverted? 
 #' @param ... additional parameters
 #' @export
-calibMatrix <- function(C, ...) UseMethod("calibMatrix")
+calibMatrix <- function(MC, ...) UseMethod("calibMatrix")
 #' @rdname bsm-methods
 #' @method calibMatrix bsm
 #' @S3method calibMatrix bsm
-calibMatrix.bsm <- function(C, ...){
-  sta <- get_station(C)
+calibMatrix.bsm <- function(MC, ...){
+  sta <- get_station(MC)
   # get station
   #calmats <- stationCalibration(sta, methods="all")
   # check if calibration exists
@@ -35,28 +63,28 @@ calibMatrix.bsm <- function(C, ...){
 #' @rdname calibMatrix
 #' @method calibMatrix default
 #' @S3method calibMatrix default
-calibMatrix.default <- function(C, D=NULL, H=NULL, axis_deg=0, delta_deg=0, invert=FALSE, verbose=TRUE, ...){
+calibMatrix.default <- function(MC, MD=NULL, MH=NULL, axis_deg=0, delta_deg=0, invert=FALSE, verbose=TRUE, ...){
   ##
   ## 
   ##
-  C <- as.matrix(C)
+  MC <- as.matrix(MC)
   #
-  if ((is.null(D) & is.null(H)) | ncol(C)==3){
-    stopifnot(ncol(C)==3)
-    H <- C[,3]
-    D <- C[,2]
-    C <- C[,1]
+  if ((is.null(MD) & is.null(MH)) | ncol(MC)==3){
+    stopifnot(ncol(MC)==3)
+    MH <- MC[,3]
+    MD <- MC[,2]
+    MC <- MC[,1]
   }
   #
-  C <- as.vector(C)
-  D <- as.vector(D)
-  H <- as.vector(H)
+  MC <- as.vector(MC)
+  MD <- as.vector(MD)
+  MH <- as.vector(MH)
   #
   theta <- delta_deg + axis_deg
   theta2 <- 2*theta
   #
-  RDH <- rotate(D, H, theta2, ...)
-  CMAT <- cbind(C, RDH)
+  RDH <- rotate(MD, MH, theta2, ...)
+  CMAT <- cbind(MC, RDH)
   #
   #if (scale.gam){gam2 <- "gam2"; CMAT[,3]<-CMAT[,3]/2} else {gam2 <- "2gam2"}
   #

@@ -3,18 +3,18 @@
 \alias{calibMatrix.default}
 \title{Return a calibration matrix, inverted or not}
 \usage{
-  calibMatrix(C, ...)
+  calibMatrix(MC, ...)
 
-  \method{calibMatrix}{default} (C, D = NULL, H = NULL,
+  \method{calibMatrix}{default} (MC, MD = NULL, MH = NULL,
     axis_deg = 0, delta_deg = 0, invert = FALSE,
     verbose = TRUE, ...)
 }
 \arguments{
-  \item{C}{numeric;}
+  \item{MC}{numeric;}
 
-  \item{D}{numeric;}
+  \item{MD}{numeric;}
 
-  \item{H}{numeric;}
+  \item{MH}{numeric;}
 
   \item{axis_deg}{numeric;}
 
@@ -29,10 +29,10 @@
   Return a calibration matrix, inverted or not
 }
 \details{
-  The argument \code{C} may be a matrix 4with three columns
-  representing \code{C}, \code{D}, and \code{H}
+  The argument \code{MC} may be a matrix 4with three
+  columns representing \code{MC}, \code{MD}, and \code{MH}
   respectively.  If that's the case, any arguments given
-  for \code{D}, and \code{H} are ignored.
+  for \code{MD}, and \code{MH} are ignored.
 
   Coefficients are in the form presented by Roeloffs 2010.
 

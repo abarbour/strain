@@ -6,19 +6,27 @@
 #' @docType methods
 # @import RColorBrewer
 #' @param B object with class\code{bsm}
-# @param ... additional arguments
+#' @param strn.type character; the type of strain to retrieve from \code{B}
+#' @param ... additional arguments
 NULL
 
 #' @rdname strain-getters
 #' @export
-get_rawstrain <- function(B) UseMethod("get_gaugestrain")
+get_strains <- function(B, ...) UseMethod("get_strains")
 #' @rdname bsm-methods
-#' @method get_rawstrain bsm
-#' @S3method get_rawstrain bsm
-get_rawstrain.bsm <- function(B){
-  aXi <- B$G
-  if (is.null(aXi) | !is.raw_strain(aXi)){
-    warning("Couldn't find gauge strains!")
+#' @method get_strains bsm
+#' @S3method get_strains bsm
+get_strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
+  strn.type <- match.arg(strn.type)
+  if (strn.type=="gauge"){
+    aXi <- B$G
+  } else {
+    ##: if (!is.calibrated(B)) B <- calibrate(B, ...)
+    aXi <- B$E
+    aXi[is.na(aXi)] <- 0
+  }
+  if (is.null(aXi)){
+    warning(sprtinf("Couldn't find %s strains!",strn.type))
   } else {
     return(aXi)
   }
