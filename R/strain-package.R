@@ -16,6 +16,28 @@
 # not needed since specified in DESCRIPTION-DEPENDS: stats utils graphics grDevices
 # @useDynLib strain
 #'
+#' @references Grant, E. B. (2010),
+#' Gladwin Tensor Strainmeter Calibration Using Seismic Data: 
+#' Instrument Calibration Methods and Wave Gradiometry Applications,
+#' PhD thesis, University of Memphis.
+#' 
+#' @references Hart, R. H. G., M. T. Gladwin, R. L. Gwyther, D. C. Agnew, and F. K. Wyatt (1996), 
+#' Tidal calibration of borehole strain meters: Removing the effects of small-scale inhomogeneity, 
+#' J. Geophys. Res., 101(B11), 25553–25571, doi:10.1029/96JB02273.
+#' 
+#' @references Hodgkinson, K., J. Langbein, B. Henderson, D. Mencin, and A. Borsa (2013), 
+#' Tidal calibration of plate boundary observatory borehole strainmeters, 
+#' J. Geophys. Res. Solid Earth, 118, 447–458, doi:10.1029/2012JB009651.
+#' 
+#' @references Langbein, J. (2010), 
+#' Effect of error in theoretical Earth tide on calibration of borehole strainmeters, 
+#' Geophys. Res. Lett., 37, L21303, doi:10.1029/2010GL044454.
+#' 
+#' @references Roeloffs, E. (2010), 
+#' Tidal calibration of Plate Boundary Observatory borehole strainmeters: 
+#' Roles of vertical and shear coupling, 
+#' J. Geophys. Res., 115, B06405, doi:10.1029/2009JB006407.
+#' 
 # @references some ref
 # \url{http://biomet.oxfordjournals.org/content/82/1/201}
 #'
@@ -35,45 +57,32 @@ NULL
   bsm.relative_orientations=c(0,-60,30,60)
 )
 
+##
+## Datasets
+## 
 #
-# Datasets
+##   calibration coeffs:
 #
-
-#' @title Roeloffs tidal calibration coefficients (I)
-#' @name bsm.roel1
+#' @title Roeloffs (2010) tidal calibration coefficients
+#' @name roel10
 #' @docType data
-#' @format A dataframe with calibration coefficients by station
-#bsm.roel1.rda
-#class(caltbl) <- "cal.roel1"
+#' @format A list with dataframes with calibration coefficients by station
 NULL
 
-#' @title Roeloffs tidal calibration coefficients (II)
-#' @name bsm.roel2
+#' @title PBO (un) official tidal calibration coefficients
+#' @name pbou
 #' @docType data
-#' @format A dataframe with calibration coefficients by station
-# bsm.roel2.rda
-# class(caltbl) <- "cal.roel2"
+#' @format A list with dataframes with calibration coefficients by station
 NULL
 
-#' @title PBO (unofficial) calibration coefficients
-#' @name bsm.pbou
+#' @title Hodgkinson et al (2013) tidal calibration coefficients
+#' @name hodg13
 #' @docType data
-#' @format A dataframe with calibration coefficients by station
-# bsm.pbo1.rda
-# class(caltbl) <- "cal.pbou"
+#' @format A list with dataframes with calibration coefficients by station
 NULL
 
-#' @title Grant surface-wave calibration coefficients (I)
-#' @name bsm.surfwave1
+#' @title Grant (2010) surface-wave calibration coefficients
+#' @name grant10
 #' @docType data
-#' @format A dataframe with calibration coefficients by station
-# bsm.surfwave1.rda
-# class(caltbl) <- "cal.surf1"
+#' @format A list with dataframes with calibration coefficients by station
 NULL
-
-#' @title Grant surface-wave calibration coefficients (II)
-#' @name bsm.surfwave2
-#' @docType data
-#' @format A dataframe with calibration coefficients by station
-# bsm.surfwave2.rda
-# class(caltbl) <- "cal.surf2"

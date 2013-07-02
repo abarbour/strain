@@ -1,7 +1,7 @@
 \docType{methods}
 \name{bsm-methods}
-\alias{bsm_methods}
 \alias{bsm-methods}
+\alias{bsm_methods}
 \alias{calibMatrix.bsm}
 \alias{calibrate.bsm}
 \alias{extensions.bsm}
@@ -24,6 +24,12 @@
 
   \method{plot_orientations}{bsm} (B, ...)
 
+  \method{is.calibrated}{bsm} (B)
+
+  \method{calibrate}{bsm} (B, ...)
+
+  \method{calibMatrix}{bsm} (B, ...)
+
   \method{get_az}{bsm} (B)
 
   \method{get_station}{bsm} (B)
@@ -31,12 +37,6 @@
   \method{get_itype}{bsm} (B)
 
   \method{rotate}{bsm} (B)
-
-  \method{is.calibrated}{bsm} (B)
-
-  \method{calibrate}{bsm} (B, ...)
-
-  \method{calibMatrix}{bsm} (B, ...)
 
   \method{strains}{bsm} (B,
     strn.type = c("gauge", "calib"), ...)

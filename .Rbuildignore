@@ -4,4 +4,4 @@ NOBUILD
 src
 inst
 vignettes
-^*/Makefile
+data/Makefile

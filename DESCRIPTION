@@ -1,14 +1,26 @@
 Package: strain
 Type: Package
-Title: Strainmeter title strainmeter title
-Version: 0.1-0
-Date: 2013-05-20
+Title: Tools for working with strain and pore-fluid pressure data
+Version: 0.1-1
+Date: 2013-07-01
 Author: Andrew J. Barbour
 Maintainer: Andrew J. Barbour <andy.barbour@gmail.com>
-Description: strainmeter description
-    strainmeter description
 License: GPL (>= 2)
 URL: http://abarbour.github.com/strain/
+    pborepo: http://abarbour.github.io/pborepo
+    PIASD: http://igppweb.ucsd.edu/~agnew/Piasd/piasdmain.html
+    cleanstrain+: http://earthquake.usgs.gov/monitoring/edm/cleanstrain
+Description: Methods and classes for strainmeter data.
+    Currently, supported instruments
+    include UCSD-style longbase
+    laser strainmeters, and PBO-style borehole **strainmeters**.
+    Support for PBO-style pore pressure data \textbf{is}
+    included. Some functions  providing metadata \textit{support}
+    attempt to make a _connection_
+    with the `pborepo'.
+    For processing of raw data, the user is directed to
+    Duncan Agnew's `PIASD'
+    and John Langbein's `cleanstrain+'
 Depends:
     R (>= 2.14.1),
     stats,
@@ -19,12 +31,12 @@ Imports:
     Matrix,
     corpcor
 Collate:
-    'strain-package.R'
-    'zzz.R'
-    'utilities.R'
     'bsm.R'
+    'calibrate.R'
     'getters.R'
     'misc.R'
     'rotations.R'
-    'calibrate.R'
+    'strain-package.R'
     'strains.R'
+    'utilities.R'
+    'zzz.R'

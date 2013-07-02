@@ -1,0 +1,10 @@
+Functions:
+	[ ] A function to list available calibrations for a station name
+	> list_calibrations(sta4)
+	[1] "B084" "surf" "ertid" "pbou" "pbo13_FC34"
+
+	[ ] conversion from sta4 to sta16
+	*** A naming class?
+
+	[ ] Connections to pborepo
+
