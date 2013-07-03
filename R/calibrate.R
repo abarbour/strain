@@ -9,25 +9,73 @@ NULL
 
 #' @rdname calibration-matrix
 #' @export
-print.cal <- function(X, ...) message("Borehole strainmeter calibration")
+print.cal <- function(X, ...) message("Strainmeter calibration")
 #' @rdname calibration-matrix
 #' @export
-print.cal.roel1 <- function(X, ...) message("Roeloffs tidal calib. (I)")
+print.cal.roel1 <- function(X, ...){
+  print.cal(X)
+  message("\tTidal potential, from Roeloffs 2010 (I)")
+}
 #' @rdname calibration-matrix
 #' @export
-print.cal.roel2 <- function(X, ...) message("Roeloffs tidal calib. (II)")
+print.cal.roel2 <- function(X, ...){
+  print.cal(X)
+  message("\tTidal potential, from Roeloffs 2010 (II)")
+}
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbou <- function(X, ...) message("PBO unofficial tidal calib.")
+print.cal.pbou <- function(X, ...){
+  print.cal(X)
+  message("\tPBO unofficial tidal calib. (4x3)")
+}
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo <- function(X, ...) message("PBO official tidal calib.")
+print.cal.pbo13 <- function(X, ...){
+  print.cal(X)
+  message("\tTidal potential, from Hodgkinson et al 2013")
+}
 #' @rdname calibration-matrix
 #' @export
-print.cal.surf1 <- function(X, ...) message("Grant surface-wave calib. (I)")
+print.cal.pbo13.err <- function(X, ...){
+  print.cal.pbo13(X)
+  message("\t\torientations and RMSE/I data")
+}
 #' @rdname calibration-matrix
 #' @export
-print.cal.surf2 <- function(X, ...) message("Grant surface-wave calib. (II)")
+print.cal.pbo13.ANC34 <- function(X, ...){
+  print.cal.pbo13(X)
+  message("\t\tunconstrained solution (3X4) -- pinv")
+}
+#' @rdname calibration-matrix
+#' @export
+print.cal.pbo13.ANC33 <- function(X, ...){
+  print.cal.pbo13(X)
+  message("\t\tunconstrained solution (3X3) -- pinv")
+}
+#' @rdname calibration-matrix
+#' @export
+print.cal.pbo13.AFC34 <- function(X, ...){
+  print.cal.pbo13(X)
+  message("\t\tfully-constrained solution (3X4) -- pinv")
+}
+#' @rdname calibration-matrix
+#' @export
+print.cal.surf <- function(X, ...){
+  print.cal(X)
+  message("\twave-gradiometery, from Grant (2010)")
+}
+#' @rdname calibration-matrix
+#' @export
+print.cal.surf.AS33 <- function(X, ...){
+  print.cal.surf(X)
+  message("\t\txxx (3X3)")
+}
+#' @rdname calibration-matrix
+#' @export
+print.cal.surf.AS43 <- function(X, ...){
+  print.cal.surf(X)
+  message("\t\txxx (4X3)")
+}
 
 #' @title Extract a calibration matrix from an object
 #' @name calmat

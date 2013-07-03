@@ -44,7 +44,7 @@
 #' @seealso \code{\link{bsm-methods}}
 #'
 NULL
-.default.caltbl = "bsm.pbou" # default calibration table
+.default.caltbl = "pbou" # default calibration table
 .strainEnvName = ".strnEnv"
 .strnEnv = new.env()
 .constants = list(
@@ -53,8 +53,10 @@ NULL
   bsm.R=1e8,
   bsm.diam=87e-3,
   bsm.gaps=c(100,200)*1e-6,
-  bsm.channels=0:3,
-  bsm.relative_orientations=c(0,-60,30,60)
+  bsm.relative_orientations=c(0,-60,60,30), # clockwise (convention?)
+  bsm.gauge_names=list(pbo=c(0,1,2,3), 
+                       hodg=c(1,2,3,4), 
+                       ext=c(2,1,0,3))
 )
 
 ##

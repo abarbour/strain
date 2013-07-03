@@ -1,7 +1,16 @@
+General:
+	[ ] kook: rebuild to include ANC34 change in hodg13
+
+Classes/Methods:
+	[ ] rename class 'pbo13' to 'hodg13'
+	*** adjust methods
+	[ ] 'roel1' and 'roel2' should be dealt with like ANC33, etc.
+	*** e.g. roel10.I, roel10.II
+
 Functions:
 	[ ] A function to list available calibrations for a station name
 	> list_calibrations(sta4)
-	[1] "B084" "surf" "ertid" "pbou" "pbo13_FC34"
+	[1] "B084" "surf" "ertid" "pbou" "hodg13.ANC34"
 
 	[ ] conversion from sta4 to sta16
 	*** A naming class?
