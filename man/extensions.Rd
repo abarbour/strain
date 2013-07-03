@@ -3,7 +3,7 @@
 \alias{extensions.default}
 \title{Calculate extensions along specified axes}
 \usage{
-  extensions(S, ...)
+  extensions(S, orientations = c(0, 45, 90))
 
   \method{extensions}{default} (S,
     orientations = c(0, 45, 90))

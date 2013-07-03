@@ -10,15 +10,15 @@
 #' @name rotate
 #' @param X1 numeric; 1-axis components
 #' @param X2 numeric; 2-axis components
-#' @param B object with class \code{'bsm'}
+# @param B object with class \code{'bsm'}
 #' @param theta.deg numeric; the rotation, in degrees, to apply
 #' @param hand.rule character; the sense of rotation
 #' @param ... additional parameters
 #' @export
-rotate <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left"), ...) UseMethod("rotate")
+rotate <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")) UseMethod("rotate")
 #' @rdname rotate
 #' @S3method rotate default
-rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left"), ...){
+rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")){
   ##
   ## 2D rotation
   ##
@@ -47,4 +47,4 @@ rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")
 #' @rdname bsm-methods
 #' @method rotate bsm
 #' @S3method rotate bsm
-rotate.bsm <- function(B){.NotYetImplemented()}
+rotate.bsm <- function(X1, ...){.NotYetImplemented()}

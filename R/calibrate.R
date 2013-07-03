@@ -5,99 +5,107 @@
 #' @rdname calibration-matrix
 #' @author A.J. Barbour <andy.barbour@@gmail.com>
 #' @docType methods
+#' @param x object to print
+#' @param ... additional parameters
 NULL
 
 #' @rdname calibration-matrix
 #' @export
-print.cal <- function(X, ...) message("Strainmeter calibration")
+print.cal <- function(x, ...) message("Strainmeter calibration coefficients")
 #' @rdname calibration-matrix
 #' @export
-print.cal.roel1 <- function(X, ...){
-  print.cal(X)
-  message("\tTidal potential, from Roeloffs 2010 (I)")
+print.cal.roel1 <- function(x, ...){
+  print.cal(x)
+  message("\tTidal potential method, from Roeloffs 2010 (I)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.roel2 <- function(X, ...){
-  print.cal(X)
-  message("\tTidal potential, from Roeloffs 2010 (II)")
+print.cal.roel2 <- function(x, ...){
+  print.cal(x)
+  message("\tTidal potential method, from Roeloffs 2010 (II)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbou <- function(X, ...){
-  print.cal(X)
-  message("\tPBO unofficial tidal calib. (4x3)")
+print.cal.pbou <- function(x, ...){
+  print.cal(x)
+  message("\tTidal potential method, PBO unofficial (e.g. xml) (4x3)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo13 <- function(X, ...){
-  print.cal(X)
-  message("\tTidal potential, from Hodgkinson et al 2013")
+print.cal.pbo13 <- function(x, ...){
+  print.cal(x)
+  message("\tTidal potential method, from Hodgkinson et al (2013)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo13.err <- function(X, ...){
-  print.cal.pbo13(X)
+print.cal.pbo13.err <- function(x, ...){
+  message("Calibration metadata")
   message("\t\torientations and RMSE/I data")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo13.ANC34 <- function(X, ...){
-  print.cal.pbo13(X)
+print.cal.pbo13.ANC34 <- function(x, ...){
+  print.cal.pbo13(x)
   message("\t\tunconstrained solution (3X4) -- pinv")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo13.ANC33 <- function(X, ...){
-  print.cal.pbo13(X)
+print.cal.pbo13.ANC33 <- function(x, ...){
+  print.cal.pbo13(x)
   message("\t\tunconstrained solution (3X3) -- pinv")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.pbo13.AFC34 <- function(X, ...){
-  print.cal.pbo13(X)
+print.cal.pbo13.AFC34 <- function(x, ...){
+  print.cal.pbo13(x)
   message("\t\tfully-constrained solution (3X4) -- pinv")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.surf <- function(X, ...){
-  print.cal(X)
-  message("\twave-gradiometery, from Grant (2010)")
+print.cal.surf <- function(x, ...){
+  print.cal(x)
+  message("\tWave-gradiometery method, from Grant (2010)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.surf.AS33 <- function(X, ...){
-  print.cal.surf(X)
+print.cal.surf.AS33 <- function(x, ...){
+  print.cal.surf(x)
   message("\t\txxx (3X3)")
 }
 #' @rdname calibration-matrix
 #' @export
-print.cal.surf.AS43 <- function(X, ...){
-  print.cal.surf(X)
+print.cal.surf.AS43 <- function(x, ...){
+  print.cal.surf(x)
   message("\t\txxx (4X3)")
 }
 
 #' @title Extract a calibration matrix from an object
 #' @name calmat
+#' @param X calibration table
+#' @param station
+#' @param inv.type
+#' @param coeff.names
+#' @param ... additional parameters
 #' @export
-calmat <- function(Caltbl, station, ...) UseMethod("calmat")
+calmat <- function(X, station, ...) UseMethod("calmat")
 #' @rdname calmat
 #' @method calmat default
 #' @S3method calmat default
-calmat.default <- function(Caltbl, station, ...){
-  if (missing(Caltbl)){
+calmat.default <- function(X, station, ...){
+  if (missing(X)){
     Cal <- strain:::.default.caltbl
     do.call("data",list(Cal))
     stopifnot(exists("caltbl"))
-    Caltbl <- caltbl
+    X <- caltbl
   }
-  calmat(caltbl, station, ...)
+  calmat(X, station, ...)
 }
 #' @rdname calmat
 #' @method calmat cal.pbou
 #' @S3method calmat cal.pbou
-calmat.cal.pbou <- function(Caltbl, station, ...){
-  X <- as.data.frame(unclass(Caltbl))
+calmat.cal.pbou <- function(X, station, ...){
+  X <- as.data.frame(unclass(X))
+  sta <- NULL
   CML <- subset(X, sta==station, select=-c(sta))
   if (is.null(CML) | nrow(CML)==0){
     warning(paste("No  pbou  calibration coeffs. for station", station))
@@ -122,6 +130,7 @@ calmat_reshape <- function(X, ...) UseMethod("calmat_reshape")
 #' @S3method calmat_reshape default
 calmat_reshape.default <- function(X, inv.type=NULL, coeff.names=c("S11","S21","S31","S41","S12","S22","S32","S42","S13","S23","S33","S43"), ...){
   stopifnot(!missing(X))
+  inv <- NULL # to shutup checks
   if (!is.null(inv.type)) X <- subset(X, inv==as.character(inv.type)) #, select=-c(inv))
   X <- as.matrix(X)
   dims <- dim(X)
@@ -146,15 +155,19 @@ is.calibrated <- function(X) UseMethod("is.calibrated")
 #' @rdname bsm-methods
 #' @method is.calibrated bsm
 #' @S3method is.calibrated bsm
-is.calibrated.bsm <- function(B) !is.na(B$calmat)
+is.calibrated.bsm <- function(X) !is.na(X$calmat)
 #' @rdname is.calibrated
 #' @method is.calibrated default
 #' @S3method is.calibrated default
 is.calibrated.default <- function(X) attr(X, "straintype") == "calib"
 
 #' Apply a calibration to strain data
+#' @param B calibratee
+#' @param Cmat calibrator
+#' @param invert logical; should \code{Cmat} be (pseudo) inverted?
+#' @param ... additional objects
 #' @export
-calibrate <- function(G, ...) UseMethod("calibrate")
+calibrate <- function(B, Cmat, invert=FALSE) UseMethod("calibrate")
 #' @rdname bsm-methods
 #' @method calibrate bsm
 #' @S3method calibrate bsm
@@ -169,10 +182,10 @@ calibrate.bsm <- function(B, ...){
 #' @rdname calibrate
 #' @method calibrate default
 #' @S3method calibrate default
-calibrate.default <- function(G, Cmat, invert=FALSE){
+calibrate.default <- function(B, Cmat, invert=FALSE){
   if (invert) Cmat <- corpcor::pseudoinverse(Cmat)
-  E. <- Cmat %*% G
-  return(E)
+  E. <- Cmat %*% B
+  return(E.)
 }
 
 #' Return a calibration matrix, inverted or not
@@ -200,8 +213,8 @@ calibMatrix <- function(MC, ...) UseMethod("calibMatrix")
 #' @rdname bsm-methods
 #' @method calibMatrix bsm
 #' @S3method calibMatrix bsm
-calibMatrix.bsm <- function(B, ...){
-  sta <- get_station(B)
+calibMatrix.bsm <- function(MC, ...){
+  sta <- get_station(MC)
   # get station
   #calmats <- stationCalibration(sta, methods="all")
   # check if calibration exists

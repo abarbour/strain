@@ -2,7 +2,7 @@
 \alias{gaugeOrientations}
 \title{Return gauge orientations, restricted or not.}
 \usage{
-  gaugeOrientations(B, ...)
+  gaugeOrientations(B, restrict.range = TRUE)
 }
 \arguments{
   \item{B}{object}

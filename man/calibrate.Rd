@@ -3,9 +3,19 @@
 \alias{calibrate.default}
 \title{Apply a calibration to strain data}
 \usage{
-  calibrate(G, ...)
+  calibrate(B, Cmat, invert = FALSE)
 
-  \method{calibrate}{default} (G, Cmat, invert = FALSE)
+  \method{calibrate}{default} (B, Cmat, invert = FALSE)
+}
+\arguments{
+  \item{B}{calibratee}
+
+  \item{Cmat}{calibrator}
+
+  \item{invert}{logical; should \code{Cmat} be (pseudo)
+  inverted?}
+
+  \item{...}{additional objects}
 }
 \description{
   Apply a calibration to strain data

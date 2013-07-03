@@ -4,7 +4,7 @@
 #' @aliases bsm_methods
 #' @rdname bsm-methods
 #' 
-#' @param B  object of class \code{bsm}
+#' @param x  object of class \code{bsm}
 #' @param ...  additional arguments
 #'
 #' @author A.J. Barbour <andy.barbour@@gmail.com>
@@ -13,9 +13,9 @@ NULL
 
 #' @rdname bsm-methods
 #' @export
-print.bsm <- function(B, ...){
-  cat(paste0(get_itype(B),"-style borehole strainmeter data:\n"))
-  str(B, nest.lev=1)
+print.bsm <- function(x, ...){
+  cat(paste0(get_itype(x),"-style borehole strainmeter data:\n"))
+  str(x, nest.lev=1)
 }
 
 #' Convert an object to one with class \code{'bsm'}
@@ -40,11 +40,15 @@ as.bsm.default <- function(X,
                            station="", 
                            i.type="GTSM", 
                            linearize=TRUE, 
-                           cal.tbl=c("pbou"), ...){
+                           cal.tbl=c("pbou"), # add more!
+                           ...){
   i.type <- match.arg(i.type)
   if (linearize) X <- linearize(X)
-  cal.tbl <- paste("bsm.", match.arg(cal.tbl))
-  do.call("data", list(datname))
+  # see hydrogeo (shepard plot) for fix:
+  cal.tbl <- match.arg(cal.tbl)
+  do.call("data", list(cal.tbl)) # assumed loading will give caltbl, which is
+  # now false, meaning operations below will fail
+  E <- NULL
   B <- list(G=X, #gauge strain
             calib=calmat(caltbl, station), # gauge calib coeffs
             E=matrix(rep(NA,3),ncol=3), # calibrated strain
@@ -76,7 +80,7 @@ is.raw_strain <- function(X) inherits(X, "gauge")
 #' @param B object
 #' @param restrict.range logical; should the values be in strain azimuths
 #' @export
-gaugeOrientations <- function(B, ...) UseMethod("gaugeOrientations")
+gaugeOrientations <- function(B, restrict.range=TRUE) UseMethod("gaugeOrientations")
 
 #' @rdname bsm-methods
 #' @param restrict.range logical; should the orientiations be plotted in appropriate uniaxial directions?
@@ -97,7 +101,7 @@ gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
 #' @param opar logical; should the original graphics parameter be set upon exit?
 #' @param ... additional parameters
 #' @export
-plot_orientations <- function(angs, ...) UseMethod("plot_orientations")
+plot_orientations <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, ...) UseMethod("plot_orientations")
 #' @rdname plot_orientations
 #' @method plot_orientations default
 #' @S3method plot_orientations default
@@ -119,7 +123,8 @@ plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="
 #' @rdname bsm-methods
 #' @method plot_orientations bsm
 #' @S3method plot_orientations bsm
-plot_orientations.bsm <- function(B, ...){
+plot_orientations.bsm <- function(angs, ...){
+  B <- angs
   angs <- gaugeOrientations(B, restrict.range=TRUE)
   plot_orientations(angs, 
                     gauge.labels=c("CH0","CH1","CH2","CH3"), 
@@ -163,9 +168,9 @@ orientation_conventions <- function(){
   cat("  PBO/GTSM:
     
     #      0 3 2
-    #       \\|/  dθ=60°
+    #       \\|/  dTheta=60
     #      --|--1
-    #       /|\\  dθ=60°
+    #       /|\\  dTheta=60
     
   Hodgkinson et al 2013:
     

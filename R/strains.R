@@ -5,7 +5,7 @@
 #' @rdname strains
 #' @export
 #' @seealso \code{\link{bsm-methods}}
-strains <- function(B, ...) UseMethod("get_strains")
+strains <- function(B, ...) UseMethod("strains")
 #' @rdname bsm-methods
 #' @param strn.type character; the type of strain to retrieve
 #' @method strains bsm
@@ -20,7 +20,7 @@ strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
     aXi[is.na(aXi)] <- 0
   }
   if (is.null(aXi)){
-    warning(sprtinf("Couldn't find %s strains!",strn.type))
+    warning(sprintf("Couldn't find %s strains!",strn.type))
   } else {
     return(aXi)
   }
@@ -44,19 +44,20 @@ strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
 #' cannot be solved for.
 #' 
 #' The calculation is based on 2-D Mohr's circle  with the 1-axis being normal
-#' and the 2-axis being shear.  
-#' 
+#' and the 2-axis being shear.
 #' 
 #' @param S strain information
 #' @param ... additional parameters
+#A, B, alpha, is.radians=TRUE
 #' @export
-#' @references Altamani 19XX, "Strain Rosettes" by J.H.Meir, p. 412
+#' @references Meir, J.H. (19XX),"Strain Rosettes" , in XX, pp. 412, edited by
+#' Altamani 19XX
 principals <- function(S, ...) UseMethod("principals")
 #' @rdname bsm-methods
 #' @method principals bsm
 #' @S3method principals bsm
-principals.bsm <- function(B, ...){
-  S <- get_strains(B, strn.type="calib")
+principals.bsm <- function(S, ...){
+  S <- strains(S, strn.type="calib")
   #
   stopifnot(is.calibrated(S))
   #
@@ -97,13 +98,13 @@ principals.default <- function(A, B, alpha, is.radians=TRUE){
 
 #' @rdname principals 
 #' @S3method principals lsm3
-principals.lsm3 <- function(L){
+principals.lsm3 <- function(S, ...){
   .NotYetImplemented()
 }
 
 #' @rdname principals 
 #' @S3method principals lsm2
-principals.lsm2 <- function(L){
+principals.lsm2 <- function(S, ...){
   .NotYetImplemented()
 }
 
@@ -116,15 +117,7 @@ principals.lsm2 <- function(L){
 #' @param orientations numeric; the angles to evaluate extensional strain at
 #' @param ... additional parameters
 #' @export
-extensions <- function(S, ...) UseMethod("extensions")
-#' @rdname bsm-methods
-#' @S3method extensions bsm
-#' @method extensions bsm
-extensions.bsm <- function(B, ...){
-  stopifnot(is.calibrated(B))
-  S <- get_strains(B, strn.type="calib")
-  extensions(S, ...)
-}
+extensions <- function(S, orientations=c(0,45,90)) UseMethod("extensions")
 #' @rdname extensions
 #' @S3method extensions default
 #' @method extensions default
@@ -145,4 +138,12 @@ extensions.default <- function(S, orientations=c(0,45,90)){
   E <- matrix(sapply(X=orientations, FUN=EFUN), ncol=length(orientations))
   colnames(E) <- paste("e", orientations, sep=".")
   return(E)
+}
+#' @rdname bsm-methods
+#' @S3method extensions bsm
+#' @method extensions bsm
+extensions.bsm <- function(S, ...){
+  stopifnot(is.calibrated(S))
+  S <- strains(S, strn.type="calib")
+  extensions(S, ...)
 }

@@ -33,11 +33,11 @@ gap_distance <- function(gap=NULL){
 #' @param unref.strn logical; should the centering be reversed?
 #' @param ... additional parameters
 #' @export
-linearize <- function(X, ...) UseMethod("linearize")
+linearize <- function(X, gap=NULL, ref.strn=FALSE, ...) UseMethod("linearize")
 #' @rdname linearize
 #' @method linearize default
 #' @S3method linearize default
-linearize.default <- function(X, gap=NULL, ref.strn=FALSE){
+linearize.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   #
   # Apply linearization correction to bsm datum
   #
@@ -63,11 +63,11 @@ linearize.default <- function(X, gap=NULL, ref.strn=FALSE){
 }
 #' @rdname linearize
 #' @export
-unlinearize <- function(X, ...) UseMethod("unlinearize")
+unlinearize <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...) UseMethod("unlinearize")
 #' @rdname linearize
 #' @method unlinearize default
 #' @S3method unlinearize default
-unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE){
+unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...){
   #
   # inverts linearized gauge strain to
   # raw counts

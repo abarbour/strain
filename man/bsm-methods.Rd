@@ -17,18 +17,18 @@
 \alias{strains.bsm}
 \title{Methods for borehole strainmeter (bsm) data}
 \usage{
-  print.bsm(B, ...)
+  print.bsm(x, ...)
 
   \method{gaugeOrientations}{bsm} (B,
     restrict.range = TRUE)
 
-  \method{plot_orientations}{bsm} (B, ...)
+  \method{plot_orientations}{bsm} (angs, ...)
 
-  \method{is.calibrated}{bsm} (B)
+  \method{is.calibrated}{bsm} (X)
 
   \method{calibrate}{bsm} (B, ...)
 
-  \method{calibMatrix}{bsm} (B, ...)
+  \method{calibMatrix}{bsm} (MC, ...)
 
   \method{get_az}{bsm} (B)
 
@@ -36,17 +36,17 @@
 
   \method{get_itype}{bsm} (B)
 
-  \method{rotate}{bsm} (B)
+  \method{rotate}{bsm} (X1, ...)
 
   \method{strains}{bsm} (B,
     strn.type = c("gauge", "calib"), ...)
 
-  \method{principals}{bsm} (B, ...)
+  \method{principals}{bsm} (S, ...)
 
-  \method{extensions}{bsm} (B, ...)
+  \method{extensions}{bsm} (S, ...)
 }
 \arguments{
-  \item{B}{object of class \code{bsm}}
+  \item{x}{object of class \code{bsm}}
 
   \item{...}{additional arguments}
 

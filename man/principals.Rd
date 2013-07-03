@@ -10,9 +10,9 @@
   \method{principals}{default} (A, B, alpha,
     is.radians = TRUE)
 
-  principals.lsm3(L)
+  principals.lsm3(S, ...)
 
-  principals.lsm2(L)
+  principals.lsm2(S, ...)
 }
 \arguments{
   \item{S}{strain information}
@@ -37,6 +37,7 @@
   \item{LSM-2}{Rectangular two-gauge \eqn{90^{\circ}}} }
 }
 \references{
-  Altamani 19XX, "Strain Rosettes" by J.H.Meir, p. 412
+  Meir, J.H. (19XX),"Strain Rosettes" , in XX, pp. 412,
+  edited by Altamani 19XX
 }
 

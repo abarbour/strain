@@ -23,12 +23,12 @@
   Agnew, and F. K. Wyatt (1996), Tidal calibration of
   borehole strain meters: Removing the effects of
   small-scale inhomogeneity, J. Geophys. Res., 101(B11),
-  25553–25571, doi:10.1029/96JB02273.
+  25553-25571, doi:10.1029/96JB02273.
 
   Hodgkinson, K., J. Langbein, B. Henderson, D. Mencin, and
   A. Borsa (2013), Tidal calibration of plate boundary
   observatory borehole strainmeters, J. Geophys. Res. Solid
-  Earth, 118, 447–458, doi:10.1029/2012JB009651.
+  Earth, 118, 447-458, doi:10.1029/2012JB009651.
 
   Langbein, J. (2010), Effect of error in theoretical Earth
   tide on calibration of borehole strainmeters, Geophys.
