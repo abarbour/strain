@@ -1,9 +1,9 @@
 \docType{package}
 \name{strain-package}
-\alias{strain,}
+\alias{strain}
 \alias{strain-package}
 \alias{strainmeter}
-\title{Tools to work with geodetic strainmeter data.}
+\title{Tools to work with geodetic strain data.}
 \description{
   Some description
 }

@@ -1,4 +1,4 @@
-#' @title Tools to work with geodetic strainmeter data.
+#' @title Tools to work with geodetic strain data.
 #'
 #' @description
 #' Some description
@@ -8,7 +8,7 @@
 #'
 #' @docType package
 #' @name strain-package
-#' @aliases strain, strainmeter
+#' @aliases strain strainmeter
 #' 
 #' @author Andrew J. Barbour <andy.barbour@@gmail.com> 
 #' 

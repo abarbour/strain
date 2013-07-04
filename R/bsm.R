@@ -165,26 +165,24 @@ plot_gaugeline.default <- function(theta.deg=0, gauge.label=NULL, x=c(0,0), y=c(
 #' Remind, with ASCII art, the gauge numbering/naming conventions
 #' @export
 orientation_conventions <- function(){
-  cat("  PBO/GTSM:
-    
-    #      0 3 2
-    #       \\|/  dTheta=60
-    #      --|--1
-    #       /|\\  dTheta=60
+  cat("
+  PBO/GTSM:
+    #      0  3  2
+    #       \\ | /  dTheta=60
+    #      ---|---1
+    #       / | \\  dTheta=60
     
   Hodgkinson et al 2013:
-    
-    #      1 4 3
-    #       \\|/
-    #      --|--2
-    #       /|\\
-    
-  Roeloffs 2010 (x1 in ch1 and x2 in ch3 directions):
-    
-    #      gauges    extensions
-    #      0 3 2       2 3 0
-    #       \\|/         \\|/
-    #      --|--1      --|--1
-    #       /|\\         /|\\
-")
+    #      1  4  3
+    #       \\ | /  dTheta=60
+    #      ---|---2
+    #       / | \\  dTheta=60
+
+  Roeloffs 2010 (x1 in ch1 and x2 in ch3 directions):    
+    #      gauges                 extensions
+    #      0  3  2                2  3  0
+    #       \\ | /  dTheta=60       \\ | /
+    #      ---|---1               ---|---1
+    #       / | \\  dTheta=60       / | \\
+  ")
 }

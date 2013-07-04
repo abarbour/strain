@@ -1,7 +1,7 @@
 \docType{methods}
 \name{bsm-methods}
-\alias{bsm-methods}
 \alias{bsm_methods}
+\alias{bsm-methods}
 \alias{calibMatrix.bsm}
 \alias{calibrate.bsm}
 \alias{extensions.bsm}
