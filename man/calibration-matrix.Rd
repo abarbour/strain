@@ -16,29 +16,29 @@
 \alias{print.cal.surf.AS43}
 \title{Calibration matrices for BSM gauge data}
 \usage{
-  print.cal(x, ...)
+  \method{print}{cal} (x, ...)
 
-  print.cal.roel1(x, ...)
+  \method{print.cal}{roel1} (x, ...)
 
-  print.cal.roel2(x, ...)
+  \method{print.cal}{roel2} (x, ...)
 
-  print.cal.pbou(x, ...)
+  \method{print.cal}{pbou} (x, ...)
 
-  print.cal.pbo13(x, ...)
+  \method{print.cal}{pbo13} (x, ...)
 
-  print.cal.pbo13.err(x, ...)
+  \method{print.cal.pbo13}{err} (x, ...)
 
-  print.cal.pbo13.ANC34(x, ...)
+  \method{print.cal.pbo13}{ANC34} (x, ...)
 
-  print.cal.pbo13.ANC33(x, ...)
+  \method{print.cal.pbo13}{ANC33} (x, ...)
 
-  print.cal.pbo13.AFC34(x, ...)
+  \method{print.cal.pbo13}{AFC34} (x, ...)
 
-  print.cal.surf(x, ...)
+  \method{print.cal}{surf} (x, ...)
 
-  print.cal.surf.AS33(x, ...)
+  \method{print.cal.surf}{AS33} (x, ...)
 
-  print.cal.surf.AS43(x, ...)
+  \method{print.cal.surf}{AS43} (x, ...)
 }
 \arguments{
   \item{x}{object to print}
