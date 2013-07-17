@@ -10,70 +10,82 @@
 NULL
 
 #' @rdname calibration-matrix
-#' @export
+#' @method print cal
+#' @S3method print cal
 print.cal <- function(x, ...) message("Strainmeter calibration coefficients")
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal roel1
+#' @S3method print.cal roel1
 print.cal.roel1 <- function(x, ...){
   print.cal(x)
   message("\tTidal potential method, from Roeloffs 2010 (I)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal roel2
+#' @S3method print.cal roel2
 print.cal.roel2 <- function(x, ...){
   print.cal(x)
   message("\tTidal potential method, from Roeloffs 2010 (II)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal pbou
+#' @S3method print.cal pbou
 print.cal.pbou <- function(x, ...){
   print.cal(x)
   message("\tTidal potential method, PBO unofficial (e.g. xml) (4x3)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal pbo13
+#' @S3method print.cal pbo13
 print.cal.pbo13 <- function(x, ...){
   print.cal(x)
   message("\tTidal potential method, from Hodgkinson et al (2013)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.pbo13 err
+#' @S3method print.cal.pbo13 err
 print.cal.pbo13.err <- function(x, ...){
   message("Calibration metadata")
   message("\t\torientations and RMSE/I data")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.pbo13 ANC34
+#' @S3method print.cal.pbo13 ANC34
 print.cal.pbo13.ANC34 <- function(x, ...){
   print.cal.pbo13(x)
   message("\t\tunconstrained solution (3X4) -- pinv")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.pbo13 ANC33
+#' @S3method print.cal.pbo13 ANC33
 print.cal.pbo13.ANC33 <- function(x, ...){
   print.cal.pbo13(x)
   message("\t\tunconstrained solution (3X3) -- pinv")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.pbo13 AFC34
+#' @S3method print.cal.pbo13 AFC34
 print.cal.pbo13.AFC34 <- function(x, ...){
   print.cal.pbo13(x)
   message("\t\tfully-constrained solution (3X4) -- pinv")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal surf
+#' @S3method print.cal surf
 print.cal.surf <- function(x, ...){
   print.cal(x)
   message("\tWave-gradiometery method, from Grant (2010)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.surf AS33
+#' @S3method print.cal.surf AS33
 print.cal.surf.AS33 <- function(x, ...){
   print.cal.surf(x)
   message("\t\txxx (3X3)")
 }
 #' @rdname calibration-matrix
-#' @export
+#' @method print.cal.surf AS43
+#' @S3method print.cal.surf AS43
 print.cal.surf.AS43 <- function(x, ...){
   print.cal.surf(x)
   message("\t\txxx (4X3)")
