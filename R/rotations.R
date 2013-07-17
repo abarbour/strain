@@ -43,8 +43,61 @@ rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")
     return(M)
   }
 }
-
 #' @rdname bsm-methods
 #' @method rotate bsm
 #' @S3method rotate bsm
 rotate.bsm <- function(X1, ...){.NotYetImplemented()}
+
+#' Transform tensor strains in a 1-2 system into an r-t system
+#' 
+#' \code{hand.rule} determines whether the rotation is clockwise ("left")
+#' or--the default--anti-clockwise ("right").
+#' 
+#' @name geod_rotate
+#' @param E11 numeric; 1-axis strain
+#' @param E22 numeric; 2-axis strain
+#' @param E12 numeric; shear strain
+#' @param geodesic.deg numeric; the azimuth of the geodesic (in degrees)
+#' @param ... additional parameters
+#' @export
+geod_rotate <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE) UseMethod("geod_rotate")
+#' @rdname geod_rotate
+#' @S3method geod_rotate default
+geod_rotate.default <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE){
+  E <- cbind(as.vector(E11), as.vector(E22), as.vector(E12))
+  cn <- paste0("E",c("rr","tt","rt"))
+  #
+  if (geodesic.deg != 0){
+    theta <- geodesic.deg*pi/180
+    st <- sin(theta)
+    sst <- st*st
+    ct <- cos(theta)
+    cct <- ct*ct
+    sct <- st*ct
+    #
+    # Transormation defined as
+    #
+    # [Egeod] = [R][E]
+    # |Err|     | cct  sst   2*sct  | |E11|
+    # |Ett|  =  | sst  cct  -2*sct  |*|E22|
+    # |Ert|     | sct  sct  cct-sst | |E12|
+    #
+    MR <- matrix(c(cct,sst,2*sct, 
+                   sst,cct,-2*sct,
+                   sct,sct,cct-sst), ncol=3, byrow=TRUE)
+    if (NsEwNw){
+      # Correct if input is extensions from LSM (assumes N-E as 1-2 coords)
+      # [E] = [Re][e]  thus  [Egeod] = [R][Re][e]
+      MR2 <- matrix(c(0,   1,  0, 
+                      1,   0,  0,
+                      0.5, 1,  1), ncol=3, byrow=TRUE)
+      MR <- MR %*% MR2
+    }
+    #
+    stopifnot(is.matrix(MR))
+    E <- E %*% t(MR)  # so the result is columnar
+  }
+  colnames(E) <- cn
+  attr(E,"theta") <- geodesic.deg
+  return(E)
+}

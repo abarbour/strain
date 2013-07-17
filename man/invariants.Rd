@@ -1,0 +1,29 @@
+\name{invariants}
+\alias{invariants}
+\alias{invariants.default}
+\title{Calculate strain invariants from horizontal tensor strains}
+\usage{
+  invariants(E11, E22, E12, nu, ...)
+
+  \method{invariants}{default} (E11, E22, E12, ...)
+}
+\arguments{
+  \item{E11}{numeric; 1-axis strain}
+
+  \item{E22}{numeric; 2-axis strain}
+
+  \item{E12}{numeric; Shear strains}
+
+  \item{nu}{numeric; Poisson's ratio}
+
+  \item{...}{additional parameters passed to
+  \code{\link{dilatation}}}
+}
+\description{
+  Calculate strain invariants from horizontal tensor
+  strains
+}
+\seealso{
+  \code{\link{dilatation}} and \code{\link{max_shear}}
+}
+

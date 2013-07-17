@@ -1,0 +1,23 @@
+\name{dilatation}
+\alias{dilatation}
+\alias{dilatation.default}
+\title{Calculate vertical and dilatational strain from horizontal tensor strains}
+\usage{
+  dilatation(E11, E22, nu, ...)
+
+  \method{dilatation}{default} (E11, E22, nu, ...)
+}
+\arguments{
+  \item{E11}{numeric; 1-axis strain}
+
+  \item{E22}{numeric; 2-axis strain}
+
+  \item{nu}{numeric; Poisson's ratio}
+
+  \item{...}{additional parameters}
+}
+\description{
+  Calculate vertical and dilatational strain from
+  horizontal tensor strains
+}
+

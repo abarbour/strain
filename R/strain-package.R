@@ -48,17 +48,49 @@ NULL
 .default.caltbl = "pbou" # default calibration table
 .strainEnvName = ".strnEnv"
 .strnEnv = new.env()
+
+#' Constants used as defaults
+#' 
+#' @details The helper function \code{\link{constants}}
+#' shows (the structure of, optionally)
+#' and returns \code{.constants}.
+#'
+#' The following constants are assumed
+#' \describe{
+#' \item{Poisson's ratios}{ (Poisson solid)}
+#' }
+#' @name strain-constants
+#' @seealso \code{\link{strain}}
 .constants = list(
-  deg2rad=pi/180,
-  rad2deg=180/pi,
-  bsm.R=1e8,
-  bsm.diam=87e-3,
-  bsm.gaps=c(100,200)*1e-6,
-  bsm.relative_orientations=c(0,-60,60,30), # clockwise (convention?)
-  bsm.gauge_names=list(pbo=c(0,1,2,3), 
-                       hodg=c(1,2,3,4), 
-                       ext=c(2,1,0,3))
+  Poisson=list(
+    nu=0.25,      #for a Poisson solid
+    nu_u=1/3,
+    VpVs=sqrt(3) #for a Poisson solid
+  ),
+  conversions=list(
+    to_radians=pi/180,
+    from_radians=180/pi
+  ),
+  bsm=list(R=1e8,
+           diam=87e-3,
+           gaps=c(100,200)*1e-6,
+           relative_orientations=c(0,-60,60,30), # clockwise (convention?)
+           gauge_names=list(pbo=c(0,1,2,3),
+                            hodg=c(1,2,3,4),
+                            ext=c(2,1,0,3)
+                            )
+  )
 )
+#' @rdname strain-constants
+#' @param do.str logical; should the structure be printed?
+#' @export
+# @example
+# constants()
+constants <- function(do.str=TRUE){
+  const <- strain:::.constants
+  if (do.str) str(const, comp.str = "++++++++\n\t", no.list=TRUE, digits.d = 9)
+  return(invisible(const))
+}
 
 ##
 ## Datasets

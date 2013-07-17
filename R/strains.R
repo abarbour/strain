@@ -26,6 +26,95 @@ strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
   }
 }
 
+#' Calculate vertical and dilatational strain from horizontal tensor strains
+#' 
+#' @param E11 numeric; 1-axis strain
+#' @param E22 numeric; 2-axis strain
+#' @param nu numeric; Poisson's ratio
+#' @param ... additional parameters
+#' @export
+dilatation <- function(E11, E22, nu, ...) UseMethod("dilatation")
+#' @rdname dilatation
+#' @S3method dilatation default
+#' @method dilatation default
+dilatation.default <- function(E11, E22, nu, ...){
+  if (missing(nu)) nu <- constants(FALSE)$Poisson$nu
+  Ear <- as.matrix(E11+E22)
+  sc <- -nu/(1-nu)
+  Ezz <- sc*Ear
+  attr(Ezz,"nu") <- nu
+  Ekk <- Ear+Ezz
+  return(list(E33=Ezz, Ekk=Ekk))
+}
+
+#' Calculate maximum horizontal shear from horizontal tensor strains
+#' 
+#' @param E11 numeric; 1-axis strain
+#' @param E22 numeric; 2-axis strain
+#' @param E12 numeric; Shear strains
+#' @param ... additional parameters
+#' @export
+max_shear <- function(E11, E22, E12, ...) UseMethod("max_shear")
+#' @rdname max_shear
+#' @S3method max_shear default
+#' @method max_shear default
+max_shear.default <- function(E11, E22, E12, ...){
+  Ediff <- as.matrix(E11-E22)
+  Esh <- sqrt(Ediff/4 + E12**2)
+  return(list(Esh_max=Esh))
+}
+
+#' Calculate strain invariants from horizontal tensor strains
+#' 
+#' @param E11 numeric; 1-axis strain
+#' @param E22 numeric; 2-axis strain
+#' @param E12 numeric; Shear strains
+#' @param nu numeric; Poisson's ratio
+#' @param ... additional parameters passed to \code{\link{dilatation}}
+#' @seealso \code{\link{dilatation}} and \code{\link{max_shear}}
+#' @export
+invariants <- function(E11, E22, E12, nu, ...) UseMethod("invariants")
+#' @rdname invariants
+#' @S3method invariants default
+#' @method invariants default
+invariants.default <- function(E11, E22, E12, ...){
+  Ekk <- dilatation(E11, E22, ...)
+  if (!missing(E12)){
+    Esh <- max_shear(E11, E22, E12)
+  } else {
+    Esh <- NULL
+  }
+  return(list(E33=Ekk$E33, Dil=Ekk$Ekk, Esh=Esh$Esh_max))
+}
+
+#' Transform tensor strains into geodesic reference frame (radial, transverse)
+#' 
+#' @param E11 numeric; 1-axis strain
+#' @param E22 numeric; 2-axis strain
+#' @param E12 numeric; Shear strains
+#' @param theta numeric; the azimuth of the geodesic in the 1-2 axis system
+#' @param ... additional parameters passed to \code{\link{invariants}}
+#' @seealso \code{\link{invariants}}
+#' @export
+geodesic_strains <- function(E11, E22, E12, geod.deg=0, ...) UseMethod("geodesic_strains")
+#' @rdname geodesic_strains
+#' @S3method geodesic_strains default
+#' @method geodesic_strains default
+geodesic_strains.default <- function(E11, E22, E12, geod.deg=0, ...){
+  # rotate into radial/transverse
+  ERT <- geod_rotate(E11, E22, E12, geod.deg, NsEwNw=FALSE)
+  Err <- ERT[,"Err"]
+  Ett <- ERT[,"Ett"]
+  Ert <- ERT[,"Ert"]
+  # then calc invariants
+  Einv <- invariants(Err, Ett, Ert)
+  Ezz <- Einv$E33
+  Dil <- Einv$Dil
+  Esh <- Einv$Esh
+  #
+  return(list(Err=Err, Ett=Ett, Ert=Ert, Ezz=Ezz, Dil=Dil, Esh=Esh))
+}
+
 #' Calculate principal strains
 #' 
 #' Strainmeters are generally designed to resemble common
