@@ -1,10 +1,10 @@
 \name{calmat}
 \alias{calmat}
+\alias{calmat_reshape}
+\alias{calmat_reshape.default}
 \alias{calmat.cal.pbou}
 \alias{calmat.cal.surf1}
 \alias{calmat.default}
-\alias{calmat_reshape}
-\alias{calmat_reshape.default}
 \title{Extract a calibration matrix from an object}
 \usage{
   calmat(X, station, ...)
