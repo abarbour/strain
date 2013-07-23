@@ -1,0 +1,38 @@
+\name{strain-filtering}
+\alias{minfilt}
+\alias{minfilt.default}
+\alias{strain-filtering}
+\title{Minimum phase filtering}
+\usage{
+  minfilt(y,
+    scenario = c("ones_to_fivem", "fivem_to_onehr"),
+    verbose = TRUE)
+
+  \method{minfilt}{default} (y,
+    scenario = c("ones_to_fivem", "fivem_to_onehr"),
+    verbose = TRUE)
+}
+\arguments{
+  \item{y}{numeric}
+
+  \item{scenario}{character}
+
+  \item{verbose}{logical; should messages be given?}
+}
+\description{
+  Desc
+}
+\details{
+  Det
+}
+\references{
+  D.C. Agnew and K. Hodgkinson (2007), Designing compact
+  causal digital filters for low-frequency strainmeter
+  data, Bulletin of the Seismological Society of America,
+  vol 97, 1B, 1-99, doi: 10.1785/0120060088
+}
+\seealso{
+  \code{\link{decimate}}, \code{\link{lpfilter}},
+  \code{\link{minphs}}, \code{\link{strain-package}}
+}
+

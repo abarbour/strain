@@ -95,7 +95,19 @@ constants <- function(do.str=TRUE){
 ##
 ## Datasets
 ## 
+##   Filter weights
 #
+#' @title Minimum phase lowpass filter weights for strain data
+#' @references
+#' D.C. Agnew and K. Hodgkinson (2007),
+#' Designing compact causal digital filters for low-frequency strainmeter data,
+#' Bulletin of the Seismological Society of America,
+#' vol 97, 1B, 1-99, doi: 10.1785/0120060088
+#' @name minphs
+#' @docType data
+#' @format A list with filter weights by decimation factor
+NULL
+
 ##   calibration coeffs:
 #
 #' @title Roeloffs (2010) tidal calibration coefficients
@@ -104,7 +116,7 @@ constants <- function(do.str=TRUE){
 #' @format A list with dataframes with calibration coefficients by station
 NULL
 
-#' @title PBO (un) official tidal calibration coefficients
+#' @title PBO (un)official tidal calibration coefficients
 #' @name pbou
 #' @docType data
 #' @format A list with dataframes with calibration coefficients by station

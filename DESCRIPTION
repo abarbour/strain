@@ -41,3 +41,4 @@ Collate:
     'strains.R'
     'utilities.R'
     'zzz.R'
+    'filtering.R'
