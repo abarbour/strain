@@ -59,35 +59,42 @@ minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), ver
 #' Straight decimation
 #' @description Performs a simple, straight decimation.
 #' @details
+#' 
 #' This is to be used with a proper low-pass filtering algorithm to
 #' reduce data volume without introducing aliasing effects, or to
 #' decimate an index series (e.g. for plotting, etc.).
 #' 
 #' \emph{No filtering is applied, so this will introduce aliasing if
 #' used improperly.}
+#' 
+#' The \code{\link{ts}} method uses \code{\link{window}}
 #'  
 #' @param y numeric
 #' @param ndec integer; the decimation factor
+#' @param ... additional parameters; Used only for \code{\link{ts}} method.
 #' @aliases decim
 #' @export
 #' @seealso \code{\link{lpfilter}}, \code{\link{strain-filtering}}
-decimate <- function(y, ndec=1) UseMethod("decimate")
+decimate <- function(y, ndec=1, ...) UseMethod("decimate")
 #' @rdname decimate
 #' @method decimate ts
 #' @S3method decimate ts
-decimate.ts <- function(y, ndec=1){
+decimate.ts <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)
-  yf <- frequency(y)/ndec
-  y <- decimate(as.vector(y), ndec)
-  if (ndec >= 1) y <- ts(y, frequency=yf)
+  if (ndec>1){
+    yf <- frequency(y)/ndec
+    #   y <- decimate(as.vector(y), ndec)
+    #   if (ndec >= 1) y <- ts(y, frequency=yf)
+    y <- window(y, frequency=yf, ...)
+  }
   attr(y,"ndec") <- ndec
   return(y)
 }
 #' @rdname decimate
 #' @method decimate default
 #' @S3method decimate default
-decimate.default <- function(y, ndec=1){
+decimate.default <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)
   if (ndec>1){
