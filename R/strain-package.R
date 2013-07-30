@@ -4,7 +4,11 @@
 #' Some description
 #'
 #' @details
-#' Some details
+#' See the following pages for details on
+#' 
+#' @section Filtering:
+#' \code{\link{strain-filtering}} is a good place to start to learn about
+#' filtration tools.
 #'
 #' @docType package
 #' @name strain-package
