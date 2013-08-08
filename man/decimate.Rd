@@ -16,8 +16,8 @@
 
   \item{ndec}{integer; the decimation factor}
 
-  \item{...}{additional parameters; for \code{\link{ts}}
-  method only.}
+  \item{...}{additional parameters; Used only for
+  \code{\link{ts}} method.}
 }
 \description{
   Performs a simple, straight decimation.
