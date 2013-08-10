@@ -8,16 +8,17 @@
 strains <- function(B, ...) UseMethod("strains")
 #' @rdname bsm-methods
 #' @param strn.type character; the type of strain to retrieve
+#' @param zero.fill.na logical; should \code{NA}s be fille with zero?
 #' @method strains bsm
 #' @S3method strains bsm
-strains.bsm <- function(B, strn.type=c("gauge","calib"), ...){
+strains.bsm <- function(B, strn.type=c("gauge","calib"), zero.fill.na=TRUE, ...){
   strn.type <- match.arg(strn.type)
   if (strn.type=="gauge"){
     aXi <- B$G
   } else {
     ##: if (!is.calibrated(B)) B <- calibrate(B, ...)
     aXi <- B$E
-    aXi[is.na(aXi)] <- 0
+    if (zero.fill.na) aXi[is.na(aXi)] <- 0
   }
   if (is.null(aXi)){
     warning(sprintf("Couldn't find %s strains!",strn.type))

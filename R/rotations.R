@@ -54,6 +54,7 @@ rotate.bsm <- function(X1, ...){.NotYetImplemented()}
 #' or--the default--anti-clockwise ("right").
 #' 
 #' @name geod_rotate
+#' @param BSM numeric matrix with columns \code{c("ar","gam1","gam2")}
 #' @param E11 numeric; 1-axis strain
 #' @param E22 numeric; 2-axis strain
 #' @param E12 numeric; shear strain
@@ -61,6 +62,57 @@ rotate.bsm <- function(X1, ...){.NotYetImplemented()}
 #' @param ... additional parameters
 #' @export
 geod_rotate <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE) UseMethod("geod_rotate")
+#' @rdname geod_rotate
+#' @export
+# @S3method geod_rotate matrix
+#' @details \code{\link{geod_rotate2}} is a kludge for the moment, to
+#' prove tensor strain rotations
+geod_rotate2 <- function(BSM, geodesic.deg=0, ...){
+  #E <- strains(B, "calib")
+  E <- BSM
+  cn <- colnames(E)
+  Ear <- E[,"ar"]
+  Ediff <- E[,"gam1"]
+  Eshr <- E[,"gam2"]
+  E22 <- (Ear - Ediff) / 2
+  E11 <- Ear - E22
+  E12 <- Eshr/2
+  #
+  theta <- geodesic.deg*pi/180
+  st <- sin(theta)
+  sst <- st*st
+  ct <- cos(theta)
+  cct <- ct*ct
+  sct <- st*ct
+  #
+  # Transormation defined as
+  #
+  # [E]' = [R][E]
+  # |E11|'     |  cct  sst    sct   | |E11|
+  # |E22|'  =  |  sst  cct   -sct   |*|E22|
+  # |E12|'     | -sct  sct  cct-sst | |E12|
+  #
+  MR <- matrix(c( cct,sst,sct, 
+                  sst,cct,-sct,
+                 -sct,sct,cct-sst), ncol=3, byrow=TRUE)
+  E <- cbind(E11,E22,E12)
+  E <- E %*% t(MR)  # so the result is columnar
+  #
+  E11 <- E[,1]
+  E22 <- E[,2]
+  E12 <- E[,3]
+  ar <- E11 + E22
+  gam1 <- E11 - E22
+  gam2 <- 2*E12
+  #print(all.equal(ar,Ear)) # warning("Areal strain was *NOT* invariant!  Something is wrong.")
+  BSM <- cbind(ar,gam1,gam2)
+  return(BSM)
+}
+
+#' @rdname bsm-methods
+#' @S3method geod_rotate bsm
+geod_rotate.bsm <- function(){.NotYetImplemented()}
+
 #' @rdname geod_rotate
 #' @S3method geod_rotate default
 geod_rotate.default <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE){

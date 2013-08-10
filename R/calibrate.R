@@ -104,18 +104,22 @@ calmat <- function(X, station, ...) UseMethod("calmat")
 #' @method calmat default
 #' @S3method calmat default
 calmat.default <- function(X, station, ...){
+  #message("A")
   if (missing(X)){
     Cal <- strain:::.default.caltbl
-    do.call("data",list(Cal))
+    do.call("data", list(Cal))
+    assign("caltbl", eval(as.name(Cal)))
     stopifnot(exists("caltbl"))
     X <- caltbl
+    print(class(X))
   }
-  calmat(X, station, ...)
+  .calmat(X, station, ...)
 }
 #' @rdname calmat
-#' @method calmat cal.pbou
-#' @S3method calmat cal.pbou
-calmat.cal.pbou <- function(X, station, ...){
+.calmat <- function(X, ...) UseMethod(".calmat")
+#' @method .calmat cal.pbou
+#' @S3method .calmat cal.pbou
+.calmat.cal.pbou <- function(X, station, ...){
   X <- as.data.frame(unclass(X))
   sta <- NULL
   CML <- subset(X, sta==station, select=-c(sta))
@@ -131,9 +135,10 @@ calmat.cal.pbou <- function(X, station, ...){
   return(allmat)
 }
 #' @rdname calmat
-#' @method calmat cal.surf1
-#' @S3method calmat cal.surf1
-calmat.cal.surf1 <- calmat.cal.pbou
+#' @method .calmat cal.surf1
+#' @S3method .calmat cal.surf1
+.calmat.cal.surf1 <- .calmat.cal.pbou
+
 #' @rdname calmat
 #' @export
 calmat_reshape <- function(X, ...) UseMethod("calmat_reshape")

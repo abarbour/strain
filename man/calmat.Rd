@@ -1,9 +1,9 @@
 \name{calmat}
+\alias{.calmat}
+\alias{.calmat.cal.surf1}
 \alias{calmat}
 \alias{calmat_reshape}
 \alias{calmat_reshape.default}
-\alias{calmat.cal.pbou}
-\alias{calmat.cal.surf1}
 \alias{calmat.default}
 \title{Extract a calibration matrix from an object}
 \usage{
@@ -11,9 +11,9 @@
 
   \method{calmat}{default} (X, station, ...)
 
-  \method{calmat}{cal.pbou} (X, station, ...)
+  .calmat(X, ...)
 
-  \method{calmat}{cal.surf1} (X, station, ...)
+  \method{.calmat}{cal.surf1} (X, station, ...)
 
   calmat_reshape(X, ...)
 

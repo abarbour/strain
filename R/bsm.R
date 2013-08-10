@@ -50,7 +50,7 @@ as.bsm.default <- function(X,
   # now false, meaning operations below will fail
   E <- NULL
   B <- list(G=X, #gauge strain
-            calib=calmat(caltbl, station), # gauge calib coeffs
+            calib=calmat(cal.tbl, station), # gauge calib coeffs
             E=matrix(rep(NA,3),ncol=3), # calibrated strain
             P=NA) # principal strains
   # cannot set attributes on NULL!

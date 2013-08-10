@@ -6,6 +6,7 @@
 \alias{calibrate.bsm}
 \alias{extensions.bsm}
 \alias{gaugeOrientations.bsm}
+\alias{geod_rotate.bsm}
 \alias{get_az.bsm}
 \alias{get_itype.bsm}
 \alias{get_station.bsm}
@@ -38,8 +39,11 @@
 
   \method{rotate}{bsm} (X1, ...)
 
+  geod_rotate.bsm()
+
   \method{strains}{bsm} (B,
-    strn.type = c("gauge", "calib"), ...)
+    strn.type = c("gauge", "calib"), zero.fill.na = TRUE,
+    ...)
 
   \method{principals}{bsm} (S, ...)
 
@@ -55,6 +59,9 @@
 
   \item{strn.type}{character; the type of strain to
   retrieve}
+
+  \item{zero.fill.na}{logical; should \code{NA}s be fille
+  with zero?}
 }
 \description{
   Methods for borehole strainmeter (bsm) data
