@@ -20,6 +20,8 @@
   ## add some info to the environment
   ##psd:::psd_envAssign("init", "initialized upon attach")
   ##
-  packageStartupMessage(sprintf("Loaded strain (%s) -- Strainmeter data tools.", 
-                                utils:::packageVersion("strain")))
+  pack <- "strain"
+  packageStartupMessage(sprintf("Loaded % (%s) -- Strainmeter data tools.", 
+                                pack,
+                                utils::packageVersion(pack)))
 }
