@@ -18,9 +18,48 @@ NULL
 #' @param gap character; the type of gap
 #' @export
 gap_distance <- function(gap=NULL){
-  gaps <- strain:::.constants$bsm.gaps
+  gaps <- strain:::.constants$bsm$gaps
   gap <- match.arg(gap, c("one","two"))
   switch(gap, one=gaps[1], two=gaps[2])
+}
+
+#' Gain correction
+#' 
+#' @name gain
+#' @param X numeric; gauge strains
+#' @param gap numeric or character; the gap distance
+#' @param ref.strn logical; should the results be centered?
+#' @param constant numeric; value to use for de-linearizing
+#' @param unref.strn logical; should the centering be reversed?
+#' @param ... additional parameters
+#' @export
+gain <- function(X, gap=NULL, ref.strn=FALSE, ...) UseMethod("gain")
+#' @rdname gain
+#' @method gain default
+#' @S3method gain default
+gain.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
+  #
+  # Apply linearization correction to bsm datum
+  #
+  X <- as.matrix(X)
+  #
+  if (is.numeric(gap)){
+    gapd <- gap
+  } else {
+    gapd <- gap_distance(gap)
+  }
+  diam <- strain:::.constants$bsm$diam
+  #
+  GAIN <- function(d, i.gap=gapd, i.diam=diam) {
+    dc <- strain:::.constants$bsm$R
+    D. <- d/dc
+    C. <- i.gap/i.diam
+    G. <- C. / (1 - D.)**2
+    return(G.)
+  }
+  X <- apply(X, MARGIN=2, FUN=GAIN)
+  if (ref.strn) X <- scale(X, scale=F)
+  return(X)
 }
 
 #' Make raw strain linear or linear strain raw
@@ -48,10 +87,10 @@ linearize.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   } else {
     gapd <- gap_distance(gap)
   }
-  diam <- strain:::.constants$bsm.diam
+  diam <- strain:::.constants$bsm$diam
   #
   LIN <- function(d, i.gap=gapd, i.diam=diam) {
-    dc <- strain:::.constants$bsm.R
+    dc <- strain:::.constants$bsm$R
     D. <- d/dc
     C. <- i.gap/i.diam
     E. <- C. * D. / (1 - D.)
@@ -80,10 +119,10 @@ unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...){
   } else {
     gapd <- gap_distance(gap)
   }
-  diam <- strain:::.constants$bsm.diam
+  diam <- strain:::.constants$bsm$diam
   #
   UNLIN <- function(ld, ldc=constant, i.gap=gapd, i.diam=diam) {
-    dc <- strain:::.constants$bsm.R
+    dc <- strain:::.constants$bsm$R
     E. <- ld + ldc
     d <- dc * i.diam * E. / (i.gap + i.diam*E.)
     return(d)

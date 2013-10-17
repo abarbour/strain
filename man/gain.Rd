@@ -1,0 +1,28 @@
+\name{gain}
+\alias{gain}
+\alias{gain.default}
+\title{Gain correction}
+\usage{
+  gain(X, gap = NULL, ref.strn = FALSE, ...)
+
+  \method{gain}{default} (X, gap = NULL, ref.strn = FALSE,
+    ...)
+}
+\arguments{
+  \item{X}{numeric; gauge strains}
+
+  \item{gap}{numeric or character; the gap distance}
+
+  \item{ref.strn}{logical; should the results be centered?}
+
+  \item{constant}{numeric; value to use for de-linearizing}
+
+  \item{unref.strn}{logical; should the centering be
+  reversed?}
+
+  \item{...}{additional parameters}
+}
+\description{
+  Gain correction
+}
+

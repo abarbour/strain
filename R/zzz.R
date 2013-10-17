@@ -21,7 +21,7 @@
   ##psd:::psd_envAssign("init", "initialized upon attach")
   ##
   pack <- "strain"
-  packageStartupMessage(sprintf("Loaded % (%s) -- Strainmeter data tools.", 
+  packageStartupMessage(sprintf("Loaded %s (%s) -- Strainmeter data tools.", 
                                 pack,
                                 utils::packageVersion(pack)))
 }
