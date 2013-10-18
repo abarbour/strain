@@ -1,0 +1,11 @@
+README
+/Users/abarbour/kook.processing/R/dev/packages/strain/NOBUILD/bin/pbo
+Creation date:	Fri Oct 18 14:07:06 PDT 2013
+
+bottle.py*
+bottle_merge.py*
+get_1sps.csh*
+get_20sps.csh*	<-- is now 'hfbsm'
+get_l2.csh*
+get_lf.csh*
+rdstrain.pl*
