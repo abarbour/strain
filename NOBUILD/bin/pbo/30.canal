@@ -1,0 +1,8 @@
+#!/bin/sh
+rm -f B084*
+ls > /tmp/prelist
+hfbsm B084 pinyon084bcs2006 2009 215 17:00:00 2009 215 19:00:00 1
+ls > /tmp/postlist
+diff /tmp/prelist /tmp/postlist
+mv B084.ALL_01.l.txt canal.l.txt
+mv B084.ALL_01.r.txt canal.r.txt

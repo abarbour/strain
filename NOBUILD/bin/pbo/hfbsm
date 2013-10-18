@@ -1,0 +1,260 @@
+#!/bin/csh
+#
+#
+#
+
+if ( $#argv == 0 || $#argv < 8 ) then
+	echo "Script to download high-frequency strain data"
+	echo ""
+	echo "		$0 Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]"
+	echo "  e.g.	$0 B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00"
+	echo
+	echo "This should produce, for example:"
+	echo "	  B073.ALL_20.r.txt  raw        data for 4 channels (nanostrain)"
+	echo "	  B073.ALL_20.l.txt  linearized data for 4 channels (nanostrain)"
+	echo "	  B073.2009105_20.tar"
+	echo ""
+	echo "	** defaults to 20Hz, but will accept 1 Hz as last arg **"
+	echo ""
+	exit
+endif
+
+set name=$1
+set long=$2
+set syear=$3
+set sday=$4
+set start=$5
+set eyear=$6
+set eday=$7
+set tend=$8
+
+if ($#argv == 8) then
+  # default to 20Hz
+  set samp=20
+else if ($#argv == 9) then
+  set samp=$9
+else
+  set samp=1
+endif
+
+switch ($samp)
+	case 1:
+	  echo "sampling is  1 Hz"
+	  set samp = "01"
+	  set sampflag = 1
+	  breaksw
+	case 20:
+	  echo "sampling is 20 Hz"
+	  set samp = "20"
+	  set sampflag = 20
+	  breaksw
+	default:
+	  echo "invalid sampling: must be 1 (one) or 20 (twenty)"
+	  exit
+	  #breaksw
+endsw
+
+#exit
+########### set variables   ########################
+
+
+set shour=`echo $start | awk '{ print substr($1,1,2) }' `
+set  smin=`echo $start | awk '{ print substr($1,4,2) }' `
+
+set ehour=`echo $tend | awk '{ print substr($1,1,2) }' `
+set  emin=`echo $tend | awk '{ print substr($1,4,2) }' `
+
+echo $name $syear $sday $shour $smin    $eyear  $eday $ehour $emin
+
+#exit
+########## get data ######################
+
+set year=$syear
+set day=$sday
+set limitday=366
+while ($year <= $eyear)
+	if ($year == $eyear) set limitday=$eday
+	while ($day <= $limitday )
+		set day=`echo $day  | awk '{ printf "%03d\n", $1 }' `
+		set  sy=`echo $year | awk '{ printf "%02d\n", $1-2000 }' `
+		set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
+		set tarfile="${name}.${year}${day}_${samp}.tar"
+		echo ${repos}
+		ftp -V ${repos}/${tarfile}
+		tar -xf ${tarfile}
+		rm -f ${tarfile}
+		@ day ++
+	end
+	set day=1
+	@ year ++
+end
+
+#exit
+## unpack day and hour tars , select files inside start and end times ##
+
+set year=$syear
+set day=$sday
+set limitday=366
+set hour=$shour
+set limith=23
+while ($year <= $eyear)
+	if ($year == $eyear) set limitday=$eday
+	while ($day <= $limitday )
+		set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
+		set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
+		if ($day == $eday) set limith=$ehour
+		while ($hour <= $limith )
+			set hour=`echo $hour | awk '{ printf"%02d\n",$1}' `
+			set tfi="${name}${sy}${day}${hour}"
+			if ( ${sampflag} == 1 ) then
+				tar -xf ${tfi}.tgz 
+			else
+				tar -xf ${tfi}_${samp}.tar
+			endif
+			@ hour ++
+		end
+		set hour=0;
+		@ day ++
+	end
+	set day=1
+	@ year ++
+end
+
+if ( ${sampflag} == 1 ) then
+	rm -f ${name}???????.tgz
+else
+	rm -f ${name}???????_${samp}.tar
+
+	## unpack minute files ##
+
+	foreach file (`ls ${name}?????????_${samp}.tgz`)
+		tar xfz $file
+		rm $file
+	end
+endif
+
+####  append channel files #####
+
+if ( ${sampflag} == 1 ) then
+	foreach c (CH0 CH1 CH2 CH3)
+		set year=$syear
+		set day=$sday
+		set limitday=366
+		set hour=$shour
+		set limith=23
+		set flag=0
+		while ($year <= $eyear)
+			if ($year == $eyear) set limitday=$eday
+			while ($day <= $limitday )
+				set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
+				set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
+				if ($day == $eday) set limith=$ehour
+				while ($hour <= $limith)
+					set hour=`echo $hour | awk '{ printf"%02d\n",$1   }' `
+					set cfi="${name}${sy}${day}${hour}${c}"
+					#echo "${cfi}"
+					if ( $flag == 0 ) then
+						cp ${cfi} ${name}.${c}_${samp}
+						set flag=1
+					else
+						bottle_merge.py ${name}.${c}_${samp} ${cfi} ${name}.${c}_${samp}
+					endif
+					@ hour ++
+				end
+				@ day ++
+				set hour=0
+			end
+			@ year ++
+			set day=1
+		end
+	end 
+	rm -f ${name}???????CH?
+else
+	foreach c (CH0 CH1 CH2 CH3)
+		set year=$syear
+		set day=$sday
+		set limitday=366
+		set hour=$shour
+		set limithour=23
+		set min=$smin
+		set limitmin=59
+		set flag=0
+		while ($year <= $eyear)
+			if ($year == $eyear) set limitday=$eday
+			while ($day <= $eday )
+				set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
+				set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
+				if ($day == $eday) set limithour=$ehour
+				while ($hour <= $limithour)
+					set hour=`echo $hour | awk '{ printf"%02d\n",$1   }' `
+					if ($hour == $ehour) set limitmin=$emin
+					while ($min < $limitmin )
+						set min=`echo $min | awk '{ printf "%02d\n", $1 }'`
+						set sfi="${name}${sy}${day}${hour}${min}${c}_${samp}"
+						#echo "${sfi}"
+						if ( $flag == 0 ) then
+							cp ${sfi} {$name}.${c}_${samp}
+							set flag=1
+						else
+							bottle_merge.py ${name}.${c}_${samp} ${sfi} {$name}.${c}_${samp}
+						endif
+						@ min++	
+					end
+					@ hour ++
+					set min=0;
+				end
+				@ day ++
+				set hour=0
+			end
+			@ year ++
+			set day=1
+		end
+	end
+	rm -f ${name}?????????CH?_${samp}
+endif
+
+####### make ascii linearized data ##########
+
+# Decide instrument gap
+# first batch have gap = 0.002 
+# others have gap = 0.001, 
+#	[B001][B003][B004][B005][B006][B007][B009][B010][B011]
+#	[B012][B018][B022][B024][B035][B081][B082][B086][B087]:
+
+switch ($name)
+case [B][0][0]?
+	set gap=0.0002
+	breaksw
+case [B][0][1][0128]
+	set gap=0.0002
+	breaksw
+case [B][0][2][24]
+	set gap=0.0002
+	breaksw
+case [B][0][8][1267]
+	set gap=0.0002
+	breaksw
+default:
+	set gap=0.0001
+	breaksw
+endsw
+
+
+foreach c (CH0 CH1 CH2 CH3)
+	set botfi="${name}.${c}_${samp}"
+	bottle.py -t ${botfi} > ${botfi}.r.txt
+	cat ${botfi}.r.txt | awk '{  di=($3/1e+8)/(1-($3/1e+8)) ; if (f == 0 && $3 != 999999)   {d0=di;f=1}  ; if (/999999/) printf ("%s %s	999999\n", $1, $2, $3) ; else printf("%s %s	%14.9f \n", $1,$2, ((di-d0)*'$gap'/0.087)*1e+9)  }' > ${botfi}.l.txt
+	rm -f ${botfi}
+end
+
+# make full files
+set allfi="${name}.ALL_${samp}"
+
+rm -f ${allfi}.[rl].txt
+paste ${name}.CH[0-3]_${samp}.l.txt | awk 'BEGIN{printf"%26s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime"}{printf"%sT%-15s\t%f\t%f\t%f\t%f\n",$1,$2,$3,$6,$9,$12}' >  ${allfi}.l.txt
+paste ${name}.CH[0-3]_${samp}.r.txt | awk 'BEGIN{printf"%26s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime"}{printf"%sT%-15s\t%i\t%i\t%i\t%i\n",$1,$2,$3,$6,$9,$12}' >  ${allfi}.r.txt
+
+# cleanup
+#rm ${name}.CH[0-3]_${samp}.l.txt 
+
+exit 1

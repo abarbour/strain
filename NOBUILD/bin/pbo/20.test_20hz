@@ -1,0 +1,8 @@
+#!/bin/sh
+rm -f B073*
+ls > /tmp/prelist$$
+hfbsm B073 varian073bcs2006 2009 105 13:00:00 2009 105 13:01:00
+ls > /tmp/postlist$$
+
+head B073.ALL_20.[lr].txt
+diff /tmp/prelist$$ /tmp/postlist$$
