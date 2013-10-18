@@ -1,0 +1,17 @@
+README
+/Users/abarbour/kook.processing/R/dev/packages/strain/bin
+Creation date:	Fri Oct 18 12:47:14 PDT 2013
+
+
+ftp://brick.unavco.org/pub/users/hodgkin/other/new/
+2013/
+get_strain.csh
+get_strain.csh.gz
+
+http://cws.unavco.org:8080/cws/learn/uscs/2009/2009strainmeter/handouts/DataDownloadAndTools/
+2009/ <-- equivalent functions -->
+
+examples/ 
+examples.tar
+
+#http://stackoverflow.com/questions/3347507/including-script-files-in-an-r-extension-package/3347589#3347589
