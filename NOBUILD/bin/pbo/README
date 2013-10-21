@@ -2,10 +2,12 @@ README
 /Users/abarbour/kook.processing/R/dev/packages/strain/NOBUILD/bin/pbo
 Creation date:	Fri Oct 18 14:07:06 PDT 2013
 
-bottle.py*
-bottle_merge.py*
-get_1sps.csh*
+bottle.py*	  <-- bottle-file decoder
+bottle_merge.py*  <-- bottle-file decoder/merger
+
 get_20sps.csh*	<-- is now 'hfbsm'
+get_1sps.csh*   <-- is now incorporated into 'hfbsm'
+
 get_l2.csh*
 get_lf.csh*
 rdstrain.pl*

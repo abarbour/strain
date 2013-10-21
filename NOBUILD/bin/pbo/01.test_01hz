@@ -1,7 +1,8 @@
 #!/bin/sh
 rm -f B073*
 ls > /tmp/prelist
-hfbsm B073 varian073bcs2006 2009 105 13:00:00 2009 105 13:01:00 1
+#hfbsm B073 varian073bcs2006 2009 105 '13:00:00' 2009 105 13:00:20 1
+hfbsm B073 varian073bcs2006 2009 105 '13:00:00' 2009 105 13:01:00 1
 ls > /tmp/postlist
 diff /tmp/prelist /tmp/postlist
 head B073.ALL_01.[lr].txt

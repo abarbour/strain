@@ -186,3 +186,53 @@ orientation_conventions <- function(){
     #       / | \\  dTheta=60       / | \\
   ")
 }
+
+
+#' Assemble high-frequency strain data
+#' @details
+#' This uses a set of scripts included with the package, namely 
+#' \code{hfbsm},
+#' \code{bottle.py}, \code{bottle_merge.py}
+#' 
+#' @param sta4
+#' @param sta16
+#' @param yst
+#' @param dst
+#' @param st
+#' @param yen
+#' @param den
+#' @param en
+#' @param sampling
+#' @param ...
+#' @export
+hfbsm <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:00:00", sampling=1, ...) UseMethod("hfbsm")
+#' @rdname hfbsm
+#' @method hfbsm default
+#' @S3method hfbsm default
+hfbsm.default <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:01:00", sampling=1, ...){
+	#
+  sta16 <- sta16_from_sta4(sta4, meta="bsm")
+  stopifnot(!is.null(sta16))
+  #
+  stopifnot(sampling==20 | sampling==1)
+	#
+	func <- "hfbsm"
+	package.dir <- find.package('strain')
+  hfbsm.dir <- pypath <- file.path(package.dir, func)
+  script <- file.path(hfbsm.dir, func)
+  
+  #results <- try(system(file.path(pypath,"bottle.py -py")))
+  #if (inherits(results, "try-error")) stop( "failed" )
+  
+  #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
+	#hfbsm B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00 [[1] pypath]
+  cmd <- sprintf("%s %s %s %04i %i '%s' %04i %i '%s' %i %s", 
+                 script, sta4, sta16, 
+                 yst, dst, st,
+                 yen, den, en,
+                 sampling,
+                 pypath)
+  message(cmd)
+  results <- try(system(cmd)) #, intern=!verbose))
+  if (inherits(results, "try-error")) stop( "failed" )
+}

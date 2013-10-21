@@ -1,11 +1,12 @@
 Package: strain
 Type: Package
 Title: Tools for working with strainmeter and pore-fluid pressure data
-Version: 0.1-3
-Date: 2013-10-16
+Version: 0.1-4
+Date: 2013-10-21
 Author: Andrew J. Barbour
 Maintainer: Andrew J. Barbour <andy.barbour@gmail.com>
 License: GPL (>= 2)
+SystemRequirements: awk, csh, python
 URL: http://abarbour.github.io/strain/ (dev) and
     http://abarbour.github.io/pborepo for metadata.
     For processing of raw data,
@@ -29,8 +30,9 @@ Depends:
     graphics,
     grDevices
 Imports:
+    corpcor,
     Matrix,
-    corpcor
+    pborepo
 Collate:
     'bsm.R'
     'calibrate.R'
