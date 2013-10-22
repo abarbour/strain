@@ -1,6 +1,7 @@
 \name{hfbsm}
 \alias{hfbsm}
 \alias{hfbsm.default}
+\alias{load_hfbsm.hfbsm.nfo}
 \title{Assemble high-frequency strain data}
 \usage{
   hfbsm(sta4, yst, dst, st = "00:00:00", yen, den,
@@ -8,6 +9,9 @@
 
   \method{hfbsm}{default} (sta4, yst, dst, st = "00:00:00",
     yen, den, en = "00:01:00", sampling = 1, ...)
+
+  \method{load_hfbsm}{hfbsm.nfo} (object,
+    file.type = c("lin", "raw"), loc = ".", ...)
 }
 \arguments{
   \item{sta4}{}

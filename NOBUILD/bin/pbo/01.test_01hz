@@ -2,7 +2,11 @@
 rm -f B073*
 ls > /tmp/prelist
 #hfbsm B073 varian073bcs2006 2009 105 '13:00:00' 2009 105 13:00:20 1
+# these should err
+hfbsm NULL varian073bcs2006 2009 105 '13:00:00' 2009 105 13:01:00 1
+hfbsm B073 NULL 2009 105 '13:00:00' 2009 105 13:01:00 1
+# this should be OK
 hfbsm B073 varian073bcs2006 2009 105 '13:00:00' 2009 105 13:01:00 1
 ls > /tmp/postlist
 diff /tmp/prelist /tmp/postlist
-head B073.ALL_01.[lr].txt
+head -3 B073.ALL_01.[lr].txt

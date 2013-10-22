@@ -6,7 +6,7 @@ Date: 2013-10-21
 Author: Andrew J. Barbour
 Maintainer: Andrew J. Barbour <andy.barbour@gmail.com>
 License: GPL (>= 2)
-SystemRequirements: awk, csh, python
+SystemRequirements: awk, csh, python (>= 2.3)
 URL: http://abarbour.github.io/strain/ (dev) and
     http://abarbour.github.io/pborepo for metadata.
     For processing of raw data,
@@ -28,19 +28,20 @@ Depends:
     stats,
     utils,
     graphics,
-    grDevices
+    grDevices,
+    lubridate (>= 1.3.0),
+    pborepo (>= 0.2013.247-1)
 Imports:
     corpcor,
-    Matrix,
-    pborepo
+    Matrix
 Collate:
+    'strain-package.R'
     'bsm.R'
     'calibrate.R'
     'getters.R'
     'misc.R'
     'rotations.R'
-    'strain-package.R'
     'strains.R'
+    'filtering.R'
     'utilities.R'
     'zzz.R'
-    'filtering.R'

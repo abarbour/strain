@@ -215,14 +215,19 @@ hfbsm.default <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:01:00"
   stopifnot(!is.null(sta16))
   #
   stopifnot(sampling==20 | sampling==1)
+  if (sampling==1){
+    message("minimum length returned is one hour")
+  } else {
+    message("minimum length returned is one minute")
+  }
 	#
 	func <- "hfbsm"
 	package.dir <- find.package('strain')
   hfbsm.dir <- pypath <- file.path(package.dir, func)
   script <- file.path(hfbsm.dir, func)
   
-  #results <- try(system(file.path(pypath,"bottle.py -py")))
-  #if (inherits(results, "try-error")) stop( "failed" )
+  pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE))
+  if (inherits(pyver, "try-error")) stop( "python version poke failed" )
   
   #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
 	#hfbsm B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00 [[1] pypath]
@@ -233,6 +238,50 @@ hfbsm.default <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:01:00"
                  sampling,
                  pypath)
   message(cmd)
-  results <- try(system(cmd)) #, intern=!verbose))
-  if (inherits(results, "try-error")) stop( "failed" )
+  results <- try(system(cmd, intern=TRUE))
+  if (inherits(results, "try-error")) stop( "hfbsm failed" )
+  #
+  names(results) <- c("StationNames","DTfrom","DTto","SamplingHz","URLsrc","linfi","rawfi")
+  toret <- list(cmd=cmd, res=results, py=pyver)
+  class(toret) <- "hfbsm.nfo"
+  return(toret)
+}
+
+#' @export
+load_hfbsm <- function(X, ...) UseMethod("load_hfbsm")
+#' @rdname hfbsm
+#' @export
+#' @method load_hfbsm hfbsm.nfo
+#' @S3method load_hfbsm hfbsm.nfo
+load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...){
+  #
+  otype <- match.arg(file.type)
+  file.type <- paste0(otype,"fi")
+  res <- object[["res"]]
+  stanames <- strsplit(res[["StationNames"]],"\t")[[1]]
+  sta4 <- stanames[1]
+  sta16 <- stanames[2]
+  samp <- strsplit(res[["SamplingHz"]],"\t")[[1]]
+  hz <- as.numeric(samp[3])
+  file <- res[[file.type]]
+  nas <- switch(file.type, rawfi="999999", linfi="999999.000000")
+  #
+  op <- options(digits.secs=3)
+  #
+  POS <- function(x, TZ="UTC"){
+    #2009-08-03T01:30:21
+    #2009-04-15T13:00:00.350000
+    lubridate::ymd_hms(x)
+  }
+  #
+  #print(file)
+  dat <- read.table(file, header=TRUE, colClasses=c("character",rep("numeric",5)), comment.char="#", na.strings=nas)
+  #
+  dat <- within(data=dat, expr={
+    Datetime <- POS(Datetime)
+    RelInd <- hz*RelInd
+    })
+  class(dat) <- c("hfbsm",otype)
+  on.exit(options(op))
+  return(invisible(dat))
 }

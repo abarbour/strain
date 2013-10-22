@@ -1,6 +1,6 @@
 #!/bin/csh
 #
-#
+# V 2.0 -- Oct 2013 -- AJB
 #
 if ( $#argv == 0 || $#argv < 8 ) then
     echo "Script to download high-frequency strain data"
@@ -45,14 +45,22 @@ else
     set pydir="."
 endif
 
+if ($name == "NULL") then
+    echo "invalid 4-char name"
+    exit 1
+endif
+
+if ($long == "NULL") then
+    echo "invalid 16-char name"
+    exit 1
+endif
+
 switch ($samp)
     case 1:
-        #echo "sampling is  1 Hz"
         set samp = "01"
         set sampflag = 1
         breaksw
     case 20:
-        #echo "sampling is 20 Hz"
         set samp = "20"
         set sampflag = 20
         breaksw
@@ -60,6 +68,7 @@ switch ($samp)
         echo "invalid sampling: must be 1 (one) or 20 (twenty)"
         exit 1
 endsw
+
 
 #echo $start | awk 'BEGIN{FS=":"}{print $1, $2, $3}'
 set shour=`echo $start | awk 'BEGIN{FS=":"}{print $1}' `
@@ -75,7 +84,10 @@ set esec=`echo $start | awk 'BEGIN{FS=":"}{print $3}' `
 # to prevent a full day
 set emin=`echo $syear $sday $shour $smin $eyear $eday $ehour $emin | awk '{if ($1==$5){ if ($2==$6){ if ($3==$7) { if ($4==$8){ $8=$4+1}}}}; printf"%02i",$8}'`
 
-echo "$name   $syear $sday $shour $smin --  $eyear  $eday $ehour $emin @  $samp Hz"
+echo "${name}	${long}"
+echo "	from	${syear} ${sday} ${shour} ${smin}"
+echo "	to	${eyear} ${eday} ${ehour} ${emin}"
+echo "	Hz	${samp}"
 
 #exit
 ########## get data ######################
@@ -264,6 +276,8 @@ set allfi="${name}.ALL_${samp}"
 rm -f ${allfi}.[rl].txt
 paste ${name}.CH[0-3]_${samp}.l.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%f\t%f\t%f\t%f\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.l.txt
 paste ${name}.CH[0-3]_${samp}.r.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%i\t%i\t%i\t%i\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.r.txt
+#
+ls ${allfi}.[lr].txt
 
 # cleanup
 rm ${name}.CH[0-3]_${samp}.[lr].txt 
