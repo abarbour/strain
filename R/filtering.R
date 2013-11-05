@@ -30,8 +30,8 @@ minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), ver
   y <- as.vector(y)
   scen <- match.arg(scenario)
   #
-  data("minphs", envir=strain:::.strnEnv) 
-  minphs <- strain:::.strnEnv$minphs
+  data("minphs", envir=.strnEnv) 
+  minphs <- get("minphs", envir=.strnEnv)
   by2 <- minphs$by2
   by3 <- minphs$by3
   by5 <- minphs$by5
@@ -115,11 +115,43 @@ decimate.default <- function(y, ndec=1, ...){
 #' @param y numeric
 #' @param wgts numeric; convolution filter weights
 #' @param ndec integer; the decimation factor
+#' @param frq integer; the sampling frequency of \code{y}
+#' @param plt logical; should the decimation stages be plotted?
+#' @param ... additional parameters to \code{\link{ts}} in the case \code{y}
+#' does not have class \code{'ts'}.
 #' @seealso \code{\link{decimate}}, \code{\link{filter}}, \code{\link{strain-filtering}}
 lpfilter <- function(y, wgts, ndec=1){
-  y <- as.vector(y)
+  #y <- as.ts(y)
   #print(c(length(y),length(wgts)))
-  y <- stats::filter(y, wgts, method="convolution", side=1)
-  return(decimate(y, ndec))
+  y <- decimate(stats::filter(y, wgts, method="convolution", side=1), ndec)
+  return(y)
 }
 
+#' @rdname lpfilter
+#' @export
+lpfilter.dec <- function(y, frq=1, ndecs=c(2,5), plt=FALSE, ...){
+  ndecs <- as.integer(ndecs)
+  stopifnot(all(ndecs %in% c(2,3,5)))
+  #
+  env <- new.env()
+  data('minphs', envir=env)
+  minphs <- get("minphs", envir=env)
+  weight.list <- list(NA, minphs$by2, minphs$by3, NA, minphs$by5)
+  #
+  yf. <- if (!is.ts(y)){
+    ts(y, frequency=frq, ...)
+  } else {
+    y
+  }
+  #
+  if (plt) plot(yf., type=ifelse(length(y)<5e3,"p","l"))
+  #
+  for (n in seq_along(ndecs)){
+    dec <- ndecs[n]
+    wgt <- weight.list[[dec]]
+    yf. <- lpfilter(yf., wgt, dec)
+    if (plt) lines(yf., col=(n+2), lwd=1+n/2)
+  }
+  attr(yf.,"ndec") <- ndecs
+  return(yf.)
+}
