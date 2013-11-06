@@ -278,7 +278,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
   hfbsm.dir <- pypath <- file.path(package.dir, func)
   script <- file.path(hfbsm.dir, func)
   
-  pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE))
+  pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE, ignore.stderr=TRUE))
   if (inherits(pyver, "try-error")) stop( "python version-poke failed" )
   
   #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
@@ -348,10 +348,9 @@ load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 #' @export
 #' @method load_hfbsm hfbsm.nfo
 #' @S3method load_hfbsm hfbsm.nfo
-load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...){
+load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop.on.empty=TRUE, ...){
   #
   success <- object[["cmd.success"]]
-  stopifnot(success)
   #
   cmd <- object[["cmd"]]
   res <- object[["results"]]
@@ -365,21 +364,34 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...)
   fis <- res[["files"]]
   fi <- fis[[file.type]]
   #
-  nas <- switch(file.type, rawfi="999999", linfi="999999.000000")
+  naval <- 999999
+  naval.c <- as.character(naval)
+  nas <- switch(file.type, rawfi=naval.c, linfi=paste0(naval.c,".000000"))
   #
   op <- options(digits.secs=3)
+  on.exit(options(op))
   #
   POS <- function(x, TZ="UTC"){
     #2009-08-03T01:30:21
     #2009-04-15T13:00:00.350000
-    lubridate::ymd_hms(x)
+    suppressWarnings(lubridate::ymd_hms(x))
   }
   #
   #print(file)
   dat <- read.table(fi, header=TRUE, 
                     colClasses=c("character", rep("numeric", 5)), 
                     comment.char="#", na.strings=nas)
-  X <- dat==999999
+  #
+  if (nrow(dat) == 0){
+    # the file exists, but is empty
+    if (stop.on.empty){
+      stop("file is empty")
+    } else {
+      dat[1,] <- naval
+    }
+  }
+  #
+  X <- dat==naval
   na.inds <- which(X, arr.ind=TRUE)
   dat[X] <- NA
   #
@@ -388,12 +400,13 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...)
                 RelInd = hz*dat[ , 'RelInd']
                 )
   #
+  #
   attr(toret, "sta4") <- sta4
   attr(toret, "file") <- fi
   attr(toret, "frequency") <- hz
   attr(toret, "cmd") <- cmd
   class(toret) <- c("hfbsm", otype)
-  on.exit(options(op))
+  
   return(invisible(toret))
 }
 
