@@ -16,7 +16,7 @@
 #' 
 #' @author Andrew J. Barbour <andy.barbour@@gmail.com> 
 #' 
-#' @import pborepo Matrix corpcor
+#' @import Matrix corpcor lubridate pborepo zoo
 # not needed since specified in DESCRIPTION-DEPENDS: stats utils graphics grDevices
 # @useDynLib strain
 #'

@@ -24,16 +24,13 @@ Description: Methods and classes for strainmeter data.
     Duncan Agnew's `PIASD'
     and John Langbein's `cleanstrain+' (see `URL' section).
 Depends:
-    R (>= 2.14.1),
-    stats,
-    utils,
-    graphics,
-    grDevices,
-    lubridate (>= 1.3.0),
-    pborepo (>= 0.2013.247-1)
+    R (>= 2.14.1)
 Imports:
+    Matrix,
     corpcor,
-    Matrix
+    lubridate (>= 1.3.0),
+    pborepo (>= 0.2013.247-1),
+    zoo
 Collate:
     'strain-package.R'
     'bsm.R'

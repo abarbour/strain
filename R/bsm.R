@@ -193,33 +193,85 @@ orientation_conventions <- function(){
 #' This uses a set of scripts included with the package, namely 
 #' \code{hfbsm},
 #' \code{bottle.py}, \code{bottle_merge.py}
+#' to create (from source files) high frequency PBO strain records
+#' for a station.
 #' 
-#' @param sta4
-#' @param sta16
-#' @param yst
-#' @param dst
-#' @param st
-#' @param yen
-#' @param den
-#' @param en
-#' @param sampling
-#' @param ...
+#' @param sta character; the station code.  This can be either
+#' the 4-character code (e.g., \code{'B084'}) of the
+#' 16-character code (e.g., \code{'pinyon084bcs2006'}) because it
+#' uses \code{\link{station_data}} with \code{use.regexp=TRUE}
+#' @param year numeric; the year of the start time of the desired dataset
+#' @param jday numeric; the Julian day (day of year) of the start time
+#' @param st character; the hour:minute:second of the start time
+#' @param duration numeric; the relative end-time, represented as the
+#' number of seconds from the start time.
+#' @param sampling numeric; the sampling rate of the downloaded data
+#' @param verbose logical; should messages and warnings be given?
+#' @param ... additional parameters 
+#' @param object an object having class \code{'hfbsm.nfo'}
+#' @param file.type character; the type of strain data to load: 
+#' \code{'lin'} for linearized data in units of linear uncorrected strain, or 
+#' \code{'raw'} for raw data in units of nonlinear counts. See [1] for
+#' more information.
+#' @param loc (unused)
+#' 
+#' @author A.J. Barbour.  
+#' \code{bottle.py} and \code{bottle_merge.py} were
+#' modified from those written by J.Wright (UNAVCO).
 #' @export
-hfbsm <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:00:00", sampling=1, ...) UseMethod("hfbsm")
+#' 
+#' @references [1] 
+#' Barbour, A. J., and Agnew, D. C. (2011). 
+#' Noise levels on plate boundary observatory borehole strainmeters in southern California. 
+#' \emph{Bulletin of the Seismological Society of America}.
+#' 101(5), 2453-2466. doi: 10.1785/0120110062
+#' 
+#' @return 
+#' \code{\link{hfbsm}}: A list with information about the results, having class \code{'hfbsm.nfo'}.
+#' 
+#' @family HF-Strain
+#' 
+#' @seealso \code{\link{strain-package}}
+#' 
+hfbsm <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...) UseMethod("hfbsm")
 #' @rdname hfbsm
 #' @method hfbsm default
 #' @S3method hfbsm default
-hfbsm.default <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:01:00", sampling=1, ...){
-	#
-  sta16 <- sta16_from_sta4(sta4, meta="bsm")
+hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...){
+  #
+  POS <- function(y, jd, hms, delta=0, tz="UTC"){
+    if (missing(hms)) hms <- "00:00:00"
+    delta <- as.integer(delta)
+    Dt <- as.POSIXct(strptime( paste(paste(y, jd, sep="-"), hms), format="%Y-%j %X", tz=tz)) + delta
+    list(year = strftime(Dt, "%Y", tz=tz),
+         jday = strftime(Dt, "%j", tz=tz),
+         hms = strftime(Dt, "%X", tz=tz)
+    )
+  }
+  #
+  stadat <- station_data(sta, meta="bsm", use.regexp=TRUE)
+  if (nrow(stadat)>1) stop("multiple stations found")
+  sta4 <- as.character(stadat$sta4)
+  stopifnot(!is.null(sta4))
+  sta16 <- as.character(stadat$sta16)
   stopifnot(!is.null(sta16))
   #
   stopifnot(sampling==20 | sampling==1)
-  if (sampling==1){
-    message("minimum length returned is one hour")
+  #
+  # the minus one accounts for the fact that
+  # if the times given to 'hfbsm' script
+  # are, say, "00:00:00" and "01:00:00" the result
+  # will be _through_ hour 1, an end at 1:59:59.
+  # this ensures (?) the end time will be "00:59:59" 
+  # instead, as the user expects it to be
+  min.dur <- ifelse(sampling==1, 3600, 60) - 1
+  duration <- if (missing(duration)){
+    min.dur
   } else {
-    message("minimum length returned is one minute")
+    max(min.dur, duration - 1)
   }
+  Dt.st <- POS(year, jday, st, 0)
+  Dt.en <- POS(year, jday, st, duration)
 	#
 	func <- "hfbsm"
 	package.dir <- find.package('strain')
@@ -227,43 +279,92 @@ hfbsm.default <- function(sta4, yst, dst, st="00:00:00", yen, den, en="00:01:00"
   script <- file.path(hfbsm.dir, func)
   
   pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE))
-  if (inherits(pyver, "try-error")) stop( "python version poke failed" )
+  if (inherits(pyver, "try-error")) stop( "python version-poke failed" )
   
   #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
 	#hfbsm B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00 [[1] pypath]
-  cmd <- sprintf("%s %s %s %04i %i '%s' %04i %i '%s' %i %s", 
-                 script, sta4, sta16, 
-                 yst, dst, st,
-                 yen, den, en,
-                 sampling,
-                 pypath)
-  message(cmd)
-  results <- try(system(cmd, intern=TRUE))
-  if (inherits(results, "try-error")) stop( "hfbsm failed" )
+  TSTR <- function(Dt) sprintf("%s %s '%s'", Dt$year, Dt$jday, Dt$hms)
+  t.st <- TSTR(Dt.st)
+  t.en <- TSTR(Dt.en)
+  cmd <- sprintf("%s %s %s %s %s %i %s", script, sta4, sta16, t.st, t.en, sampling, pypath)
   #
-  names(results) <- c("StationNames","DTfrom","DTto","SamplingHz","URLsrc","linfi","rawfi")
-  toret <- list(cmd=cmd, res=results, py=pyver)
+  # setup results
+  toret <- list(StationNames=list(sta4=NA, sta16=NA),
+                DT=list(from=NA, to=NA),
+                SamplingHz=NA,
+                URLsrc=NA,
+                files=list(rawfi=NA, linfi=NA))
+  # run the command
+  if (verbose) message(paste("assembling", sta4, "@", sampling, "Hz:", t.st, t.en, "..."))
+  results <- try(system(cmd, intern=TRUE))
+  success <- !inherits(results, "try-error")
+  #
+  if (success){
+    #
+    stanames <- strsplit(results[1],"\t")[[1]]
+    toret$StationNames$sta4 <- stanames[1]
+    toret$StationNames$sta16 <- stanames[2]
+    #
+    dtf <- strsplit(results[2],"\t")[[1]]
+    dtf <- dtf[3]
+    toret$DT$from <- dtf
+    dtt <- strsplit(results[3],"\t")[[1]]
+    dtt <- dtt[3]
+    toret$DT$to <- dtt
+    #
+    samp <- strsplit(results[4],"\t")[[1]]
+    hz <- as.numeric(samp[3])
+    toret$SamplingHz <- hz
+    #
+    # this is the length of results if only one file-url is returned
+    nres <- 7 
+    # this is the length of results as returned (can have more than one url)
+    nreso <- length(results)
+    # this is, then, the number of additional urls
+    nd <- nreso - nres
+    n <- 5
+    m <- n + nd
+    urls <- results[n:m]
+    toret$URLsrc <- urls
+    #
+    n <- m + 1
+    m <- n + 1
+    fis <- results[n:m]
+    # l then r... alphabetical!
+    toret$files$linfi <- fis[1]
+    toret$files$rawfi <- fis[2]
+  } else {
+    if (verbose) warning( paste("hfbsm script failed:", cmd) )
+  }
+  #
+  toret <- list(cmd=cmd, cmd.success=success, results=toret, python=pyver)
   class(toret) <- "hfbsm.nfo"
   return(toret)
 }
 
 #' @export
-load_hfbsm <- function(X, ...) UseMethod("load_hfbsm")
+load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 #' @rdname hfbsm
 #' @export
 #' @method load_hfbsm hfbsm.nfo
 #' @S3method load_hfbsm hfbsm.nfo
 load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...){
   #
+  success <- object[["cmd.success"]]
+  stopifnot(success)
+  #
+  cmd <- object[["cmd"]]
+  res <- object[["results"]]
+  stanames <- res[["StationNames"]]
+  sta4 <- stanames$sta4
+  sta16 <- stanames$sta16
+  hz <- res[["SamplingHz"]]
+  #
   otype <- match.arg(file.type)
   file.type <- paste0(otype,"fi")
-  res <- object[["res"]]
-  stanames <- strsplit(res[["StationNames"]],"\t")[[1]]
-  sta4 <- stanames[1]
-  sta16 <- stanames[2]
-  samp <- strsplit(res[["SamplingHz"]],"\t")[[1]]
-  hz <- as.numeric(samp[3])
-  file <- res[[file.type]]
+  fis <- res[["files"]]
+  fi <- fis[[file.type]]
+  #
   nas <- switch(file.type, rawfi="999999", linfi="999999.000000")
   #
   op <- options(digits.secs=3)
@@ -275,13 +376,52 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", ...)
   }
   #
   #print(file)
-  dat <- read.table(file, header=TRUE, colClasses=c("character",rep("numeric",5)), comment.char="#", na.strings=nas)
+  dat <- read.table(fi, header=TRUE, 
+                    colClasses=c("character", rep("numeric", 5)), 
+                    comment.char="#", na.strings=nas)
+  X <- dat==999999
+  na.inds <- which(X, arr.ind=TRUE)
+  dat[X] <- NA
   #
-  dat <- within(data=dat, expr={
-    Datetime <- POS(Datetime)
-    RelInd <- hz*RelInd
-    })
-  class(dat) <- c("hfbsm",otype)
+  toret <- list(srcdat=ts(dat[ , paste0("CH",0:3)], frequency=hz), 
+                Datetime = POS(dat[ , 'Datetime']),
+                RelInd = hz*dat[ , 'RelInd']
+                )
+  #
+  attr(toret, "sta4") <- sta4
+  attr(toret, "file") <- fi
+  attr(toret, "frequency") <- hz
+  attr(toret, "cmd") <- cmd
+  class(toret) <- c("hfbsm", otype)
   on.exit(options(op))
-  return(invisible(dat))
+  return(invisible(toret))
+}
+
+#' @rdname hfbsm
+#' @aliases plot.hfbsm
+#' @S3method plot hfbsm
+#' @method plot hfbsm
+#' @param x an object of class \code{'hfbsm'}
+#' @param sc numeric; a value to scale the strains by
+#' @param main character; the plot title
+#' @param xlab character; the x-axis label
+#' @param note character; a note to place in the bottom left corner
+#' @param v.markers numeric; dashed, red, vertical lines are drawn at these times
+#' @param frame.plot logical; should boxes be drawn around each frame?
+plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL, 
+                       frame.plot=FALSE, ...){
+  dat <-  sc*x$srcdat
+  if (!is.ts(dat)) dat <- ts(dat, frequency=attr(x, "frequency"))
+  if (is.null(main)) main <- attr(x, "file")
+  if (is.null(xlab)) xlab <- paste("Time, seconds from", as.character(x$Datetime[1]))
+  #
+  my.ts.panel <- function(x, col, bg, pch, type, ...){
+    lines(x, col = col, bg = bg, pch = pch, type = type, ...)
+    if (!is.null(v.markers)) abline(v=as.numeric(v.markers), col="red", lty=2, lwd=1.5)
+  }
+  plot.ts(dat, main=main, xlab=xlab, frame.plot=frame.plot, 
+          oma.multi = c(6, 1.2, 5, 1.2), las=1, panel=my.ts.panel, ...)
+  #if (!is.null(v.markers)) abline(v=as.numeric(v.markers), col="red", lty=2, lwd=1.5)
+  mtext(attr(x, "sta4"), adj=0, line=1)
+  if (!is.null(note)) mtext(note, adj=0, side=1, line=2.7, cex=0.9, font=3)
 }

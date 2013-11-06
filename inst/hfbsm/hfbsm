@@ -1,6 +1,17 @@
 #!/bin/csh
 #
-# V 2.0 -- Oct 2013 -- AJB
+# Download and assemble high frequency borehole strain
+# data from source files
+#
+# Wishlist
+# 	* convert to non-csh script (python?)
+# Notes
+# 	* If output is added, separate information by tabs
+# 	  and change results interpreter inside R-func hfbsm
+#
+# Versions
+#
+#	2.0 -- Oct 2013 -- AJB
 #
 if ( $#argv == 0 || $#argv < 8 ) then
     echo "Script to download high-frequency strain data"
