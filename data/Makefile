@@ -1,10 +1,13 @@
-all:
-	make clean
-	make get
-	make min
-min:
-	rr minphs.R
-get:
-	cp /Users/abarbour/dbase/stations/calib/*.rda .
+all: minphs.rda clean
+
+minphs.rda: r.minphs dec2 dec3 dec5
+	rr r.minphs s
+
+#get:
+	#cp /Users/abarbour/dbase/stations/calib/*.rda .
+	#
+	## now part of the pborepo pkg
+	#
+	#
 clean:
-	rm -f *.rda *.Rout .RData
+	rm -f *.Rout .RData

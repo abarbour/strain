@@ -6,4 +6,4 @@ inst
 vignettes
 data/Makefile
 data/dec?
-data/minphs.R*
+data/r.*

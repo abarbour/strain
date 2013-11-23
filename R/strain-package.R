@@ -111,29 +111,3 @@ constants <- function(do.str=TRUE){
 #' @docType data
 #' @format A list with filter weights by decimation factor
 NULL
-
-##   calibration coeffs:
-#
-#' @title Roeloffs (2010) tidal calibration coefficients
-#' @name roel10
-#' @docType data
-#' @format A list with dataframes with calibration coefficients by station
-NULL
-
-#' @title PBO (un)official tidal calibration coefficients
-#' @name pbou
-#' @docType data
-#' @format A list with dataframes with calibration coefficients by station
-NULL
-
-#' @title Hodgkinson et al (2013) tidal calibration coefficients
-#' @name hodg13
-#' @docType data
-#' @format A list with dataframes with calibration coefficients by station
-NULL
-
-#' @title Grant (2010) surface-wave calibration coefficients
-#' @name grant10
-#' @docType data
-#' @format A list with dataframes with calibration coefficients by station
-NULL
