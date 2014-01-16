@@ -3,11 +3,10 @@
 \alias{calibMatrix.default}
 \title{Return a calibration matrix, inverted or not}
 \usage{
-  calibMatrix(MC, ...)
+calibMatrix(MC, ...)
 
-  \method{calibMatrix}{default} (MC, MD = NULL, MH = NULL,
-    axis_deg = 0, delta_deg = 0, invert = FALSE,
-    verbose = TRUE, ...)
+\method{calibMatrix}{default}(MC, MD = NULL, MH = NULL, axis_deg = 0,
+  delta_deg = 0, invert = FALSE, verbose = TRUE, ...)
 }
 \arguments{
   \item{MC}{numeric;}
@@ -26,17 +25,17 @@
   \item{...}{additional parameters}
 }
 \description{
-  Return a calibration matrix, inverted or not
+Return a calibration matrix, inverted or not
 }
 \details{
-  The argument \code{MC} may be a matrix 4with three
-  columns representing \code{MC}, \code{MD}, and \code{MH}
-  respectively.  If that's the case, any arguments given
-  for \code{MD}, and \code{MH} are ignored.
+The argument \code{MC} may be a matrix 4with three columns
+representing \code{MC}, \code{MD}, and \code{MH}
+respectively.  If that's the case, any arguments given for
+\code{MD}, and \code{MH} are ignored.
 
-  Coefficients are in the form presented by Roeloffs 2010.
+Coefficients are in the form presented by Roeloffs 2010.
 
-  The pseudo-inverse is computed using
-  \code{corpcor::pseudoinverse} with default tolerances.
+The pseudo-inverse is computed using
+\code{corpcor::pseudoinverse} with default tolerances.
 }
 

@@ -5,19 +5,17 @@
 \alias{plot.hfbsm}
 \title{Assemble high-frequency strain data}
 \usage{
-  hfbsm(sta, year, jday, st = "00:00:00", duration,
-    sampling = 1, verbose = TRUE, ...)
+hfbsm(sta, year, jday, st = "00:00:00", duration, sampling = 1,
+  verbose = TRUE, ...)
 
-  \method{hfbsm}{default} (sta, year, jday,
-    st = "00:00:00", duration, sampling = 1,
-    verbose = TRUE, ...)
+\method{hfbsm}{default}(sta, year, jday, st = "00:00:00", duration,
+  sampling = 1, verbose = TRUE, ...)
 
-  \method{load_hfbsm}{hfbsm.nfo} (object,
-    file.type = c("lin", "raw"), loc = ".", ...)
+\method{load_hfbsm}{hfbsm.nfo}(object, file.type = c("lin", "raw"),
+  loc = ".", stop.on.empty = TRUE, ...)
 
-  \method{plot}{hfbsm} (x, sc = 1, main = NULL,
-    xlab = NULL, note = NULL, v.markers = NULL,
-    frame.plot = FALSE, ...)
+\method{plot}{hfbsm}(x, sc = 1, main = NULL, xlab = NULL, note = NULL,
+  v.markers = NULL, frame.plot = FALSE, ...)
 }
 \arguments{
   \item{sta}{character; the station code.  This can be
@@ -74,30 +72,30 @@
   each frame?}
 }
 \value{
-  \code{\link{hfbsm}}: A list with information about the
-  results, having class \code{'hfbsm.nfo'}.
+\code{\link{hfbsm}}: A list with information about the
+results, having class \code{'hfbsm.nfo'}.
 }
 \description{
-  Assemble high-frequency strain data
+Assemble high-frequency strain data
 }
 \details{
-  This uses a set of scripts included with the package,
-  namely \code{hfbsm}, \code{bottle.py},
-  \code{bottle_merge.py} to create (from source files) high
-  frequency PBO strain records for a station.
+This uses a set of scripts included with the package,
+namely \code{hfbsm}, \code{bottle.py},
+\code{bottle_merge.py} to create (from source files) high
+frequency PBO strain records for a station.
 }
 \author{
-  A.J. Barbour. \code{bottle.py} and \code{bottle_merge.py}
-  were modified from those written by J.Wright (UNAVCO).
+A.J. Barbour. \code{bottle.py} and \code{bottle_merge.py}
+were modified from those written by J.Wright (UNAVCO).
 }
 \references{
-  [1] Barbour, A. J., and Agnew, D. C. (2011). Noise levels
-  on plate boundary observatory borehole strainmeters in
-  southern California. \emph{Bulletin of the Seismological
-  Society of America}. 101(5), 2453-2466. doi:
-  10.1785/0120110062
+[1] Barbour, A. J., and Agnew, D. C. (2011). Noise levels
+on plate boundary observatory borehole strainmeters in
+southern California. \emph{Bulletin of the Seismological
+Society of America}. 101(5), 2453-2466. doi:
+10.1785/0120110062
 }
 \seealso{
-  \code{\link{strain-package}}
+\code{\link{strain-package}}
 }
 

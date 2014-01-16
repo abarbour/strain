@@ -5,14 +5,13 @@
 \alias{principals.lsm3}
 \title{Calculate principal strains}
 \usage{
-  principals(S, ...)
+principals(S, ...)
 
-  \method{principals}{default} (A, B, alpha,
-    is.radians = TRUE)
+\method{principals}{default}(A, B, alpha, is.radians = TRUE)
 
-  principals.lsm3(S, ...)
+\method{principals}{lsm3}(S, ...)
 
-  principals.lsm2(S, ...)
+\method{principals}{lsm2}(S, ...)
 }
 \arguments{
   \item{S}{strain information}
@@ -20,16 +19,16 @@
   \item{...}{additional parameters}
 }
 \description{
-  Strainmeters are generally designed to resemble common
-  strain-gauge rosette configurations to simplify gauge
-  combinations.
+Strainmeters are generally designed to resemble common
+strain-gauge rosette configurations to simplify gauge
+combinations.
 }
 \details{
-  If there are only two components of the LSM the angle of
-  maximum shear cannot be solved for.
+If there are only two components of the LSM the angle of
+maximum shear cannot be solved for.
 
-  The calculation is based on 2-D Mohr's circle with the
-  1-axis being normal and the 2-axis being shear.
+The calculation is based on 2-D Mohr's circle with the
+1-axis being normal and the 2-axis being shear.
 }
 \section{Rosette classifications}{
   \itemize{ \item{BSM}{T-Delta} \item{LSM-3}{Rectangular
@@ -37,7 +36,7 @@
   \item{LSM-2}{Rectangular two-gauge \eqn{90^{\circ}}} }
 }
 \references{
-  Meir, J.H. (19XX),"Strain Rosettes" , in XX, pp. 412,
-  edited by Altamani 19XX
+Meir, J.H. (19XX),"Strain Rosettes" , in XX, pp. 412,
+edited by Altamani 19XX
 }
 

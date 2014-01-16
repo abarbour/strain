@@ -3,9 +3,9 @@
 \alias{dilatation.default}
 \title{Calculate vertical and dilatational strain from horizontal tensor strains}
 \usage{
-  dilatation(E11, E22, nu, ...)
+dilatation(E11, E22, nu, ...)
 
-  \method{dilatation}{default} (E11, E22, nu, ...)
+\method{dilatation}{default}(E11, E22, nu, ...)
 }
 \arguments{
   \item{E11}{numeric; 1-axis strain}
@@ -17,7 +17,7 @@
   \item{...}{additional parameters}
 }
 \description{
-  Calculate vertical and dilatational strain from
-  horizontal tensor strains
+Calculate vertical and dilatational strain from horizontal
+tensor strains
 }
 

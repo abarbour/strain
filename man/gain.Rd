@@ -3,10 +3,9 @@
 \alias{gain.default}
 \title{Gain correction}
 \usage{
-  gain(X, gap = NULL, ref.strn = FALSE, ...)
+gain(X, gap = NULL, ref.strn = FALSE, ...)
 
-  \method{gain}{default} (X, gap = NULL, ref.strn = FALSE,
-    ...)
+\method{gain}{default}(X, gap = NULL, ref.strn = FALSE, ...)
 }
 \arguments{
   \item{X}{numeric; gauge strains}
@@ -23,6 +22,6 @@
   \item{...}{additional parameters}
 }
 \description{
-  Gain correction
+Gain correction
 }
 

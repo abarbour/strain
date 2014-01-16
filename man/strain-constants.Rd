@@ -3,30 +3,44 @@
 \alias{constants}
 \alias{strain-constants}
 \title{Constants used as defaults}
-\format{List of 3
+\format{\preformatted{List of 3
  $ Poisson    :List of 3
+  ..$ nu  : num 0.25
+  ..$ nu_u: num 0.333
+  ..$ VpVs: num 1.73
  $ conversions:List of 2
- $ bsm        :List of 5}
+  ..$ to_radians  : num 0.0175
+  ..$ from_radians: num 57.3
+ $ bsm        :List of 5
+  ..$ R                    : num 1e+08
+  ..$ diam                 : num 0.087
+  ..$ gaps                 : num [1:2] 1e-04 2e-04
+  ..$ relative_orientations: num [1:4] 0 -60 60 30
+  ..$ gauge_names          :List of 3
+  .. ..$ pbo : num [1:4] 0 1 2 3
+  .. ..$ hodg: num [1:4] 1 2 3 4
+  .. ..$ ext : num [1:4] 2 1 0 3
+}}
 \usage{
-  .constants
+.constants
 
-  constants(do.str = TRUE)
+constants(do.str = TRUE)
 }
 \arguments{
   \item{do.str}{logical; should the structure be printed?}
 }
 \description{
-  Constants used as defaults
+Constants used as defaults
 }
 \details{
-  The helper function \code{\link{constants}} shows (the
-  structure of, optionally) and returns \code{.constants}.
+The helper function \code{\link{constants}} shows (the
+structure of, optionally) and returns \code{.constants}.
 
-  The following constants are assumed \describe{
-  \item{Poisson's ratios}{ (Poisson solid)} }
+The following constants are assumed \describe{
+\item{Poisson's ratios}{ (Poisson solid)} }
 }
 \seealso{
-  \code{\link{strain}}
+\code{\link{strain}}
 }
 \keyword{datasets}
 

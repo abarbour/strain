@@ -3,9 +3,9 @@
 \alias{max_shear.default}
 \title{Calculate maximum horizontal shear from horizontal tensor strains}
 \usage{
-  max_shear(E11, E22, E12, ...)
+max_shear(E11, E22, E12, ...)
 
-  \method{max_shear}{default} (E11, E22, E12, ...)
+\method{max_shear}{default}(E11, E22, E12, ...)
 }
 \arguments{
   \item{E11}{numeric; 1-axis strain}
@@ -17,7 +17,7 @@
   \item{...}{additional parameters}
 }
 \description{
-  Calculate maximum horizontal shear from horizontal tensor
-  strains
+Calculate maximum horizontal shear from horizontal tensor
+strains
 }
 

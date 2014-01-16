@@ -3,14 +3,14 @@
 \alias{is.calibrated.default}
 \title{Test whether strain is calibrated}
 \usage{
-  is.calibrated(X)
+is.calibrated(X)
 
-  \method{is.calibrated}{default} (X)
+\method{is.calibrated}{default}(X)
 }
 \arguments{
   \item{X}{object to test}
 }
 \description{
-  Test whether strain is calibrated
+Test whether strain is calibrated
 }
 

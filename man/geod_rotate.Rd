@@ -4,13 +4,12 @@
 \alias{geod_rotate2}
 \title{Transform tensor strains in a 1-2 system into an r-t system}
 \usage{
-  geod_rotate(E11, E22, E12, geodesic.deg = 0,
-    NsEwNw = FALSE)
+geod_rotate(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE)
 
-  geod_rotate2(BSM, geodesic.deg = 0, ...)
+geod_rotate2(BSM, geodesic.deg = 0, ...)
 
-  geod_rotate.default(E11, E22, E12, geodesic.deg = 0,
-    NsEwNw = FALSE)
+\method{geod_rotate}{default}(E11, E22, E12, geodesic.deg = 0,
+  NsEwNw = FALSE)
 }
 \arguments{
   \item{BSM}{numeric matrix with columns
@@ -28,12 +27,12 @@
   \item{...}{additional parameters}
 }
 \description{
-  \code{hand.rule} determines whether the rotation is
-  clockwise ("left") or--the default--anti-clockwise
-  ("right").
+\code{hand.rule} determines whether the rotation is
+clockwise ("left") or--the default--anti-clockwise
+("right").
 }
 \details{
-  \code{\link{geod_rotate2}} is a kludge for the moment, to
-  prove tensor strain rotations
+\code{\link{geod_rotate2}} is a kludge for the moment, to
+prove tensor strain rotations
 }
 

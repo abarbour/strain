@@ -6,11 +6,11 @@
 \alias{strain-getters}
 \title{Functions to get information about a \code{bsm} object.}
 \usage{
-  get_az(B)
+get_az(B)
 
-  get_station(B)
+get_station(B)
 
-  get_itype(B)
+get_itype(B)
 }
 \arguments{
   \item{B}{object with class\code{bsm}}
@@ -21,9 +21,9 @@
   \item{...}{additional arguments}
 }
 \description{
-  Functions to get information about a \code{bsm} object.
+Functions to get information about a \code{bsm} object.
 }
 \author{
-  A.J. Barbour <andy.barbour@gmail.com>
+A.J. Barbour <andy.barbour@gmail.com>
 }
 

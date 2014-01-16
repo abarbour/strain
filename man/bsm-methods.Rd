@@ -1,7 +1,7 @@
 \docType{methods}
 \name{bsm-methods}
-\alias{bsm_methods}
 \alias{bsm-methods}
+\alias{bsm_methods}
 \alias{calibMatrix.bsm}
 \alias{calibrate.bsm}
 \alias{extensions.bsm}
@@ -18,36 +18,34 @@
 \alias{strains.bsm}
 \title{Methods for borehole strainmeter (bsm) data}
 \usage{
-  print.bsm(x, ...)
+\method{print}{bsm}(x, ...)
 
-  \method{gaugeOrientations}{bsm} (B,
-    restrict.range = TRUE)
+\method{gaugeOrientations}{bsm}(B, restrict.range = TRUE)
 
-  \method{plot_orientations}{bsm} (angs, ...)
+\method{plot_orientations}{bsm}(angs, ...)
 
-  \method{is.calibrated}{bsm} (X)
+\method{is.calibrated}{bsm}(X)
 
-  \method{calibrate}{bsm} (B, ...)
+\method{calibrate}{bsm}(B, ...)
 
-  \method{calibMatrix}{bsm} (MC, ...)
+\method{calibMatrix}{bsm}(MC, ...)
 
-  \method{get_az}{bsm} (B)
+\method{get_az}{bsm}(B)
 
-  \method{get_station}{bsm} (B)
+\method{get_station}{bsm}(B)
 
-  \method{get_itype}{bsm} (B)
+\method{get_itype}{bsm}(B)
 
-  \method{rotate}{bsm} (X1, ...)
+\method{rotate}{bsm}(X1, ...)
 
-  geod_rotate.bsm()
+\method{geod_rotate}{bsm}()
 
-  \method{strains}{bsm} (B,
-    strn.type = c("gauge", "calib"), zero.fill.na = TRUE,
-    ...)
+\method{strains}{bsm}(B, strn.type = c("gauge", "calib"),
+  zero.fill.na = TRUE, ...)
 
-  \method{principals}{bsm} (S, ...)
+\method{principals}{bsm}(S, ...)
 
-  \method{extensions}{bsm} (S, ...)
+\method{extensions}{bsm}(S, ...)
 }
 \arguments{
   \item{x}{object of class \code{bsm}}
@@ -64,9 +62,9 @@
   with zero?}
 }
 \description{
-  Methods for borehole strainmeter (bsm) data
+Methods for borehole strainmeter (bsm) data
 }
 \author{
-  A.J. Barbour <andy.barbour@gmail.com>
+A.J. Barbour <andy.barbour@gmail.com>
 }
 

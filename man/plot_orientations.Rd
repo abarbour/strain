@@ -3,12 +3,11 @@
 \alias{plot_orientations.default}
 \title{Plot the orientations of the instrument gauges.}
 \usage{
-  plot_orientations(angs, gauge.labels = seq_along(angs),
-    name = "", opar = TRUE, ...)
+plot_orientations(angs, gauge.labels = seq_along(angs), name = "",
+  opar = TRUE, circle.n = 30, ...)
 
-  \method{plot_orientations}{default} (angs,
-    gauge.labels = seq_along(angs), name = "", opar = TRUE,
-    ...)
+\method{plot_orientations}{default}(angs, gauge.labels = seq_along(angs),
+  name = "", opar = TRUE, circle.n = 30, ...)
 }
 \arguments{
   \item{angs}{numeric; angles of gauges to plot}
@@ -18,9 +17,13 @@
   \item{opar}{logical; should the original graphics
   parameter be set upon exit?}
 
+  \item{circle.n}{numeric; the degree discretization of the
+  reference circle. Setting this to zero will blank the
+  circle}
+
   \item{...}{additional parameters}
 }
 \description{
-  Plot the orientations of the instrument gauges.
+Plot the orientations of the instrument gauges.
 }
 

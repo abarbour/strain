@@ -99,26 +99,40 @@ gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
 #' @param angs numeric; angles of gauges to plot
 #' @param name character; add something to the title
 #' @param opar logical; should the original graphics parameter be set upon exit?
+#' @param circle.n numeric; the degree discretization of the reference circle.
+#' Setting this to zero will blank the circle
 #' @param ... additional parameters
 #' @export
-plot_orientations <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, ...) UseMethod("plot_orientations")
+plot_orientations <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, circle.n=30, ...) UseMethod("plot_orientations")
 #' @rdname plot_orientations
 #' @method plot_orientations default
 #' @S3method plot_orientations default
-plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, ...){
-  angs <- as.vector(angs)
+plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, circle.n=30, ...){
+  angs <- if (missing(angs)){
+    gauge.labels <- paste0("BS",c(0,3,2,1))
+    name <- "GTSM"
+    c(-30,0,30,90)
+  } else {
+    as.vector(angs)
+  }
   lims <- c(-1,1)
   sc <- 1.2
   if (opar){  
     oploc <- par(no.readonly = TRUE)
     par(mar=c(0,0,3,0), bty="n", xaxt="n", yaxt="n", pty="s")
+    on.exit(par(oploc))
   }
-  plot(circle(30, -angs[1]), 
-       main=sprintf("%s Gauge Orientations", name), asp=1,
-       xlab="", ylab="", col="gray", type="l", xlim=sc*lims, ylim=sc*lims, ...)
+  ccol <- ifelse(circle.n==0,NA,"gray")
+  bsmcirc <- circle(ifelse(circle.n==0, 5, abs(circle.n)), angs[1])
+  plot(bsmcirc, 
+       main=sprintf("%s Gauge Orientations", name), asp=1, col=NA, #ccol,
+       xlab="", ylab="", type="l", xlim=sc*lims, ylim=sc*lims, ...)
   stopifnot(length(angs)==length(gauge.labels))
-  invisible(mapply(FUN=plot_gaugeline, angs, gauge.label=as.character(gauge.labels), SIMPLIFY=T))
-  if (opar) on.exit(par(oploc))
+  toret <- invisible(sapply(seq_along(angs), 
+                   FUN=function(n, ...){plot_gaugeline(angs[n], as.character(gauge.labels[n]), ...)},
+                   ...
+                   ))
+  lines(bsmcirc, col=ccol, ...)
 }
 #' @rdname bsm-methods
 #' @method plot_orientations bsm
@@ -155,11 +169,13 @@ plot_gaugeline <- function(...) UseMethod("plot_gaugeline")
 #' @S3method plot_gaugeline default
 plot_gaugeline.default <- function(theta.deg=0, gauge.label=NULL, x=c(0,0), y=c(-1,1), ...){
   newxy <- rotate(x, y, theta.deg, "left")
-  gauge.label <- match.arg(gauge.label, c("","CH0","CH1","CH2","CH3"))
+  #gauge.label <- match.arg(gauge.label, c("","CH0","CH1","CH2","CH3"))
   lines(newxy, ...)
   newxy <- 1.17*newxy[2,]
-  text(newxy[1],newxy[2], sprintf("%s\n(%.1f)", gauge.label, theta.deg))
-  return(NULL)
+  if (!is.null(gauge.label)){
+    text(newxy[1], newxy[2], sprintf("%s\n(%.1f)", gauge.label, theta.deg))
+  }
+  return(invisible(newxy))
 }
 
 #' Remind, with ASCII art, the gauge numbering/naming conventions

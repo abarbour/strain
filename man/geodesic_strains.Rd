@@ -3,10 +3,9 @@
 \alias{geodesic_strains.default}
 \title{Transform tensor strains into geodesic reference frame (radial, transverse)}
 \usage{
-  geodesic_strains(E11, E22, E12, geod.deg = 0, ...)
+geodesic_strains(E11, E22, E12, geod.deg = 0, ...)
 
-  \method{geodesic_strains}{default} (E11, E22, E12,
-    geod.deg = 0, ...)
+\method{geodesic_strains}{default}(E11, E22, E12, geod.deg = 0, ...)
 }
 \arguments{
   \item{E11}{numeric; 1-axis strain}
@@ -22,10 +21,10 @@
   \code{\link{invariants}}}
 }
 \description{
-  Transform tensor strains into geodesic reference frame
-  (radial, transverse)
+Transform tensor strains into geodesic reference frame
+(radial, transverse)
 }
 \seealso{
-  \code{\link{invariants}}
+\code{\link{invariants}}
 }
 

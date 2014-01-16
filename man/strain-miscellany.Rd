@@ -4,7 +4,7 @@
 \alias{strain-miscellany}
 \title{Miscellaneous utilities}
 \usage{
-  circle(dtheta = 1, origin = 0)
+circle(dtheta = 1, origin = 0)
 }
 \arguments{
   \item{dtheta}{numeric; the disretization in degrees.}
@@ -13,14 +13,14 @@
   degrees}
 }
 \description{
-  Miscellaneous utilities
+Miscellaneous utilities
 
-  Return a unit circle.
+Return a unit circle.
 }
 \details{
-  Origin is for a right-hand (ccw) system.
+Origin is for a right-hand (ccw) system.
 }
 \author{
-  A.J. Barbour <andy.barbour@gmail.com>
+A.J. Barbour <andy.barbour@gmail.com>
 }
 

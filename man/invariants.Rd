@@ -3,9 +3,9 @@
 \alias{invariants.default}
 \title{Calculate strain invariants from horizontal tensor strains}
 \usage{
-  invariants(E11, E22, E12, nu, ...)
+invariants(E11, E22, E12, nu, ...)
 
-  \method{invariants}{default} (E11, E22, E12, ...)
+\method{invariants}{default}(E11, E22, E12, ...)
 }
 \arguments{
   \item{E11}{numeric; 1-axis strain}
@@ -20,10 +20,9 @@
   \code{\link{dilatation}}}
 }
 \description{
-  Calculate strain invariants from horizontal tensor
-  strains
+Calculate strain invariants from horizontal tensor strains
 }
 \seealso{
-  \code{\link{dilatation}} and \code{\link{max_shear}}
+\code{\link{dilatation}} and \code{\link{max_shear}}
 }
 

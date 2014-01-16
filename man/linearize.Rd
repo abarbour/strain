@@ -5,16 +5,14 @@
 \alias{unlinearize.default}
 \title{Make raw strain linear or linear strain raw}
 \usage{
-  linearize(X, gap = NULL, ref.strn = FALSE, ...)
+linearize(X, gap = NULL, ref.strn = FALSE, ...)
 
-  \method{linearize}{default} (X, gap = NULL,
-    ref.strn = FALSE, ...)
+\method{linearize}{default}(X, gap = NULL, ref.strn = FALSE, ...)
 
-  unlinearize(X, gap = NULL, constant = 0,
-    unref.strn = TRUE, ...)
+unlinearize(X, gap = NULL, constant = 0, unref.strn = TRUE, ...)
 
-  \method{unlinearize}{default} (X, gap = NULL,
-    constant = 0, unref.strn = TRUE, ...)
+\method{unlinearize}{default}(X, gap = NULL, constant = 0,
+  unref.strn = TRUE, ...)
 }
 \arguments{
   \item{X}{numeric; gauge strains}
@@ -31,6 +29,6 @@
   \item{...}{additional parameters}
 }
 \description{
-  Make raw strain linear or linear strain raw
+Make raw strain linear or linear strain raw
 }
 

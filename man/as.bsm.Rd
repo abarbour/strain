@@ -6,15 +6,14 @@
 \alias{is.raw_strain}
 \title{Convert an object to one with class \code{'bsm'}}
 \usage{
-  as.bsm(X, ...)
+as.bsm(X, ...)
 
-  \method{as.bsm}{default} (X, g0az = 0, station = "",
-    i.type = "GTSM", linearize = TRUE, cal.tbl = c("pbou"),
-    ...)
+\method{as.bsm}{default}(X, g0az = 0, station = "", i.type = "GTSM",
+  linearize = TRUE, cal.tbl = c("pbou"), ...)
 
-  is.bsm(X)
+is.bsm(X)
 
-  is.raw_strain(X)
+is.raw_strain(X)
 }
 \arguments{
   \item{X}{generic object}
@@ -34,6 +33,6 @@
   \item{...}{additional arguments}
 }
 \description{
-  Convert an object to one with class \code{'bsm'}
+Convert an object to one with class \code{'bsm'}
 }
 
