@@ -18,7 +18,7 @@
 \alias{strains.bsm}
 \title{Methods for borehole strainmeter (bsm) data}
 \usage{
-print.bsm(x, ...)
+\method{print}{bsm}(x, ...)
 
 \method{gaugeOrientations}{bsm}(B, restrict.range = TRUE)
 
