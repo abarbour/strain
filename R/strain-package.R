@@ -16,8 +16,9 @@
 #' 
 #' @author Andrew J. Barbour <andy.barbour@@gmail.com> 
 #' 
-#' @import Matrix corpcor lubridate pborepo zoo
-# not needed since specified in DESCRIPTION-DEPENDS: stats utils graphics grDevices
+#' @import corpcor lubridate pborepo zoo
+# Matrix adds considerable load time -- is it necessary?? If so, use @importFrom?
+#'
 # @useDynLib strain
 #'
 #' @references Grant, E. B. (2010),

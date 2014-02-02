@@ -114,7 +114,7 @@ decimate.default <- function(y, ndec=1, ...){
 #' @aliases lpdfilter
 #' @param y numeric
 #' @param wgts numeric; convolution filter weights
-#' @param ndec integer; the decimation factor
+#' @param ndec integer; the decimation factors to use
 #' @param frq integer; the sampling frequency of \code{y}
 #' @param plt logical; should the decimation stages be plotted?
 #' @param ... additional parameters to \code{\link{ts}} in the case \code{y}

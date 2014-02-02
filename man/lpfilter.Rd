@@ -13,7 +13,7 @@ lpfilter.dec(y, frq = 1, ndecs = c(2, 5), plt = FALSE, ...)
 
   \item{wgts}{numeric; convolution filter weights}
 
-  \item{ndec}{integer; the decimation factor}
+  \item{ndec}{integer; the decimation factors to use}
 
   \item{frq}{integer; the sampling frequency of \code{y}}
 

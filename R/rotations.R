@@ -50,30 +50,34 @@ rotate.bsm <- function(X1, ...){.NotYetImplemented()}
 
 #' Transform tensor strains in a 1-2 system into an r-t system
 #' 
-#' \code{hand.rule} determines whether the rotation is clockwise ("left")
-#' or--the default--anti-clockwise ("right").
-#' 
 #' @name geod_rotate
-#' @param BSM numeric matrix with columns \code{c("ar","gam1","gam2")}
 #' @param E11 numeric; 1-axis strain
 #' @param E22 numeric; 2-axis strain
 #' @param E12 numeric; shear strain
 #' @param geodesic.deg numeric; the azimuth of the geodesic (in degrees)
+#' @param NsEwNw unused??
+#' @param BSM numeric matrix with columns \code{c("ar","gam1","gam2")}
 #' @param ... additional parameters
 #' @export
-geod_rotate <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE) UseMethod("geod_rotate")
+geod_rotate <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE, ...) UseMethod("geod_rotate")
 #' @rdname geod_rotate
 #' @export
-# @S3method geod_rotate matrix
+#' @param check.columns logical; should column names be checked?
 #' @details \code{\link{geod_rotate2}} is a kludge for the moment, to
 #' prove tensor strain rotations
-geod_rotate2 <- function(BSM, geodesic.deg=0, ...){
+geod_rotate2 <- function(BSM, geodesic.deg=0, check.columns=FALSE, ...){
   #E <- strains(B, "calib")
-  E <- BSM
+  E <- as.matrix(BSM)
   cn <- colnames(E)
-  Ear <- E[,"ar"]
-  Ediff <- E[,"gam1"]
-  Eshr <- E[,"gam2"]
+  cn.req <- c("ar","gam1","gam2")
+  if (!all(cn %in% cn.req) & check.columns){
+    stop("Column names must be: ", paste(cn.req))
+  } else {
+    cn.req <- 1:3
+  }
+  Ear <- E[,cn.req[1]]
+  Ediff <- E[,cn.req[2]]
+  Eshr <- E[,cn.req[3]]
   E22 <- (Ear - Ediff) / 2
   E11 <- Ear - E22
   E12 <- Eshr/2
@@ -92,8 +96,8 @@ geod_rotate2 <- function(BSM, geodesic.deg=0, ...){
   # |E22|'  =  |  sst  cct   -sct   |*|E22|
   # |E12|'     | -sct  sct  cct-sst | |E12|
   #
-  MR <- matrix(c( cct,sst,sct, 
-                  sst,cct,-sct,
+  MR <- matrix(c( cct,sst,2*sct, 
+                  sst,cct,-2*sct,
                  -sct,sct,cct-sst), ncol=3, byrow=TRUE)
   E <- cbind(E11,E22,E12)
   E <- E %*% t(MR)  # so the result is columnar
@@ -115,7 +119,7 @@ geod_rotate.bsm <- function(){.NotYetImplemented()}
 
 #' @rdname geod_rotate
 #' @S3method geod_rotate default
-geod_rotate.default <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE){
+geod_rotate.default <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE, ...){
   E <- cbind(as.vector(E11), as.vector(E22), as.vector(E12))
   cn <- paste0("E",c("rr","tt","rt"))
   #

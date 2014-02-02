@@ -4,17 +4,14 @@
 \alias{geod_rotate2}
 \title{Transform tensor strains in a 1-2 system into an r-t system}
 \usage{
-geod_rotate(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE)
+geod_rotate(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE, ...)
 
-geod_rotate2(BSM, geodesic.deg = 0, ...)
+geod_rotate2(BSM, geodesic.deg = 0, check.columns = FALSE, ...)
 
 \method{geod_rotate}{default}(E11, E22, E12, geodesic.deg = 0,
-  NsEwNw = FALSE)
+  NsEwNw = FALSE, ...)
 }
 \arguments{
-  \item{BSM}{numeric matrix with columns
-  \code{c("ar","gam1","gam2")}}
-
   \item{E11}{numeric; 1-axis strain}
 
   \item{E22}{numeric; 2-axis strain}
@@ -24,12 +21,18 @@ geod_rotate2(BSM, geodesic.deg = 0, ...)
   \item{geodesic.deg}{numeric; the azimuth of the geodesic
   (in degrees)}
 
+  \item{NsEwNw}{unused??}
+
+  \item{BSM}{numeric matrix with columns
+  \code{c("ar","gam1","gam2")}}
+
   \item{...}{additional parameters}
+
+  \item{check.columns}{logical; should column names be
+  checked?}
 }
 \description{
-\code{hand.rule} determines whether the rotation is
-clockwise ("left") or--the default--anti-clockwise
-("right").
+Transform tensor strains in a 1-2 system into an r-t system
 }
 \details{
 \code{\link{geod_rotate2}} is a kludge for the moment, to
