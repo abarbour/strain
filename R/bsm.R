@@ -265,7 +265,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
     )
   }
   #
-  stadat <- station_data(sta, meta="bsm", use.regexp=TRUE)
+  stadat <- pborepo::station_data(sta, meta="bsm", use.regexp=TRUE)
   if (nrow(stadat)>1) stop("multiple stations found")
   sta4 <- as.character(stadat$sta4)
   stopifnot(!is.null(sta4))
@@ -358,6 +358,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
   return(toret)
 }
 
+#' @rdname hfbsm
 #' @export
 load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 #' @rdname hfbsm

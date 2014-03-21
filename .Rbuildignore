@@ -1,8 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+./*.txt
 NOBUILD
 src
-inst
 vignettes
 data/Makefile
 data/dec?

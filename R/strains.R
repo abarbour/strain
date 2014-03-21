@@ -177,11 +177,11 @@ principals.bsm <- function(S, ...){
 #' @rdname principals
 #' @method principals default
 #' @S3method principals default
-principals.default <- function(A, B, alpha, is.radians=TRUE){
-  Eps_max <- A + B
-  Eps_min <- A - B
+principals.default <- function(S, B, alpha, is.radians=TRUE, ...){
+  Eps_max <- S + B
+  Eps_min <- S - B
   if (!is.radians) alpha <- alpha * pi / 180
-  Shear_max <- A + B*cos(2*alpha)
+  Shear_max <- S + B*cos(2*alpha)
   Shear_azim <- - 2 * B * sin(2*alpha)
   return(data.frame(Emax=Eps_max, Emin=Eps_min, Shear=Shear_max, ShearAzimuth=Shear_azim))
 }

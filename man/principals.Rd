@@ -7,7 +7,7 @@
 \usage{
 principals(S, ...)
 
-\method{principals}{default}(A, B, alpha, is.radians = TRUE)
+\method{principals}{default}(S, B, alpha, is.radians = TRUE, ...)
 
 \method{principals}{lsm3}(S, ...)
 

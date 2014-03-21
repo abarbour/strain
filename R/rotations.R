@@ -115,7 +115,7 @@ geod_rotate2 <- function(BSM, geodesic.deg=0, check.columns=FALSE, ...){
 
 #' @rdname bsm-methods
 #' @S3method geod_rotate bsm
-geod_rotate.bsm <- function(){.NotYetImplemented()}
+geod_rotate.bsm <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE, ...){.NotYetImplemented()}
 
 #' @rdname geod_rotate
 #' @S3method geod_rotate default

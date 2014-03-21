@@ -1,6 +1,7 @@
 \name{hfbsm}
 \alias{hfbsm}
 \alias{hfbsm.default}
+\alias{load_hfbsm}
 \alias{load_hfbsm.hfbsm.nfo}
 \alias{plot.hfbsm}
 \title{Assemble high-frequency strain data}
@@ -10,6 +11,8 @@ hfbsm(sta, year, jday, st = "00:00:00", duration, sampling = 1,
 
 \method{hfbsm}{default}(sta, year, jday, st = "00:00:00", duration,
   sampling = 1, verbose = TRUE, ...)
+
+load_hfbsm(object, ...)
 
 \method{load_hfbsm}{hfbsm.nfo}(object, file.type = c("lin", "raw"),
   loc = ".", stop.on.empty = TRUE, ...)
