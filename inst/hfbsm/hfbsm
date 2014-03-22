@@ -111,7 +111,11 @@ while ($year <= $eyear)
     while ($day <= $limitday )
         set day=`echo $day  | awk '{ printf "%03d\n", $1 }' `
         set  sy=`echo $year | awk '{ printf "%02d\n", $1-2000 }' `
-        set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
+	# NCEDC turned off raw storage shortly before the end of 2013 (WTF?!)
+        #set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
+	# IRIS is apparently still archiving data
+	#http://www.iris.edu/pbo/raw/bsm/
+	set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
         set tarfile="${name}.${year}${day}_${samp}.tar"
         echo ${repos}
         ftp -V ${repos}/${tarfile}
