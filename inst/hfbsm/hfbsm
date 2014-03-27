@@ -115,7 +115,8 @@ while ($year <= $eyear)
         #set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
 	# IRIS is apparently still archiving data
 	#http://www.iris.edu/pbo/raw/bsm/
-	set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
+	#will not work --> set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
+	set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
         set tarfile="${name}.${year}${day}_${samp}.tar"
         echo ${repos}
         ftp -V ${repos}/${tarfile}

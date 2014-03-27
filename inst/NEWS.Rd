@@ -7,7 +7,7 @@
 \newcommand{\CRANpkg}{\href{http://CRAN.R-project.org/package=#1}{\pkg{#1}}}
 %\code{} or \Code{}?
 
-\name{kitagawa}
+\name{strain}
 \title{News for package 'strain'}
 \encoding{UTF-8}
 
