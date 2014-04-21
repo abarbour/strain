@@ -93,9 +93,9 @@ is.calibrated.default <- function(X) attr(X, "straintype") == "calib"
 #' @param ... additional objects
 #' @export
 calibrate <- function(B, Cmat, invert=FALSE) UseMethod("calibrate")
+
 #' @rdname bsm-methods
-#' @method calibrate bsm
-#' @S3method calibrate bsm
+#' @export
 calibrate.bsm <- function(B, ...){
   G <- strains(B)
   Cmat <- calibMatrix(B)
@@ -105,12 +105,17 @@ calibrate.bsm <- function(B, ...){
   return(B)
 }
 #' @rdname calibrate
-#' @method calibrate default
-#' @S3method calibrate default
+#' @export
 calibrate.default <- function(B, Cmat, invert=FALSE){
-  if (invert) Cmat <- corpcor::pseudoinverse(Cmat)
+  if (invert) Cmat <- pinv(Cmat)
   E. <- Cmat %*% B
   return(E.)
+}
+
+#' @rdname calibrate
+#' @export
+pinv <- function(Cmat, ...){
+  zapsmall( corpcor::pseudoinverse(Cmat, ...) )
 }
 
 #' Return a calibration matrix, inverted or not

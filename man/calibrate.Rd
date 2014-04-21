@@ -1,11 +1,14 @@
 \name{calibrate}
 \alias{calibrate}
 \alias{calibrate.default}
+\alias{pinv}
 \title{Apply a calibration to strain data}
 \usage{
 calibrate(B, Cmat, invert = FALSE)
 
 \method{calibrate}{default}(B, Cmat, invert = FALSE)
+
+pinv(Cmat, ...)
 }
 \arguments{
   \item{B}{calibratee}
