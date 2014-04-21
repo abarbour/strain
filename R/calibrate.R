@@ -112,12 +112,6 @@ calibrate.default <- function(B, Cmat, invert=FALSE){
   return(E.)
 }
 
-#' @rdname calibrate
-#' @export
-pinv <- function(Cmat, ...){
-  zapsmall( corpcor::pseudoinverse(Cmat, ...) )
-}
-
 #' Return a calibration matrix, inverted or not
 #' 
 #' @details
