@@ -10,7 +10,7 @@
 calmat <- function(X, station, ...) UseMethod("calmat")
 #' @rdname calmat
 #' @method calmat default
-#' @S3method calmat default
+#' @export
 calmat.default <- function(X, station, ...){
   #message("A")
   if (missing(X)){
@@ -26,7 +26,7 @@ calmat.default <- function(X, station, ...){
 #' @rdname calmat
 .calmat <- function(X, ...) UseMethod(".calmat")
 #' @method .calmat cal.pbou
-#' @S3method .calmat cal.pbou
+#' @export
 .calmat.cal.pbou <- function(X, station, ...){
   X <- as.data.frame(unclass(X))
   sta <- NULL
@@ -44,7 +44,7 @@ calmat.default <- function(X, station, ...){
 }
 #' @rdname calmat
 #' @method .calmat cal.surf1
-#' @S3method .calmat cal.surf1
+#' @export
 .calmat.cal.surf1 <- .calmat.cal.pbou
 
 #' @rdname calmat
@@ -52,7 +52,7 @@ calmat.default <- function(X, station, ...){
 calmat_reshape <- function(X, ...) UseMethod("calmat_reshape")
 #' @rdname calmat
 #' @method calmat_reshape default
-#' @S3method calmat_reshape default
+#' @export
 calmat_reshape.default <- function(X, inv.type=NULL, coeff.names=c("S11","S21","S31","S41","S12","S22","S32","S42","S13","S23","S33","S43"), ...){
   stopifnot(!missing(X))
   inv <- NULL # to shutup checks
@@ -79,11 +79,11 @@ calmat_reshape.default <- function(X, inv.type=NULL, coeff.names=c("S11","S21","
 is.calibrated <- function(X) UseMethod("is.calibrated")
 #' @rdname bsm-methods
 #' @method is.calibrated bsm
-#' @S3method is.calibrated bsm
+#' @export
 is.calibrated.bsm <- function(X) !is.na(X$calmat)
 #' @rdname is.calibrated
 #' @method is.calibrated default
-#' @S3method is.calibrated default
+#' @export
 is.calibrated.default <- function(X) attr(X, "straintype") == "calib"
 
 #' Apply a calibration to strain data
@@ -136,7 +136,7 @@ calibrate.default <- function(B, Cmat, invert=FALSE){
 calibMatrix <- function(MC, ...) UseMethod("calibMatrix")
 #' @rdname bsm-methods
 #' @method calibMatrix bsm
-#' @S3method calibMatrix bsm
+#' @export
 calibMatrix.bsm <- function(MC, ...){
   sta <- get_station(MC)
   # get station
@@ -148,7 +148,7 @@ calibMatrix.bsm <- function(MC, ...){
 }
 #' @rdname calibMatrix
 #' @method calibMatrix default
-#' @S3method calibMatrix default
+#' @export
 calibMatrix.default <- function(MC, MD=NULL, MH=NULL, axis_deg=0, delta_deg=0, invert=FALSE, verbose=TRUE, ...){
   ##
   ## 

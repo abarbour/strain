@@ -36,7 +36,7 @@ gap_distance <- function(gap=NULL){
 gain <- function(X, gap=NULL, ref.strn=FALSE, ...) UseMethod("gain")
 #' @rdname gain
 #' @method gain default
-#' @S3method gain default
+#' @export
 gain.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   #
   # Apply linearization correction to bsm datum
@@ -75,7 +75,7 @@ gain.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
 linearize <- function(X, gap=NULL, ref.strn=FALSE, ...) UseMethod("linearize")
 #' @rdname linearize
 #' @method linearize default
-#' @S3method linearize default
+#' @export
 linearize.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   #
   # Apply linearization correction to bsm datum
@@ -105,7 +105,7 @@ linearize.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
 unlinearize <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...) UseMethod("unlinearize")
 #' @rdname linearize
 #' @method unlinearize default
-#' @S3method unlinearize default
+#' @export
 unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...){
   #
   # inverts linearized gauge strain to

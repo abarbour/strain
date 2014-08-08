@@ -34,7 +34,7 @@ print.bsm <- function(x, ...){
 as.bsm <- function(X, ...) UseMethod("as.bsm")
 #' @rdname as.bsm
 #' @method as.bsm default
-#' @S3method as.bsm default
+#' @export
 as.bsm.default <- function(X, 
                            g0az=0, 
                            station="", 
@@ -85,7 +85,7 @@ gaugeOrientations <- function(B, restrict.range=TRUE) UseMethod("gaugeOrientatio
 #' @rdname bsm-methods
 #' @param restrict.range logical; should the orientiations be plotted in appropriate uniaxial directions?
 #' @method gaugeOrientations bsm
-#' @S3method gaugeOrientations bsm
+#' @export
 gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
   ch0 <- get_az(B)
   ch1 <- ch0-60
@@ -106,7 +106,7 @@ gaugeOrientations.bsm <- function(B, restrict.range=TRUE){
 plot_orientations <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, circle.n=30, ...) UseMethod("plot_orientations")
 #' @rdname plot_orientations
 #' @method plot_orientations default
-#' @S3method plot_orientations default
+#' @export
 plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="", opar=TRUE, circle.n=30, ...){
   angs <- if (missing(angs)){
     gauge.labels <- paste0("BS",c(0,3,2,1))
@@ -136,7 +136,7 @@ plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="
 }
 #' @rdname bsm-methods
 #' @method plot_orientations bsm
-#' @S3method plot_orientations bsm
+#' @export
 plot_orientations.bsm <- function(angs, ...){
   B <- angs
   angs <- gaugeOrientations(B, restrict.range=TRUE)
@@ -166,7 +166,7 @@ plot_orientations.bsm <- function(angs, ...){
 plot_gaugeline <- function(...) UseMethod("plot_gaugeline")
 #' @rdname plot_gaugeline
 #' @method plot_gaugeline default
-#' @S3method plot_gaugeline default
+#' @export
 plot_gaugeline.default <- function(theta.deg=0, gauge.label=NULL, x=c(0,0), y=c(-1,1), ...){
   newxy <- rotate(x, y, theta.deg, "left")
   #gauge.label <- match.arg(gauge.label, c("","CH0","CH1","CH2","CH3"))
@@ -252,7 +252,7 @@ orientation_conventions <- function(){
 hfbsm <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...) UseMethod("hfbsm")
 #' @rdname hfbsm
 #' @method hfbsm default
-#' @S3method hfbsm default
+#' @export
 hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...){
   #
   POS <- function(y, jd, hms, delta=0, tz="UTC"){
@@ -362,9 +362,8 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
 #' @export
 load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 #' @rdname hfbsm
-#' @export
 #' @method load_hfbsm hfbsm.nfo
-#' @S3method load_hfbsm hfbsm.nfo
+#' @export
 load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop.on.empty=TRUE, ...){
   #
   success <- object[["cmd.success"]]
@@ -429,8 +428,8 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
 
 #' @rdname hfbsm
 #' @aliases plot.hfbsm
-#' @S3method plot hfbsm
 #' @method plot hfbsm
+#' @export
 #' @param x an object of class \code{'hfbsm'}
 #' @param sc numeric; a value to scale the strains by
 #' @param main character; the plot title

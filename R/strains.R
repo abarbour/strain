@@ -10,7 +10,7 @@ strains <- function(B, ...) UseMethod("strains")
 #' @param strn.type character; the type of strain to retrieve
 #' @param zero.fill.na logical; should \code{NA}s be fille with zero?
 #' @method strains bsm
-#' @S3method strains bsm
+#' @export
 strains.bsm <- function(B, strn.type=c("gauge","calib"), zero.fill.na=TRUE, ...){
   strn.type <- match.arg(strn.type)
   if (strn.type=="gauge"){
@@ -36,8 +36,8 @@ strains.bsm <- function(B, strn.type=c("gauge","calib"), zero.fill.na=TRUE, ...)
 #' @export
 dilatation <- function(E11, E22, nu, ...) UseMethod("dilatation")
 #' @rdname dilatation
-#' @S3method dilatation default
 #' @method dilatation default
+#' @export
 dilatation.default <- function(E11, E22, nu, ...){
   if (missing(nu)) nu <- constants(FALSE)$Poisson$nu
   Ear <- as.matrix(E11+E22)
@@ -57,8 +57,8 @@ dilatation.default <- function(E11, E22, nu, ...){
 #' @export
 max_shear <- function(E11, E22, E12, ...) UseMethod("max_shear")
 #' @rdname max_shear
-#' @S3method max_shear default
 #' @method max_shear default
+#' @export
 max_shear.default <- function(E11, E22, E12, ...){
   Ediff <- as.matrix(E11-E22)
   Esh <- sqrt(Ediff/4 + E12**2)
@@ -76,8 +76,8 @@ max_shear.default <- function(E11, E22, E12, ...){
 #' @export
 invariants <- function(E11, E22, E12, nu, ...) UseMethod("invariants")
 #' @rdname invariants
-#' @S3method invariants default
 #' @method invariants default
+#' @export
 invariants.default <- function(E11, E22, E12, ...){
   Ekk <- dilatation(E11, E22, ...)
   if (!missing(E12)){
@@ -99,8 +99,8 @@ invariants.default <- function(E11, E22, E12, ...){
 #' @export
 geodesic_strains <- function(E11, E22, E12, geod.deg=0, ...) UseMethod("geodesic_strains")
 #' @rdname geodesic_strains
-#' @S3method geodesic_strains default
 #' @method geodesic_strains default
+#' @export
 geodesic_strains.default <- function(E11, E22, E12, geod.deg=0, ...){
   # rotate into radial/transverse
   ERT <- geod_rotate(E11, E22, E12, geod.deg, NsEwNw=FALSE)
@@ -145,7 +145,7 @@ geodesic_strains.default <- function(E11, E22, E12, geod.deg=0, ...){
 principals <- function(S, ...) UseMethod("principals")
 #' @rdname bsm-methods
 #' @method principals bsm
-#' @S3method principals bsm
+#' @export
 principals.bsm <- function(S, ...){
   S <- strains(S, strn.type="calib")
   #
@@ -176,7 +176,7 @@ principals.bsm <- function(S, ...){
 
 #' @rdname principals
 #' @method principals default
-#' @S3method principals default
+#' @export
 principals.default <- function(S, B, alpha, is.radians=TRUE, ...){
   Eps_max <- S + B
   Eps_min <- S - B
@@ -187,13 +187,15 @@ principals.default <- function(S, B, alpha, is.radians=TRUE, ...){
 }
 
 #' @rdname principals 
-#' @S3method principals lsm3
+#' @method principals lsm3
+#' @export
 principals.lsm3 <- function(S, ...){
   .NotYetImplemented()
 }
 
 #' @rdname principals 
-#' @S3method principals lsm2
+#' @method principals lsm2
+#' @export
 principals.lsm2 <- function(S, ...){
   .NotYetImplemented()
 }
@@ -209,8 +211,8 @@ principals.lsm2 <- function(S, ...){
 #' @export
 extensions <- function(S, orientations=c(0,45,90)) UseMethod("extensions")
 #' @rdname extensions
-#' @S3method extensions default
 #' @method extensions default
+#' @export
 extensions.default <- function(S, orientations=c(0,45,90)){
   orientations <- sort(unique(strain_azimuth(orientations)))
   S <- as.matrix(S)
@@ -230,8 +232,8 @@ extensions.default <- function(S, orientations=c(0,45,90)){
   return(E)
 }
 #' @rdname bsm-methods
-#' @S3method extensions bsm
 #' @method extensions bsm
+#' @export
 extensions.bsm <- function(S, ...){
   stopifnot(is.calibrated(S))
   S <- strains(S, strn.type="calib")

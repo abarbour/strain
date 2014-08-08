@@ -25,7 +25,7 @@ NULL
 minfilt <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), verbose=TRUE) UseMethod("minfilt")
 #' @rdname strain-filtering
 #' @method minfilt default
-#' @S3method minfilt default
+#' @export
 minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), verbose=TRUE){
   y <- as.vector(y)
   scen <- match.arg(scenario)
@@ -78,7 +78,7 @@ minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), ver
 decimate <- function(y, ndec=1, ...) UseMethod("decimate")
 #' @rdname decimate
 #' @method decimate ts
-#' @S3method decimate ts
+#' @export
 decimate.ts <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)
@@ -93,7 +93,7 @@ decimate.ts <- function(y, ndec=1, ...){
 }
 #' @rdname decimate
 #' @method decimate default
-#' @S3method decimate default
+#' @export
 decimate.default <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)

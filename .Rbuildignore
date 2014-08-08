@@ -7,3 +7,4 @@ vignettes
 data/Makefile
 data/dec?
 data/r.*
+^packrat/

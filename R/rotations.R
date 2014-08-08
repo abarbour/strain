@@ -17,7 +17,8 @@
 #' @export
 rotate <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")) UseMethod("rotate")
 #' @rdname rotate
-#' @S3method rotate default
+#' @method rotate default
+#' @export
 rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")){
   ##
   ## 2D rotation
@@ -45,7 +46,7 @@ rotate.default <- function(X1, X2=NULL, theta.deg=0, hand.rule=c("right","left")
 }
 #' @rdname bsm-methods
 #' @method rotate bsm
-#' @S3method rotate bsm
+#' @export
 rotate.bsm <- function(X1, ...){.NotYetImplemented()}
 
 #' Transform tensor strains in a 1-2 system into an r-t system
@@ -114,11 +115,13 @@ geod_rotate2 <- function(BSM, geodesic.deg=0, check.columns=FALSE, ...){
 }
 
 #' @rdname bsm-methods
-#' @S3method geod_rotate bsm
+#' @method geod_rotate bsm
+#' @export
 geod_rotate.bsm <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE, ...){.NotYetImplemented()}
 
 #' @rdname geod_rotate
-#' @S3method geod_rotate default
+#' @method geod_rotate default
+#' @export
 geod_rotate.default <- function(E11, E22, E12, geodesic.deg=0, NsEwNw=FALSE, ...){
   E <- cbind(as.vector(E11), as.vector(E22), as.vector(E12))
   cn <- paste0("E",c("rr","tt","rt"))

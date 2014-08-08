@@ -15,7 +15,7 @@ NULL
 get_az <- function(B) UseMethod("get_az")
 #' @rdname bsm-methods
 #' @method get_az bsm
-#' @S3method get_az bsm
+#' @export
 get_az.bsm <- function(B){
   aXi <- attributes(B)$g0az
   if (is.null(aXi)){
@@ -30,7 +30,7 @@ get_az.bsm <- function(B){
 get_station <- function(B) UseMethod("get_station")
 #' @rdname bsm-methods
 #' @method get_station bsm
-#' @S3method get_station bsm
+#' @export
 get_station.bsm <- function(B){
   aXi <- attributes(B)$station
   if (is.null(aXi)){
@@ -45,7 +45,7 @@ get_station.bsm <- function(B){
 get_itype <- function(B) UseMethod("get_itype")
 #' @rdname bsm-methods
 #' @method get_itype bsm
-#' @S3method get_itype bsm
+#' @export
 get_itype.bsm <- function(B){
   aXi <- attributes(B)$i.type
   if (is.null(aXi)){
