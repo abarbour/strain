@@ -1,4 +1,4 @@
 strain
 ======
 
-Tools for working with geodetic strainmeter data in R.
+R tools for working with strainmeter and pore-fluid pressure data

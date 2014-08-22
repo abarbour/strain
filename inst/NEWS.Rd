@@ -11,6 +11,12 @@
 \title{News for package 'strain'}
 \encoding{UTF-8}
 
+\section{CHANGES in strain VERSION 0.2-1 (2013-08-22)}{
+  \itemize{
+    \item Things have improved much since first version.
+    Now the code includes (untested) Coulomb stress calculations.
+  }
+}
 \section{CHANGES in strain VERSION 0.1-1 (2013-07-01)}{
   \itemize{
     \item First version, a very crude one at that.
