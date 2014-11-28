@@ -2,12 +2,39 @@ README
 /Users/abarbour/kook.processing/R/dev/packages/strain/NOBUILD/bin/pbo
 Creation date:	Fri Oct 18 14:07:06 PDT 2013
 
-bottle.py*	  <-- bottle-file decoder
-bottle_merge.py*  <-- bottle-file decoder/merger
-
 get_20sps.csh*	<-- is now 'hfbsm'
 get_1sps.csh*   <-- is now incorporated into 'hfbsm'
 
 get_l2.csh*
 get_lf.csh*
 rdstrain.pl*
+
+01.test_01hz*
+20.test_20hz*
+30.canal*
+
+Bottle files for playing with:
+	Bott1.20
+	Bott2.20
+	Bott3.20
+
+hfbsm*
+	makes:
+	txt files with bsm data, and profiling info:
+		
+		prof.bottle
+		prof.bottlemerge
+
+		which can be viewed with
+
+		(> sudo easy_install cprofilev)
+		> cprofilev prof.bottle
+		(then navigate to http://localhost:4000)
+	
+	needs:
+
+	bottlefile.py*	  <-- bottle-file decoder
+	bottlefile_merge.py*  <-- bottle-file merger
+
+
+setup.py	<-- Cythonization

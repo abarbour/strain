@@ -1,18 +1,15 @@
 LOC=../../NOBUILD/bin/pbo
 HFB=${LOC}/hfbsm
-BOT=${LOC}/bottle.py
-BOTMRG=${LOC}/bottle_merge.py
+BOT=${LOC}/bottlefile.py
+BOTMRG=${LOC}/bottlefile_merge.py
 
-all:
-	make -i hfbsm
-	make -i bottle.py
-	make -i bottle_merge.py
+all: hfbsm bottlefile.py bottlefile_merge.py
 
 hfbsm: $(HFB)
 	cp $(HFB) .
 
-bottle.py: $(BOT)
+bottlefile.py: $(BOT)
 	cp $(BOT) .
 
-bottle_merge.py: $(BOTMRG)
+bottlefile_merge.py: $(BOTMRG)
 	cp $(BOTMRG) .

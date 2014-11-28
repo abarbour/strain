@@ -1,21 +1,42 @@
 #!/bin/csh
 #
-# V 2.0 -- Oct 2013 -- AJB
+# Download and assemble high frequency borehole strain
+# data from source files held by IRIS-DMC
+#
+# Wishlist
+# 	* convert to non-csh script (python?)
+# Notes
+# 	* If more echo-type output is added to this script, separate
+# 	  the information by tabs, and change results interpreter inside
+# 	  R-func strain::hfbsm.
+#
+# Versions
+#
+#	2.1 -- Nov 2014 -- AJB -- fixed repository change and csh octal issue
+#	2.0 -- Oct 2013 -- AJB
 #
 if ( $#argv == 0 || $#argv < 8 ) then
-    echo "Script to download high-frequency strain data"
-    echo ""
-    echo "	$0 Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [[samp] .py_dir]"
-    echo "  e.g.	$0 B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00"
     echo
-    echo "This should produce, for example:"
+    echo " Script to download high-frequency strain data"
+    echo
+    echo "	$0 Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [[samp] .py_dir]"
+    echo "  e.g.	$0 B073 varian073bcs2006 2009 105 13:00:00  2009 105 16:00:00"
+    echo "      	$0 B084 pinyon084bcs2006 2010 094 '23:00:00'  2010 095 '00:59:59' 1"
+    echo "      	$0 B073 varian073bcs2006 2009 105 13:00:00  2009 105 13:01:00 20"
+    echo
+    echo "      This should produce, for example:"
     echo "	  B073.ALL_20.r.txt  raw        data for 4 channels (nanostrain)"
     echo "	  B073.ALL_20.l.txt  linearized data for 4 channels (nanostrain)"
-    echo "	  B073.2009105_20.tar"
-    echo ""
+    #echo "	  B073.2009105_20.tar"
+    echo "	  prof.bottle,prof.bottlemerge"
+    echo
     echo "	** defaults to 20Hz, but will accept 1 Hz as first optional arg **"
+    echo
     echo "	** assumes bottle*.py are under '.', but will accept dir as second optional arg **"
-    echo ""
+    echo
+    echo "      ** Code writes cProfile binary files for testing for bottlenecks;"
+    echo "      see https://docs.python.org/2/library/profile.html#module-cProfile"
+    echo
     exit 0
 endif
 
@@ -69,13 +90,14 @@ switch ($samp)
         exit 1
 endsw
 
+# Strip down the input args ...
+#
+set edaytest=`echo ${sday} | awk '{print $1*1}'`
 
-#echo $start | awk 'BEGIN{FS=":"}{print $1, $2, $3}'
 set shour=`echo $start | awk 'BEGIN{FS=":"}{print $1}' `
 set smin=`echo $start | awk 'BEGIN{FS=":"}{print $2}' `
 set ssec=`echo $start | awk 'BEGIN{FS=":"}{print $3}' `
 
-#echo $tend | awk 'BEGIN{FS=":"}{print $1, $2, $3}'
 set ehour=`echo $tend | awk 'BEGIN{FS=":"}{print $1}' `
 set emin=`echo $tend | awk 'BEGIN{FS=":"}{print $2}' `
 set esec=`echo $start | awk 'BEGIN{FS=":"}{print $3}' `
@@ -89,47 +111,80 @@ echo "	from	${syear} ${sday} ${shour} ${smin}"
 echo "	to	${eyear} ${eday} ${ehour} ${emin}"
 echo "	Hz	${samp}"
 
-#exit
+# Python command, with profiling
+#  (> sudo easy_install cprofilev)
+#  > cprofilev prof.bottlemerge
+#  (Navigate to http://localhost:4000)
+set PYCMD_BM="python -m cProfile -o prof.bottlemerge ${pydir}/bottlefile_merge.py"
+# -t turns on timestamps
+# can set -b if system is big-endian
+set PYCMD_B="python -m cProfile -o prof.bottle ${pydir}/bottlefile.py -t"
+#
+
 ########## get data ######################
 
+# some dummy values because of csh interpreting leading zeros as octal chars -- wtf!?
+set dummy=100
+set dummy2=1000
+
 set year=$syear
-set day=$sday
+set day=`echo $sday | awk '{print $1*1}'`
+@ day = ${day} + ${dummy2}
 set limitday=366
+@ limitday = ${limitday} + ${dummy2}
+
 while ($year <= $eyear)
-    if ($year == $eyear) set limitday=$eday
+    if ($year == $eyear) set limitday=`echo $eday ${dummy2} | awk '{print $1 + $2}'`
     while ($day <= $limitday )
-        set day=`echo $day  | awk '{ printf "%03d\n", $1 }' `
-        set  sy=`echo $year | awk '{ printf "%02d\n", $1-2000 }' `
-        set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
-        set tarfile="${name}.${year}${day}_${samp}.tar"
+        set fiday=`echo ${day} ${dummy2} | awk '{ printf "%03i\n", $1 - $2}' `
+        set  sy=`echo $year | awk '{ printf "%02i\n", $1-2000 }' `
+	#
+	# NCEDC turned off raw storage shortly before the end of 2013 (WTF?!)
+        #  set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
+	#
+	# IRIS is apparently still archiving data
+	#  http://www.iris.edu/pbo/raw/bsm/
+	#  will not work --> set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
+	#
+	# Nov 26 2014 -- changed again?? Working OK now.
+	#  set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
+	#
+	set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+	#                 ^^^^ this location may change
+	#
+        set tarfile="${name}.${year}${fiday}_${samp}.tar"
         echo ${repos}
         ftp -V ${repos}/${tarfile}
         tar -xf ${tarfile}
         rm -f ${tarfile}
         @ day ++
     end
-    set day=1
+    set day=${dummy2}
+    @ day ++
     @ year ++
 end
 
-#exit
 ## unpack day and hour tars , select files inside start and end times ##
 
-
 set year=$syear
-set day=$sday
+set day=`echo $sday | awk '{print $1*1}'`
+@ day = ${day} + ${dummy}
 set limitday=366
+@ limitday = ${limitday} + ${dummy}
 set hour=$shour
-set limith=23
+@ hour = ${hour} + ${dummy}
+set limithour=23
+@ limithour = ${limithour} + ${dummy}
 while ($year <= $eyear)
-    if ($year == $eyear) set limitday=$eday
+    if ($year == $eyear)  set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
     while ($day <= $limitday )
-        set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
-        set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
-        if ($day == $eday) set limith=$ehour
-        while ($hour <= $limith )
-            set hour=`echo $hour | awk '{ printf"%02d\n",$1}' `
-            set tfi="${name}${sy}${day}${hour}"
+        set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
+        set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
+        if ($day == ${edaytest}) set limithour=$ehour
+        while ($hour <= $limithour )
+            set fihour=`echo ${hour} ${dummy} | awk '{ printf"%02i\n",$1-$2}' `
+	    #echo ${name} ${sy} ${day} ${fiday} ${hour} ${fihour} ${dummy}
+            set tfi="${name}${sy}${fiday}${fihour}"
             if ( ${sampflag} == 1 ) then
                 tar -xf ${tfi}.tgz 
             else
@@ -137,10 +192,11 @@ while ($year <= $eyear)
             endif
             @ hour ++
         end
-        set hour=0;
+        set hour=${dummy};
         @ day ++
     end
-    set day=1
+    set day=${dummy}
+    @ day ++
     @ year ++
 end
 
@@ -148,12 +204,10 @@ if ( ${sampflag} == 1 ) then
     rm -f ${name}???????.tgz
 else
     rm -f ${name}???????_${samp}.tar
-
     ## unpack minute files ##
-
     foreach file (`ls ${name}?????????_${samp}.tgz`)
         tar xfz $file
-        rm $file
+        rm -f $file
     end
 endif
 
@@ -162,79 +216,91 @@ endif
 if ( ${sampflag} == 1 ) then
     foreach c (CH0 CH1 CH2 CH3)
         set year=$syear
-        set day=$sday
-        set limitday=366
-        set hour=$shour
-        set limith=23
-        set flag=0
-        while ($year <= $eyear)
-            if ($year == $eyear) set limitday=$eday
-            while ($day <= $limitday )
-                set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
-                set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
-                if ($day == $eday) set limith=$ehour
-                while ($hour <= $limith)
-                    set hour=`echo $hour | awk '{ printf"%02d\n",$1   }' `
-                    set cfi="${name}${sy}${day}${hour}${c}"
-                    #echo "${cfi}"
-                    if ( $flag == 0 ) then
+	set day=`echo $sday | awk '{print $1*1}'`
+	@ day = ${day} + ${dummy}
+	set limitday=366
+	@ limitday = ${limitday} + ${dummy}
+	set hour=$shour
+	@ hour = ${hour} + ${dummy}
+	set limithour=23
+	@ limithour = ${limithour} + ${dummy}
+        set flag=2
+	#echo ${c}
+        while ( $year <= $eyear )
+            if ( $year == $eyear ) set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
+            while ( $day <= ${limitday} )
+		set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
+                set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
+                if ($fiday == ${edaytest}) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
+                while ( $hour <= ${limithour} )
+                    set fihour=`echo ${hour} ${dummy} | awk '{ printf"%02i\n",$1 - $2}' `
+                    set cfi="${name}${sy}${fiday}${fihour}${c}"
+                    if ( ${flag} == 2 ) then
                         cp ${cfi} ${name}.${c}_${samp}
                         set flag=1
                     else
-                        ${pydir}/bottle_merge.py ${name}.${c}_${samp} ${cfi} ${name}.${c}_${samp}
+                        ${PYCMD_BM} ${name}.${c}_${samp} ${cfi} ${name}.${c}_${samp}
                     endif
                     @ hour ++
                 end
                 @ day ++
-                set hour=0
+                set hour=${dummy}
             end
             @ year ++
-            set day=1
+            set day=${dummy}
+	    @ day ++
         end
     end 
-    rm -f ${name}???????CH?
+    rm -f ${name}???????CH? | cat
 else
     foreach c (CH0 CH1 CH2 CH3)
         set year=$syear
-        set day=$sday
-        set limitday=366
-        set hour=$shour
-        set limithour=23
+	set day=`echo $sday | awk '{print $1*1}'`
+	@ day = ${day} + ${dummy}
+	set limitday=366
+	@ limitday = ${limitday} + ${dummy}
+	set hour=$shour
+	@ hour = ${hour} + ${dummy}
+	set limithour=23
+	@ limithour = ${limithour} + ${dummy}
         set min=$smin
+	@ min = ${min} + ${dummy}
         set limitmin=59
-        set flag=0
-        while ($year <= $eyear)
-            if ($year == $eyear) set limitday=$eday
-            while ($day <= $eday )
-                set day=`echo $day  | awk '{ printf "%03d\n", $1      }' `
+	@ limitmin = ${limitmin} + ${dummy}
+        set flag=2
+	#echo ${c}
+        while ( $year <= $eyear )
+            if ( $year == $eyear ) set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
+            while ( $day <= ${limitday} )
+                set fiday=`echo $day ${dummy} | awk '{ printf "%03d\n", $1 - $2}' `
                 set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
-                if ($day == $eday) set limithour=$ehour
-                while ($hour <= $limithour)
-                    set hour=`echo $hour | awk '{ printf"%02d\n",$1   }' `
-                    if ($hour == $ehour) set limitmin=$emin
-                    while ($min < $limitmin )
-                        set min=`echo $min | awk '{ printf "%02d\n", $1 }'`
-                        set sfi="${name}${sy}${day}${hour}${min}${c}_${samp}"
-                        #echo "${sfi}"
-                        if ( $flag == 0 ) then
+                if ( $fiday == ${edaytest} ) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
+                while ( $hour <= ${limithour} )
+                    set fihour=`echo $hour ${dummy} | awk '{ printf"%02d\n",$1 - $2}' `
+                    if ( ${fihour} == ${ehour} ) set limitmin=`echo $emin ${dummy} | awk '{print $1 + $2}'`
+                    while ( ${min} < ${limitmin} )
+                        set fimin=`echo ${min} ${dummy} | awk '{ printf	"%02d\n", $1 - $2}'`
+                        set sfi="${name}${sy}${fiday}${fihour}${fimin}${c}_${samp}"
+                        if ( ${flag} == 2 ) then
                             cp ${sfi} {$name}.${c}_${samp}
                             set flag=1
                         else
-                            ${pydir}/bottle_merge.py ${name}.${c}_${samp} ${sfi} {$name}.${c}_${samp}
+                            ${PYCMD_BM} ${name}.${c}_${samp} ${sfi} ${name}.${c}_${samp}
                         endif
-                        @ min++	
+			@ min++ 
                     end
                     @ hour ++
-                    set min=0;
+                    set min=${dummy}
                 end
                 @ day ++
-                set hour=0
+                set hour=${dummy}
             end
             @ year ++
-            set day=1
+            set day=${dummy}
+	    @ day ++
         end
     end
-    rm -f ${name}?????????CH?_${samp}
+    rm -f ${name}?????????CH?_${samp} | cat
 endif
 
 ####### make ascii linearized data ##########
@@ -264,22 +330,24 @@ default:
 endsw
 
 foreach c (CH0 CH1 CH2 CH3)
+    # result is in nanostrain
     set botfi="${name}.${c}_${samp}"
-    ${pydir}/bottle.py -t ${botfi} > ${botfi}.r.txt
+    ${PYCMD_B} ${botfi} > ${botfi}.r.txt
     cat ${botfi}.r.txt | awk '{  di=($3/1e+8)/(1-($3/1e+8)) ; if (f == 0 && $3 != 999999)   {d0=di;f=1}  ; if (/999999/) printf ("%s %s	999999\n", $1, $2, $3) ; else printf("%s %s	%14.9f \n", $1,$2, ((di-d0)*'$gap'/0.087)*1e+9)  }' > ${botfi}.l.txt
-    rm -f ${botfi}
+    rm -f ${botfi} | cat
 end
 
 # make full files
 set allfi="${name}.ALL_${samp}"
 
-rm -f ${allfi}.[rl].txt
+rm -f ${allfi}.[rl].txt | cat
+#
 paste ${name}.CH[0-3]_${samp}.l.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%f\t%f\t%f\t%f\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.l.txt
 paste ${name}.CH[0-3]_${samp}.r.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%i\t%i\t%i\t%i\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.r.txt
 #
-ls ${allfi}.[lr].txt
+ls ${allfi}.[lr].txt | cat
 
 # cleanup
-rm ${name}.CH[0-3]_${samp}.[lr].txt 
+rm ${name}.CH[0-3]_${samp}.[lr].txt | cat
 
 exit 0

@@ -1,7 +1,7 @@
 #!/usr/bin/env python        
 #
 # 12 Jul 2006 --jrw  original
-# 18 Oct 2013 --AJB  modified
+# 28 Nov 2014 --AJB  modified
 
 import sys, os, datetime, struct
 
@@ -16,6 +16,13 @@ BTL_TYPE_TO_PACK = {0: 'h', 1: 'i', 2: 'f' }
 BTL_TYPE_TO_PRINT = {0: 'd', 1: 'd', 2: 'g' }
 
 #########################################################################
+
+class PBO_FileContentsError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 def write_bottle(filename, start, interval, num_pts, data_type, id, data, bigendian=False):
     """
     """
@@ -161,7 +168,6 @@ class Bottle:
     def read_data(self, print_it=False, timestamps=True):
         """
         """
-
 
         if print_it:
             if timestamps:

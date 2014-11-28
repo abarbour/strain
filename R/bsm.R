@@ -205,12 +205,13 @@ orientation_conventions <- function(){
 
 
 #' Assemble high-frequency strain data
+#' 
 #' @details
 #' This uses a set of scripts included with the package, namely 
-#' \code{hfbsm},
-#' \code{bottle.py}, \code{bottle_merge.py}
-#' to create (from source files) high frequency PBO strain records
-#' for a station.
+#' \code{hfbsm}, and the python scripts 
+#' \code{bottlefile.py} and \code{bottlefile_merge.py},
+#' to create (from the raw source files) high frequency PBO strain 
+#' records for each channel at a station.
 #' 
 #' @param sta character; the station code.  This can be either
 #' the 4-character code (e.g., \code{'B084'}) of the
@@ -220,8 +221,10 @@ orientation_conventions <- function(){
 #' @param jday numeric; the Julian day (day of year) of the start time
 #' @param st character; the hour:minute:second of the start time
 #' @param duration numeric; the relative end-time, represented as the
-#' number of seconds from the start time.
-#' @param sampling numeric; the sampling rate of the downloaded data
+#' number of seconds from the start time. If this is not specified, the
+#' script will set these to a length that won't cause too much processing
+#' time to elapse.
+#' @param sampling numeric; the sampling rate of the data to be downloaded
 #' @param verbose logical; should messages and warnings be given?
 #' @param ... additional parameters 
 #' @param object an object having class \code{'hfbsm.nfo'}
@@ -232,7 +235,7 @@ orientation_conventions <- function(){
 #' @param loc (unused)
 #' 
 #' @author A.J. Barbour.  
-#' \code{bottle.py} and \code{bottle_merge.py} were
+#' \code{bottlefile.py} and \code{bottlefile_merge.py} were
 #' modified from those written by J.Wright (UNAVCO).
 #' @export
 #' 
@@ -249,8 +252,28 @@ orientation_conventions <- function(){
 #' 
 #' @seealso \code{\link{strain-package}}
 #' 
+#' @examples
+#' \dontrun{
+#' # Download and assemble
+#' # 1-Hz
+#' res   <- hfbsm("B084", 2009, 215, "01:01:00", duration=1800, 1)
+#' # 20-Hz (takes much longer)
+#' res20 <- hfbsm("B084", 2009, 215, "01:01:00", duration=1800, 20)
+#' #
+#' # Load data
+#' dat <- load_hfbsm(res)
+#' dat20 <- load_hfbsm(res20)
+#' #
+#' # Plot
+#' plot(dat)
+#' plot(dat20)
+#' #
+#' # Find out where the scripts live:
+#' file.path(find.package('strain'), "hfbsm")
+#' }
+#' 
 hfbsm <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...) UseMethod("hfbsm")
-#' @rdname hfbsm
+
 #' @method hfbsm default
 #' @export
 hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...){
@@ -290,6 +313,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
   Dt.en <- POS(year, jday, st, duration)
 	#
 	func <- "hfbsm"
+  # ^^^ name of the script doing the assembly (will call python codes as needed)
 	package.dir <- find.package('strain')
   hfbsm.dir <- pypath <- file.path(package.dir, func)
   script <- file.path(hfbsm.dir, func)
@@ -346,7 +370,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
     n <- m + 1
     m <- n + 1
     fis <- results[n:m]
-    # l then r... alphabetical!
+    # txt files (l then r)... alphabetical!
     toret$files$linfi <- fis[1]
     toret$files$rawfi <- fis[2]
   } else {
@@ -361,6 +385,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
 #' @rdname hfbsm
 #' @export
 load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
+
 #' @rdname hfbsm
 #' @method load_hfbsm hfbsm.nfo
 #' @export

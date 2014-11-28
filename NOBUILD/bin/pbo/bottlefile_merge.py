@@ -1,13 +1,20 @@
 #! /usr/bin/python
 #
 # 29 Nov 2006 --jrw  original
-# 18 Oct 2013 --AJB  modified
+# 28 Nov 2014 --AJB  modified
 
 import sys, os, shutil
-#sys.path.append("/usr/local/pbo/bin")
-import bottle
+
+import bottlefile as bottle
 
 #########################################################################
+
+class PBO_FileContentsError(Exception):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
 class BottleMerge:
 
     #####################################################################
@@ -146,8 +153,9 @@ if __name__ == '__main__':
     (opts, args) = parser.parse_args()
 
     try:
-        if len(args) != 3:
-            parser.error("incorrect number of arguments")
+	if len(args) != 3:
+	    parser.error("incorrect number of arguments")
+	    parser.print_help()
         else:
             m = BottleMerge()
             m.bottle_merge(args[0], args[1], args[2], \
