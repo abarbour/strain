@@ -358,6 +358,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
     #
     # this is the length of results if only one file-url is returned
     nres <- 7 
+    # ^^^ this will change if more echo content is returned from hfbsm (if it's changed)
     # this is the length of results as returned (can have more than one url)
     nreso <- length(results)
     # this is, then, the number of additional urls
