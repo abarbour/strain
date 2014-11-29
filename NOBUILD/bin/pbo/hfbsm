@@ -27,7 +27,6 @@ if ( $#argv == 0 || $#argv < 8 ) then
     echo "      This should produce, for example:"
     echo "	  B073.ALL_20.r.txt  raw        data for 4 channels (nanostrain)"
     echo "	  B073.ALL_20.l.txt  linearized data for 4 channels (nanostrain)"
-    #echo "	  B073.2009105_20.tar"
     echo "	  prof.bottle,prof.bottlemerge"
     echo
     echo "	** defaults to 20Hz, but will accept 1 Hz as first optional arg **"
@@ -133,31 +132,31 @@ set day=`echo $sday | awk '{print $1*1}'`
 set limitday=366
 @ limitday = ${limitday} + ${dummy2}
 
-while ($year <= $eyear)
-    if ($year == $eyear) set limitday=`echo $eday ${dummy2} | awk '{print $1 + $2}'`
-    while ($day <= $limitday )
-        set fiday=`echo ${day} ${dummy2} | awk '{ printf "%03i\n", $1 - $2}' `
-        set  sy=`echo $year | awk '{ printf "%02i\n", $1-2000 }' `
-	#
-	# NCEDC turned off raw storage shortly before the end of 2013 (WTF?!)
-        #  set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
-	#
-	# IRIS is apparently still archiving data
-	#  http://www.iris.edu/pbo/raw/bsm/
-	#  will not work --> set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
-	#
-	# Nov 26 2014 -- changed again?? Working OK now.
-	#  set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
-	#
-	set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
-	#                 ^^^^ this location may change
-	#
-        set tarfile="${name}.${year}${fiday}_${samp}.tar"
-        echo ${repos}
-        ftp -V ${repos}/${tarfile}
-        tar -xf ${tarfile}
-        rm -f ${tarfile}
-        @ day ++
+while ( $year <= $eyear )
+    if ( $year == $eyear ) set limitday=`echo $eday ${dummy2} | awk '{print $1 + $2}'`
+    while ( $day <= $limitday )
+		set fiday=`echo ${day} ${dummy2} | awk '{ printf "%03i\n", $1 - $2}' `
+		set  sy=`echo $year | awk '{ printf "%02i\n", $1-2000 }' `
+		#
+		# NCEDC turned off raw storage shortly before the end of 2013 (WTF?!)
+		#  set repos="ftp://www.ncedc.org/pub/pbo/strain/raw/bsm/${long}/${year}/${day}"
+		#
+		# IRIS is apparently still archiving data
+		#  http://www.iris.edu/pbo/raw/bsm/
+		#  will not work --> set repos="ftp://ftp.iris.edu/pub/pbo/raw/bsm/${long}/${year}/${day}"
+		#
+		# Nov 26 2014 -- changed again?? Working OK now.
+		#  set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
+		#
+		set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+		#                 ^^^^ this location may change
+		#
+		set tarfile="${name}.${year}${fiday}_${samp}.tar"
+		echo ${repos}
+		ftp -V ${repos}/${tarfile}
+		tar -xf ${tarfile}
+		rm -f ${tarfile}
+		@ day ++
     end
     set day=${dummy2}
     @ day ++
@@ -167,23 +166,24 @@ end
 ## unpack day and hour tars , select files inside start and end times ##
 
 set year=$syear
-set day=`echo $sday | awk '{print $1*1}'`
+set day=`echo ${sday} | awk '{print $1*1}'`
 @ day = ${day} + ${dummy}
 set limitday=366
 @ limitday = ${limitday} + ${dummy}
-set hour=$shour
+set hour=`echo ${shour} | awk '{print $1*1}'`
 @ hour = ${hour} + ${dummy}
 set limithour=23
 @ limithour = ${limithour} + ${dummy}
-while ($year <= $eyear)
-    if ($year == $eyear)  set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
-    while ($day <= $limitday )
+
+while ( $year <= $eyear )
+    if ( $year == $eyear )  set limitday=`echo ${eday} ${dummy} | awk '{print $1 + $2}'`
+    while ( $day <= $limitday )
         set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
         set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
-        if ($day == ${edaytest}) set limithour=$ehour
-        while ($hour <= $limithour )
+        if ( $day == ${edaytest} ) set limithour=$ehour
+        while ( $hour <= $limithour )
             set fihour=`echo ${hour} ${dummy} | awk '{ printf"%02i\n",$1-$2}' `
-	    #echo ${name} ${sy} ${day} ${fiday} ${hour} ${fihour} ${dummy}
+	    	#echo ${name} ${sy} ${day} ${fiday} ${hour} ${fihour} ${dummy}
             set tfi="${name}${sy}${fiday}${fihour}"
             if ( ${sampflag} == 1 ) then
                 tar -xf ${tfi}.tgz 
@@ -203,8 +203,8 @@ end
 if ( ${sampflag} == 1 ) then
     rm -f ${name}???????.tgz
 else
+	## unpack minute files ##
     rm -f ${name}???????_${samp}.tar
-    ## unpack minute files ##
     foreach file (`ls ${name}?????????_${samp}.tgz`)
         tar xfz $file
         rm -f $file
@@ -215,21 +215,21 @@ endif
 
 if ( ${sampflag} == 1 ) then
     foreach c (CH0 CH1 CH2 CH3)
-        set year=$syear
-	set day=`echo $sday | awk '{print $1*1}'`
-	@ day = ${day} + ${dummy}
-	set limitday=366
-	@ limitday = ${limitday} + ${dummy}
-	set hour=$shour
-	@ hour = ${hour} + ${dummy}
-	set limithour=23
-	@ limithour = ${limithour} + ${dummy}
-        set flag=2
-	#echo ${c}
+		set year=$syear
+		set day=`echo ${sday} | awk '{print $1*1}'`
+		@ day = ${day} + ${dummy}
+		set limitday=366
+		@ limitday = ${limitday} + ${dummy}
+		set hour=`echo ${shour} | awk '{print $1*1}'`
+		@ hour = ${hour} + ${dummy}
+		set limithour=23
+		@ limithour = ${limithour} + ${dummy}
+		set flag=2
+		#echo ${c}
         while ( $year <= $eyear )
-            if ( $year == $eyear ) set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
+            if ( $year == $eyear ) set limitday=`echo ${eday} ${dummy} | awk '{print $1 + $2}'`
             while ( $day <= ${limitday} )
-		set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
+				set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
                 set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
                 if ($fiday == ${edaytest}) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
                 while ( $hour <= ${limithour} )
@@ -251,24 +251,24 @@ if ( ${sampflag} == 1 ) then
 	    @ day ++
         end
     end 
-    rm -f ${name}???????CH? | cat
+    rm -f ${name}???????CH?
 else
     foreach c (CH0 CH1 CH2 CH3)
-        set year=$syear
-	set day=`echo $sday | awk '{print $1*1}'`
-	@ day = ${day} + ${dummy}
-	set limitday=366
-	@ limitday = ${limitday} + ${dummy}
-	set hour=$shour
-	@ hour = ${hour} + ${dummy}
-	set limithour=23
-	@ limithour = ${limithour} + ${dummy}
-        set min=$smin
-	@ min = ${min} + ${dummy}
-        set limitmin=59
-	@ limitmin = ${limitmin} + ${dummy}
-        set flag=2
-	#echo ${c}
+		set year=$syear
+		set day=`echo $sday | awk '{print $1*1}'`
+		@ day = ${day} + ${dummy}
+		set limitday=366
+		@ limitday = ${limitday} + ${dummy}
+		set hour=$shour
+		@ hour = ${hour} + ${dummy}
+		set limithour=23
+		@ limithour = ${limithour} + ${dummy}
+		set min=$smin
+		@ min = ${min} + ${dummy}
+		set limitmin=59
+		@ limitmin = ${limitmin} + ${dummy}
+		set flag=2
+		#echo ${c}
         while ( $year <= $eyear )
             if ( $year == $eyear ) set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
             while ( $day <= ${limitday} )
@@ -287,7 +287,7 @@ else
                         else
                             ${PYCMD_BM} ${name}.${c}_${samp} ${sfi} ${name}.${c}_${samp}
                         endif
-			@ min++ 
+					@ min++ 
                     end
                     @ hour ++
                     set min=${dummy}
@@ -300,7 +300,7 @@ else
 	    @ day ++
         end
     end
-    rm -f ${name}?????????CH?_${samp} | cat
+    rm -f ${name}?????????CH?_${samp}
 endif
 
 ####### make ascii linearized data ##########
@@ -333,21 +333,36 @@ foreach c (CH0 CH1 CH2 CH3)
     # result is in nanostrain
     set botfi="${name}.${c}_${samp}"
     ${PYCMD_B} ${botfi} > ${botfi}.r.txt
-    cat ${botfi}.r.txt | awk '{  di=($3/1e+8)/(1-($3/1e+8)) ; if (f == 0 && $3 != 999999)   {d0=di;f=1}  ; if (/999999/) printf ("%s %s	999999\n", $1, $2, $3) ; else printf("%s %s	%14.9f \n", $1,$2, ((di-d0)*'$gap'/0.087)*1e+9)  }' > ${botfi}.l.txt
-    rm -f ${botfi} | cat
+    cat ${botfi}.r.txt | awk '{  di=($3/1e+8)/(1-($3/1e+8)) ; if (f == 0 && $3 != 999999) {d0=di;f=1}; if (/999999/) printf ("%s %s	999999\n", $1, $2, $3) ; else printf("%s %s	%14.9f \n", $1,$2, ((di-d0)*'$gap'/0.087)*1e+9)  }' > ${botfi}.l.txt
+    rm -f ${botfi}
 end
 
 # make full files
 set allfi="${name}.ALL_${samp}"
 
-rm -f ${allfi}.[rl].txt | cat
 #
-paste ${name}.CH[0-3]_${samp}.l.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%f\t%f\t%f\t%f\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.l.txt
-paste ${name}.CH[0-3]_${samp}.r.txt | awk 'BEGIN{printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"}{printf"%sT%-15s  %-8g\t%i\t%i\t%i\t%i\n",$1,$2,NR,$3,$6,$9,$12}' >  ${allfi}.r.txt
+
+if ( -e ${allfi}.r.txt ) then 
+	## remove prior results ##
+	rm -f ${allfi}.[rl].txt
+endif
+ 
 #
-ls ${allfi}.[lr].txt | cat
+# Awk script to format the output nicely
+cat << XXX > /tmp/tmpawk.pp
+BEGIN{
+	printf"%26s  %-8s\tCH0\t\tCH1\t\tCH2\t\tCH3\n","Datetime","RelInd"
+}{
+	printf"%sT%-15s  %-8g\t%f\t%f\t%f\t%f\n",\$1,\$2,NR,\$3,\$6,\$9,\$12
+}
+XXX
+#
+paste ${name}.CH[0-3]_${samp}.l.txt | awk -f /tmp/tmpawk.pp >  ${allfi}.l.txt
+paste ${name}.CH[0-3]_${samp}.r.txt | awk -f /tmp/tmpawk.pp >  ${allfi}.r.txt
+
+ls ${allfi}.[lr].txt
 
 # cleanup
-rm ${name}.CH[0-3]_${samp}.[lr].txt | cat
+rm ${name}.CH[0-3]_${samp}.[lr].txt
 
 exit 0
