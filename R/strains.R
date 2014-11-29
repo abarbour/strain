@@ -39,7 +39,7 @@ dilatation <- function(E11, E22, nu, ...) UseMethod("dilatation")
 #' @method dilatation default
 #' @export
 dilatation.default <- function(E11, E22, nu, ...){
-  if (missing(nu)) nu <- constants(FALSE)$Poisson$nu
+  if (missing(nu)) nu <- strain.constants(FALSE)$Poisson$nu
   Ear <- as.matrix(E11+E22)
   sc <- -nu/(1-nu)
   Ezz <- sc*Ear
@@ -153,7 +153,7 @@ principals.bsm <- function(S, ...){
   #
   # The angle of maximum shear is relative to the angle
   # of the zeroth gauge.
-  E <- extensions(S, strain:::.constants$bsm.relative_orientations)
+  E <- extensions(S, strain:::.strainconstants$bsm.relative_orientations)
   e0 <- E[,1]
   e1 <- E[,2]
   e2 <- E[,3]

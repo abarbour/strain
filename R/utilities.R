@@ -18,7 +18,7 @@ NULL
 #' @param gap character; the type of gap
 #' @export
 gap_distance <- function(gap=NULL){
-  gaps <- strain:::.constants$bsm$gaps
+  gaps <- strain:::.strainconstants$bsm$gaps
   gap <- match.arg(gap, c("one","two"))
   switch(gap, one=gaps[1], two=gaps[2])
 }
@@ -48,10 +48,10 @@ gain.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   } else {
     gapd <- gap_distance(gap)
   }
-  diam <- strain:::.constants$bsm$diam
+  diam <- strain:::.strainconstants$bsm$diam
   #
   GAIN <- function(d, i.gap=gapd, i.diam=diam) {
-    dc <- strain:::.constants$bsm$R
+    dc <- strain:::.strainconstants$bsm$R
     D. <- d/dc
     C. <- i.gap/i.diam
     G. <- C. / (1 - D.)**2
@@ -87,10 +87,10 @@ linearize.default <- function(X, gap=NULL, ref.strn=FALSE, ...){
   } else {
     gapd <- gap_distance(gap)
   }
-  diam <- strain:::.constants$bsm$diam
+  diam <- strain:::.strainconstants$bsm$diam
   #
   LIN <- function(d, i.gap=gapd, i.diam=diam) {
-    dc <- strain:::.constants$bsm$R
+    dc <- strain:::.strainconstants$bsm$R
     D. <- d/dc
     C. <- i.gap/i.diam
     E. <- C. * D. / (1 - D.)
@@ -119,10 +119,10 @@ unlinearize.default <- function(X, gap=NULL, constant=0, unref.strn=TRUE, ...){
   } else {
     gapd <- gap_distance(gap)
   }
-  diam <- strain:::.constants$bsm$diam
+  diam <- strain:::.strainconstants$bsm$diam
   #
   UNLIN <- function(ld, ldc=constant, i.gap=gapd, i.diam=diam) {
-    dc <- strain:::.constants$bsm$R
+    dc <- strain:::.strainconstants$bsm$R
     E. <- ld + ldc
     d <- dc * i.diam * E. / (i.gap + i.diam*E.)
     return(d)

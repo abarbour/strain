@@ -56,9 +56,9 @@ NULL
 
 #' Constants used as defaults
 #' 
-#' @details The helper function \code{\link{constants}}
+#' @details The helper function \code{\link{strain.constants}}
 #' shows (the structure of, optionally)
-#' and returns \code{.constants}.
+#' and returns \code{.strainconstants}.
 #'
 #' The following constants are assumed
 #' \describe{
@@ -66,7 +66,7 @@ NULL
 #' }
 #' @name strain-constants
 #' @seealso \code{\link{strain}}
-.constants = list(
+.strainconstants = list(
   Poisson=list(
     nu=0.25,      #for a Poisson solid
     nu_u=1/3,
@@ -90,9 +90,9 @@ NULL
 #' @param do.str logical; should the structure be printed?
 #' @export
 # @example
-# constants()
-constants <- function(do.str=TRUE){
-  const <- strain:::.constants
+# strain.constants()
+strain.constants <- function(do.str=TRUE){
+  const <- strain:::.strainconstants
   if (do.str) str(const, comp.str = "++++++++\n\t", no.list=TRUE, digits.d = 9)
   return(invisible(const))
 }
