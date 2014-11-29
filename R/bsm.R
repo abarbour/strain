@@ -335,7 +335,7 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
                 URLsrc=NA,
                 files=list(rawfi=NA, linfi=NA))
   # run the command
-  if (verbose) message(paste("assembling", sta4, "@", sampling, "Hz:", t.st, t.en, "..."))
+  if (verbose) message(paste("assembling", sta4, "@", sampling, "Hz:", t.st, t.en, "(", duration, " sec )", "..."))
   results <- try(system(cmd, intern=TRUE))
   success <- !inherits(results, "try-error")
   #
