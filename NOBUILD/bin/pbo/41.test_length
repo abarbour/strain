@@ -1,9 +1,14 @@
 #!/bin/sh
 #
 # at the moment is looping to the end of the day, rather than to the expected
-# time.  Why?
+# time.  Why? <-- bad limit setting
+#
+# Appears to be OK now
+#
+#hfbsm B066 rockrd066bcn2007 2011 070 '06:01:38' 2011 070 '08:02:45' 20
 #
 hfbsm B066 rockrd066bcn2007 2011 070 '06:01:38' 2011 070 '08:02:45' 1
+#
 cat << XXX > tmp.r
 library(strain)
 x <- hfbsm(B066, 2011, 070, st='06:01:38', dur=7267)

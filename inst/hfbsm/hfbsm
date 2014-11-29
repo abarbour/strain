@@ -231,7 +231,7 @@ if ( ${sampflag} == 1 ) then
             while ( $day <= ${limitday} )
 				set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
                 set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
-                if ($fiday == ${edaytest}) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
+                if ($day == ${limitday}) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
                 while ( $hour <= ${limithour} )
                     set fihour=`echo ${hour} ${dummy} | awk '{ printf"%02i\n",$1 - $2}' `
                     set cfi="${name}${sy}${fiday}${fihour}${c}"
@@ -274,10 +274,10 @@ else
             while ( $day <= ${limitday} )
                 set fiday=`echo $day ${dummy} | awk '{ printf "%03d\n", $1 - $2}' `
                 set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
-                if ( $fiday == ${edaytest} ) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
+                if ( $day == ${limitday} ) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
                 while ( $hour <= ${limithour} )
                     set fihour=`echo $hour ${dummy} | awk '{ printf"%02d\n",$1 - $2}' `
-                    if ( ${fihour} == ${ehour} ) set limitmin=`echo $emin ${dummy} | awk '{print $1 + $2}'`
+                    if ( ${hour} == ${limithour} ) set limitmin=`echo $emin ${dummy} | awk '{print $1 + $2}'`
                     while ( ${min} < ${limitmin} )
                         set fimin=`echo ${min} ${dummy} | awk '{ printf	"%02d\n", $1 - $2}'`
                         set sfi="${name}${sy}${fiday}${fihour}${fimin}${c}_${samp}"
