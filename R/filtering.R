@@ -14,7 +14,7 @@
 #' Bulletin of the Seismological Society of America,
 #' vol 97, 1B, 1-99, doi: 10.1785/0120060088
 #' @seealso 
-#' \code{\link{decimate}},
+#' \code{\link{straight_decimate}},
 #' \code{\link{lpfilter}},
 #' \code{\link{minphs}},
 #' \code{\link{strain-package}}
@@ -24,7 +24,6 @@ NULL
 #' @export
 minfilt <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), verbose=TRUE) UseMethod("minfilt")
 #' @rdname strain-filtering
-#' @method minfilt default
 #' @export
 minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), verbose=TRUE){
   y <- as.vector(y)
@@ -75,26 +74,25 @@ minfilt.default <- function(y, scenario=c("ones_to_fivem","fivem_to_onehr"), ver
 #' @aliases decim
 #' @export
 #' @seealso \code{\link{lpfilter}}, \code{\link{strain-filtering}}
-decimate <- function(y, ndec=1, ...) UseMethod("decimate")
-#' @rdname decimate
-#' @method decimate ts
+straight_decimate <- function(y, ndec=1, ...) UseMethod("straight_decimate")
+#' @rdname straight_decimate
 #' @export
-decimate.ts <- function(y, ndec=1, ...){
+straight_decimate.ts <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)
   if (ndec>1){
     yf <- frequency(y)/ndec
-    #   y <- decimate(as.vector(y), ndec)
+    #   y <- straight_decimate(as.vector(y), ndec)
     #   if (ndec >= 1) y <- ts(y, frequency=yf)
     y <- window(y, frequency=yf, ...)
   }
   attr(y,"ndec") <- ndec
   return(y)
 }
-#' @rdname decimate
-#' @method decimate default
+#' @rdname straight_decimate
+#' @method straight_decimate default
 #' @export
-decimate.default <- function(y, ndec=1, ...){
+straight_decimate.default <- function(y, ndec=1, ...){
   stopifnot(ndec>0)
   ndec <- as.integer(ndec)
   if (ndec>1){
@@ -119,11 +117,9 @@ decimate.default <- function(y, ndec=1, ...){
 #' @param plt logical; should the decimation stages be plotted?
 #' @param ... additional parameters to \code{\link{ts}} in the case \code{y}
 #' does not have class \code{'ts'}.
-#' @seealso \code{\link{decimate}}, \code{\link{filter}}, \code{\link{strain-filtering}}
+#' @seealso \code{\link{straight_decimate}}, \code{\link{filter}}, \code{\link{strain-filtering}}
 lpfilter <- function(y, wgts, ndec=1){
-  #y <- as.ts(y)
-  #print(c(length(y),length(wgts)))
-  y <- decimate(stats::filter(y, wgts, method="convolution", side=1), ndec)
+  y <- straight_decimate(stats::filter(y, wgts, method="convolution", side=1), ndec)
   return(y)
 }
 
