@@ -4,6 +4,7 @@
 \alias{load_hfbsm}
 \alias{load_hfbsm.hfbsm.nfo}
 \alias{plot.hfbsm}
+\alias{update_file_location}
 \title{Assemble high-frequency strain data}
 \usage{
 hfbsm(sta, year, jday, st = "00:00:00", duration, sampling = 1,
@@ -16,6 +17,8 @@ load_hfbsm(object, ...)
 
 \method{plot}{hfbsm}(x, sc = 1, main = NULL, xlab = NULL, note = NULL,
   v.markers = NULL, frame.plot = FALSE, ...)
+
+update_file_location(object, new.location, verbose = TRUE, ...)
 }
 \arguments{
 \item{sta}{character; the station code.  This can be either
@@ -62,6 +65,11 @@ more information.}
 \item{v.markers}{numeric; dashed, red, vertical lines are drawn at these times}
 
 \item{frame.plot}{logical; should boxes be drawn around each frame?}
+
+\item{new.location}{the new path to set for the source-data files in \code{object}; can be
+any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple
+sub-directories while ensuring the path is constructed correctly
+(i.e., with \code{\link{file.path}})}
 }
 \value{
 \code{\link{hfbsm}}: A list with information about the results, having class \code{'hfbsm.nfo'}.

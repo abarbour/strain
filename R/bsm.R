@@ -480,3 +480,28 @@ plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL,
   mtext(attr(x, "sta4"), adj=0, line=1)
   if (!is.null(note)) mtext(note, adj=0, side=1, line=2.7, cex=0.9, font=3)
 }
+
+#' @rdname hfbsm
+#' @param new.location the new path to set for the source-data files in \code{object}; can be
+#' any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple 
+#' sub-directories while ensuring the path is constructed correctly
+#' (i.e., with \code{\link{file.path}})
+#' @export
+update_file_location <- function(object, new.location, verbose=TRUE, ...) UseMethod("update_file_location")
+
+#' @method update_file_location hfbsm.nfo
+#' @export
+update_file_location.hfbsm.nfo <- function(object, new.location, verbose=TRUE, ...){
+  new.location <- do.call(file.path, as.list(new.location))
+  fis <- object[['results']][['files']]
+  rawfi <- fis[['rawfi']]
+  linfi <- fis[['linfi']]
+  if (verbose){
+    message("old location(s):  ", unique(c(dirname(rawfi), dirname(linfi))))
+    message("new location:     ", new.location)
+  }
+  object[['results']][['files']] <- list(rawfi = file.path(new.location, basename(rawfi)), 
+                                         linfi = file.path(new.location, basename(linfi)))
+  return(object)
+}
+
