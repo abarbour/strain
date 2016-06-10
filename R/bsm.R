@@ -219,12 +219,13 @@ orientation_conventions <- function(){
 #' uses \code{\link{station_data}} with \code{use.regexp=TRUE}
 #' @param year numeric; the year of the start time of the desired dataset
 #' @param jday numeric; the Julian day (day of year) of the start time
-#' @param st character; the hour:minute:second of the start time
+#' @param st character; the hour:minute:second of the start time. Defaults to
+#' \code{'00:00:00'} if missing.
 #' @param duration numeric; the relative end-time, represented as the
-#' number of seconds from the start time. If this is not specified, the
-#' script will set these to a length that won't cause too much processing
-#' time to elapse.
-#' @param sampling numeric; the sampling rate of the data to be downloaded
+#' number of seconds from the start time. Defaults to a reasonable length
+#' that won't cause too much processing
+#' time to elapse, which depends on \code{sampling}.
+#' @param sampling numeric; the sampling rate, in Hz, of the data to be downloaded; can be either 1 or 20
 #' @param verbose logical; should messages and warnings be given?
 #' @param ... additional parameters 
 #' @param object an object having class \code{'hfbsm.nfo'}
@@ -236,7 +237,7 @@ orientation_conventions <- function(){
 #' 
 #' @author A.J. Barbour.  
 #' \code{bottlefile.py} and \code{bottlefile_merge.py} were
-#' modified from those written by J.Wright (UNAVCO).
+#' modified from those written by Jim Wright (previously at UNAVCO).
 #' @export
 #' 
 #' @references [1] 
@@ -248,8 +249,6 @@ orientation_conventions <- function(){
 #' @return 
 #' \code{\link{hfbsm}}: A list with information about the results, having class \code{'hfbsm.nfo'}.
 #' 
-#' @family HF-Strain
-#' 
 #' @seealso \code{\link{strain-package}}
 #' 
 #' @examples
@@ -258,7 +257,7 @@ orientation_conventions <- function(){
 #' # 1-Hz
 #' res   <- hfbsm("B084", 2009, 215, "01:01:00", duration=1800, 1)
 #' # 20-Hz (takes much longer)
-#' res20 <- hfbsm("B084", 2009, 215, "01:01:00", duration=1800, 20)
+#' res20 <- hfbsm("B084", 2009, 215, "01:01:00", duration=180, 20)
 #' #
 #' # Load data
 #' dat <- load_hfbsm(res)
@@ -272,11 +271,11 @@ orientation_conventions <- function(){
 #' file.path(find.package('strain'), "hfbsm")
 #' }
 #' 
-hfbsm <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...) UseMethod("hfbsm")
+hfbsm <- function(sta, year, jday, ...) UseMethod("hfbsm")
 
-#' @method hfbsm default
+#' @rdname hfbsm
 #' @export
-hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, verbose=TRUE, ...){
+hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRUE, ...){
   #
   POS <- function(y, jd, hms, delta=0, tz="UTC"){
     if (missing(hms)) hms <- "00:00:00"
@@ -284,12 +283,17 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
     Dt <- as.POSIXct(strptime( paste(paste(y, jd, sep="-"), hms), format="%Y-%j %X", tz=tz)) + delta
     list(year = strftime(Dt, "%Y", tz=tz),
          jday = strftime(Dt, "%j", tz=tz),
-         hms = strftime(Dt, "%X", tz=tz)
+         hms = strftime(Dt, "%X", tz=tz),
+         oDt = Dt
     )
   }
   #
   stadat <- pborepo::station_data(sta, meta="bsm", use.regexp=TRUE)
-  if (nrow(stadat)>1) stop("multiple stations found")
+  if (nrow(stadat)==0){
+    stop("no stations found for: ", sta)
+  } else if (nrow(stadat)>1){
+    stop("multiple stations found for: ", sta)
+  }
   sta4 <- as.character(stadat$sta4)
   stopifnot(!is.null(sta4))
   sta16 <- as.character(stadat$sta16)
@@ -304,31 +308,33 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
   # this ensures (?) the end time will be "00:59:59" 
   # instead, as the user expects it to be
   min.dur <- ifelse(sampling==1, 3600, 60) - 1
-  duration <- if (missing(duration)){
-    min.dur
-  } else {
-    max(min.dur, duration - 1)
-  }
+  duration <- ifelse(missing(duration), min.dur, max(min.dur, duration - 1))
+  if (missing(st)) st <- "00:00:00"
   Dt.st <- POS(year, jday, st, 0)
   Dt.en <- POS(year, jday, st, duration)
+  #
+  if (as.Date(Sys.time(), tz = "UTC") == as.Date(Dt.st[['oDt']], tz = "UTC")){
+    msg <- c("!!! Strain data are imported once per day; hence, if you are looking for data for the present UTC day, the script likely failed.")
+    on.exit(warning(msg, immediate. = FALSE))
+  }
 	#
-	func <- "hfbsm"
-  # ^^^ name of the script doing the assembly (will call python codes as needed)
+	func <- "hfbsm" # the name of the script doing the assembly (which will call python code as needed)
 	package.dir <- find.package('strain')
   hfbsm.dir <- pypath <- file.path(package.dir, func)
   script <- file.path(hfbsm.dir, func)
   
   pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE, ignore.stderr=TRUE))
-  if (inherits(pyver, "try-error")) stop( "python version-poke failed" )
+  if (inherits(pyver, "try-error")) stop( "python version-poke failed; check that python is installed" )
   
   #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
 	#hfbsm B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00 [[1] pypath]
-  TSTR <- function(Dt) sprintf("%s %s '%s'", Dt$year, Dt$jday, Dt$hms)
+  TSTR <- function(Dt){sprintf("%s %s '%s'", Dt[['year']], Dt[['jday']], Dt[['hms']])}
   t.st <- TSTR(Dt.st)
   t.en <- TSTR(Dt.en)
   cmd <- sprintf("%s %s %s %s %s %i %s", script, sta4, sta16, t.st, t.en, sampling, pypath)
+  if (is.null(cmd)) stop('hfbsm command generation failed')
   #
-  # setup results
+  # setup default (empty) results
   toret <- list(StationNames=list(sta4=NA, sta16=NA),
                 DT=list(from=NA, to=NA),
                 SamplingHz=NA,
@@ -388,7 +394,6 @@ hfbsm.default <- function(sta, year, jday, st="00:00:00", duration, sampling=1, 
 load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 
 #' @rdname hfbsm
-#' @method load_hfbsm hfbsm.nfo
 #' @export
 load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop.on.empty=TRUE, ...){
   #
@@ -487,9 +492,9 @@ plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL,
 #' sub-directories while ensuring the path is constructed correctly
 #' (i.e., with \code{\link{file.path}})
 #' @export
-update_file_location <- function(object, new.location, verbose=TRUE, ...) UseMethod("update_file_location")
+update_file_location <- function(object, new.location, ...) UseMethod("update_file_location")
 
-#' @method update_file_location hfbsm.nfo
+#' @rdname hfbsm
 #' @export
 update_file_location.hfbsm.nfo <- function(object, new.location, verbose=TRUE, ...){
   new.location <- do.call(file.path, as.list(new.location))

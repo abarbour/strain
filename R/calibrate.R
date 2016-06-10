@@ -2,9 +2,9 @@
 #' @title Extract a calibration matrix from an object
 #' @name calmat
 #' @param X calibration table
-#' @param station
-#' @param inv.type
-#' @param coeff.names
+#' @param station station code
+#' @param inv.type calibration inversion type
+#' @param coeff.names the coefficient labels
 #' @param ... additional parameters
 #' @export
 calmat <- function(X, station, ...) UseMethod("calmat")
