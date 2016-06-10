@@ -31,3 +31,4 @@ Imports:
     pborepo (>= 0.2013.247-1),
     zoo
 RoxygenNote: 5.0.1
+Suggests: testthat
