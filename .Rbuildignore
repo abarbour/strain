@@ -8,3 +8,5 @@ data/Makefile
 data/dec?
 data/r.*
 ^packrat/
+^\.travis\.yml$
+^codecov\.yml$

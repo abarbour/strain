@@ -19,8 +19,6 @@
 #' @import corpcor lubridate pborepo zoo
 # Matrix adds considerable load time -- is it necessary?? If so, use @importFrom?
 #'
-# @useDynLib strain
-#'
 #' @references Grant, E. B. (2010),
 #' Gladwin Tensor Strainmeter Calibration Using Seismic Data: 
 #' Instrument Calibration Methods and Wave Gradiometry Applications,

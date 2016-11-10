@@ -23,6 +23,7 @@ stresses <- function(E11, E22, E12, G=30e9, nu=0.25, extension.positive=TRUE, as
     Sv
   }
 }
+
 #' @rdname stresses
 #' @export
 principal_stresses <- function(S){

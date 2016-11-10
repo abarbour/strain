@@ -288,7 +288,7 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
     )
   }
   #
-  stadat <- pborepo::station_data(sta, meta="bsm", use.regexp=TRUE)
+  stadat <- pborepo::station_data2(sta, use.regexp=TRUE)
   if (nrow(stadat)==0){
     stop("no stations found for: ", sta)
   } else if (nrow(stadat)>1){
