@@ -1,9 +1,9 @@
 #
 # Minimum phase weights for lowpassing strain data
-# (i.e. Agnew and Hodgkinson XXXX)
+# (i.e. Agnew and Hodgkinson 2007, Table B5)
 #
 #
-# 5X lowpass-decimation
+# 5X lowpass-decimation - WkVb
 #
 by5 <- "wgts
 0.0137003
@@ -44,7 +44,14 @@ by5 <- "wgts
 "
 minphs.by5 <- read.table(textConnection(by5), header=TRUE)
 #
-# 3X lpd
+# 5X lowpass-decimation - WkVa
+#
+by5.alt <- "wgts
+NA # TODO
+"
+minphs.by5_alt <- read.table(textConnection(by5.alt), header=TRUE)
+#
+# 3X lpd - WkIII
 #
 by3 <- "wgts
 0.0373766
@@ -73,7 +80,7 @@ by3 <- "wgts
 "
 minphs.by3 <- read.table(textConnection(by3), header=TRUE)
 #
-# 2X lpd
+# 2X lpd - WkII
 #
 by2 <- "wgts
 0.0983262
