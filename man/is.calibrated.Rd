@@ -15,4 +15,3 @@ is.calibrated(X)
 \description{
 Test whether strain is calibrated
 }
-

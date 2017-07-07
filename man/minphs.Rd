@@ -11,4 +11,3 @@ Designing compact causal digital filters for low-frequency strainmeter data,
 Bulletin of the Seismological Society of America,
 vol 97, 1B, 1-99, doi: 10.1785/0120060088
 }
-

@@ -333,6 +333,7 @@ foreach c (CH0 CH1 CH2 CH3)
     # result is in nanostrain
     set botfi="${name}.${c}_${samp}"
     ${PYCMD_B} ${botfi} > ${botfi}.r.txt
+    # linearize
     cat ${botfi}.r.txt | awk '{  di=($3/1e+8)/(1-($3/1e+8)) ; if (f == 0 && $3 != 999999) {d0=di;f=1}; if (/999999/) printf ("%s %s	999999\n", $1, $2, $3) ; else printf("%s %s	%14.9f \n", $1,$2, ((di-d0)*'$gap'/0.087)*1e+9)  }' > ${botfi}.l.txt
     rm -f ${botfi}
 end

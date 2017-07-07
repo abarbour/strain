@@ -21,4 +21,3 @@ calibrate(B, Cmat, invert = FALSE)
 \description{
 Apply a calibration to strain data
 }
-

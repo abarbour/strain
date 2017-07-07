@@ -26,4 +26,3 @@ Transform tensor strains into geodesic reference frame (radial, transverse)
 \seealso{
 \code{\link{invariants}}
 }
-

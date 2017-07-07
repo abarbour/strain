@@ -3,6 +3,7 @@
 \name{hfbsm}
 \alias{hfbsm}
 \alias{hfbsm.default}
+\alias{check_for_hfbsm}
 \alias{load_hfbsm}
 \alias{load_hfbsm.hfbsm.nfo}
 \alias{plot.hfbsm}
@@ -14,6 +15,8 @@ hfbsm(sta, year, jday, ...)
 
 \method{hfbsm}{default}(sta, year, jday, st, duration, sampling = 1,
   verbose = TRUE, ...)
+
+check_for_hfbsm(sta4, starttime, endtime)
 
 load_hfbsm(object, ...)
 
@@ -114,11 +117,6 @@ file.path(find.package('strain'), "hfbsm")
 }
 
 }
-\author{
-A.J. Barbour.  
-\code{bottlefile.py} and \code{bottlefile_merge.py} were
-modified from those written by Jim Wright (previously at UNAVCO).
-}
 \references{
 [1] 
 Barbour, A. J., and Agnew, D. C. (2011). 
@@ -129,4 +127,8 @@ Noise levels on plate boundary observatory borehole strainmeters in southern Cal
 \seealso{
 \code{\link{strain-package}}
 }
-
+\author{
+A.J. Barbour.  
+\code{bottlefile.py} and \code{bottlefile_merge.py} were
+modified from those written by Jim Wright (previously at UNAVCO).
+}

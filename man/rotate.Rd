@@ -31,4 +31,3 @@ object, and that the first column is the 1-axis information.
 \code{hand.rule} determines whether the rotation is clockwise ("left")
 or--the default--anti-clockwise ("right").
 }
-

@@ -21,4 +21,3 @@ dilatation(E11, E22, nu, ...)
 \description{
 Calculate vertical and dilatational strain from horizontal tensor strains
 }
-

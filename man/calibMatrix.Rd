@@ -38,4 +38,3 @@ Coefficients are in the form presented by Roeloffs 2010.
 The pseudo-inverse is computed using \code{corpcor::pseudoinverse} with
 default tolerances.
 }
-

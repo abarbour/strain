@@ -17,4 +17,3 @@ Extract strains from an abject
 \seealso{
 \code{\link{bsm-methods}}
 }
-

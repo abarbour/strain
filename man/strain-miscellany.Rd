@@ -2,8 +2,8 @@
 % Please edit documentation in R/misc.R
 \docType{methods}
 \name{strain-miscellany}
-\alias{circle}
 \alias{strain-miscellany}
+\alias{circle}
 \title{Miscellaneous utilities}
 \usage{
 circle(dtheta = 1, origin = 0)
@@ -22,4 +22,3 @@ Origin is for a right-hand (ccw) system.
 \author{
 A.J. Barbour <andy.barbour@gmail.com>
 }
-

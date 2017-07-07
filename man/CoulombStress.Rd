@@ -35,4 +35,3 @@ Calculate Coulomb stresses on a plane from a given stress tensor
 \seealso{
 \code{\link{stresses}}
 }
-

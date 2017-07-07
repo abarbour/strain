@@ -3,8 +3,8 @@
 \name{principals}
 \alias{principals}
 \alias{principals.default}
-\alias{principals.lsm2}
 \alias{principals.lsm3}
+\alias{principals.lsm2}
 \title{Calculate principal strains}
 \usage{
 principals(S, ...)
@@ -40,8 +40,8 @@ and the 2-axis being shear.
   \item{LSM-2}{Rectangular two-gauge \eqn{90^{\circ}}}
 }
 }
+
 \references{
 Meir, J.H. (19XX),"Strain Rosettes" , in XX, pp. 412, edited by
 Altamani 19XX
 }
-

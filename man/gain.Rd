@@ -25,4 +25,3 @@ gain(X, gap = NULL, ref.strn = FALSE, ...)
 \description{
 Gain correction
 }
-

@@ -16,4 +16,3 @@ Choose a GTSM gap distance
 The gap is either \code{"one"} representing 100 microns, or
 \code{"two"} for 200 microns.
 }
-

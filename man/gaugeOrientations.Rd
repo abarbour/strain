@@ -17,4 +17,3 @@ Return gauge orientations, restricted or not.
 \details{
 The restriction is done with \code{\link{strain_azimuth}}
 }
-

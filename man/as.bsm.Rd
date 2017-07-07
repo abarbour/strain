@@ -2,8 +2,8 @@
 % Please edit documentation in R/bsm.R
 \name{as.bsm}
 \alias{as.bsm}
-\alias{as.bsm.default}
 \alias{bsm}
+\alias{as.bsm.default}
 \alias{is.bsm}
 \alias{is.raw_strain}
 \title{Convert an object to one with class \code{'bsm'}}
@@ -35,4 +35,3 @@ is.raw_strain(X)
 \description{
 Convert an object to one with class \code{'bsm'}
 }
-

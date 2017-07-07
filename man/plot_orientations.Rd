@@ -26,4 +26,3 @@ Setting this to zero will blank the circle}
 \description{
 Plot the orientations of the instrument gauges.
 }
-

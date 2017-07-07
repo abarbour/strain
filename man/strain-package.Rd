@@ -2,8 +2,8 @@
 % Please edit documentation in R/strain-package.R
 \docType{package}
 \name{strain-package}
-\alias{strain}
 \alias{strain-package}
+\alias{strain}
 \alias{strainmeter}
 \title{Tools to work with geodetic strain data.}
 \description{
@@ -17,9 +17,7 @@ See the following pages for details on
 \code{\link{strain-filtering}} is a good place to start to learn about
 filtration tools.
 }
-\author{
-Andrew J. Barbour <andy.barbour@gmail.com>
-}
+
 \references{
 Grant, E. B. (2010),
 Gladwin Tensor Strainmeter Calibration Using Seismic Data: 
@@ -47,4 +45,6 @@ J. Geophys. Res., 115, B06405, doi:10.1029/2009JB006407.
 \seealso{
 \code{\link{bsm-methods}}
 }
-
+\author{
+Andrew J. Barbour <andy.barbour@gmail.com>
+}

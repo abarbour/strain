@@ -2,10 +2,10 @@
 % Please edit documentation in R/getters.R
 \docType{methods}
 \name{strain-getters}
-\alias{get_az}
-\alias{get_itype}
-\alias{get_station}
 \alias{strain-getters}
+\alias{get_az}
+\alias{get_station}
+\alias{get_itype}
 \title{Functions to get information about a \code{bsm} object.}
 \usage{
 get_az(B)
@@ -24,4 +24,3 @@ get_itype(B)
 \author{
 A.J. Barbour <andy.barbour@gmail.com>
 }
-

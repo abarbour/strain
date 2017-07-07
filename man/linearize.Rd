@@ -32,4 +32,3 @@ unlinearize(X, gap = NULL, constant = 0, unref.strn = TRUE, ...)
 \description{
 Make raw strain linear or linear strain raw
 }
-

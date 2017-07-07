@@ -21,4 +21,3 @@ max_shear(E11, E22, E12, ...)
 \description{
 Calculate maximum horizontal shear from horizontal tensor strains
 }
-

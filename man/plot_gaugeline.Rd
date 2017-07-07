@@ -2,8 +2,8 @@
 % Please edit documentation in R/bsm.R
 \name{plot_gaugeline}
 \alias{plot_gaugeline}
-\alias{plot_gaugeline.default}
 \alias{plot_guageline}
+\alias{plot_gaugeline.default}
 \title{Plots lines for gauge orientations}
 \usage{
 plot_gaugeline(...)
@@ -32,4 +32,3 @@ The rotation is in a left-hand (cw) sense with zero being the y-axis.
 This is because in the field the gauges are generally oriented from magnetic
 North in the East direction.
 }
-

@@ -2,8 +2,8 @@
 % Please edit documentation in R/rotations.R
 \name{geod_rotate}
 \alias{geod_rotate}
-\alias{geod_rotate.default}
 \alias{geod_rotate2}
+\alias{geod_rotate.default}
 \title{Transform tensor strains in a 1-2 system into an r-t system}
 \usage{
 geod_rotate(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE, ...)
@@ -37,4 +37,3 @@ Transform tensor strains in a 1-2 system into an r-t system
 \code{\link{geod_rotate2}} is a kludge for the moment, to
 prove tensor strain rotations
 }
-

@@ -391,6 +391,34 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
 
 #' @rdname hfbsm
 #' @export
+check_for_hfbsm <- function(sta4, starttime, endtime){
+  sta4 <- as.character(sta4)
+  starttime <- as.Date.POSIXlt(starttime)
+  endtime <- as.Date.POSIXlt(endtime)
+  
+  query <- sprintf("http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=%s&cha=BS*",sta4)
+  #"http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=AVN2&cha=BS*"
+  G <- httr::GET(query)
+  if (httr::http_error(G)){
+    stat <- httr::http_status(G)
+    stat[['query']] <- query
+    print(stat)
+    stop("failed query.")
+  }
+  readr::read_table(httr::content(G, encoding = "UTF-8")) %>%
+  #[1] "#n"          "s"           "l"           "c"           "q"
+  #[6] "sample-rate" "earliest"    "latest"      "updated"     "time-spans"
+    dplyr::rename(net=`#n`, sta4=`s`, cha=`c`) -> restbl
+  
+  trng <- with(restbl, range(c(earliest, latest)))
+  data.frame(Station=sta4, Start = starttime, End = endtime) %>%
+      dplyr::mutate(Start.OK = (Start >= min(trng)) & (Start < max(trng)),
+                    End.OK = (End > min(trng)) & (End <= max(trng))) -> avail
+  return(avail)
+}
+
+#' @rdname hfbsm
+#' @export
 load_hfbsm <- function(object, ...) UseMethod("load_hfbsm")
 
 #' @rdname hfbsm

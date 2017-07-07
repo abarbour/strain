@@ -26,4 +26,3 @@ Calculate strain invariants from horizontal tensor strains
 \seealso{
 \code{\link{dilatation}} and \code{\link{max_shear}}
 }
-

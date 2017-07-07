@@ -7,4 +7,3 @@
 \author{
 A.J. Barbour <andy.barbour@gmail.com>
 }
-

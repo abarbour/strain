@@ -23,4 +23,3 @@ Calculate extensions along specified axes
 \code{orientations} is right-hand rule (ccw) relative the 1-axis (x);
 in a compass system 0 would be to the West, and 90 to the North.
 }
-
