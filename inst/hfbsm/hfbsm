@@ -149,7 +149,8 @@ while ( $year <= $eyear )
 		# Nov 26 2014 -- changed again?? Working OK now.
 		#  set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
 		#
-		set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+		# set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+		set repos="http://ds.iris.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
 		#                 ^^^^ this location may change
 		#
 		set tarfile="${name}.${year}${fiday}_${samp}.tar"
