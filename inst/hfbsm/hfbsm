@@ -12,6 +12,7 @@
 #
 # Versions
 #
+# 2.2 -- Dec 2017 -- AJB -- ftp to wget
 #	2.1 -- Nov 2014 -- AJB -- fixed repository change and csh octal issue
 #	2.0 -- Oct 2013 -- AJB
 #
@@ -153,8 +154,9 @@ while ( $year <= $eyear )
 		#
 		set tarfile="${name}.${year}${fiday}_${samp}.tar"
 		echo ${repos}
-		# -V prior to inetutils implementation... -v now:
-		ftp -v ${repos}/${tarfile}
+		# -V prior to inetutils implementation... -v now, but wget better
+		#ftp -V ${repos}/${tarfile}
+		wget --no-verbose -O ${tarfile} ${repos}/${tarfile}
 		tar -xf ${tarfile}
 		rm -f ${tarfile}
 		@ day ++
