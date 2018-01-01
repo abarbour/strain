@@ -153,7 +153,8 @@ while ( $year <= $eyear )
 		#
 		set tarfile="${name}.${year}${fiday}_${samp}.tar"
 		echo ${repos}
-		ftp -V ${repos}/${tarfile}
+		# -V prior to inetutils implementation... -v now:
+		ftp -v ${repos}/${tarfile}
 		tar -xf ${tarfile}
 		rm -f ${tarfile}
 		@ day ++
