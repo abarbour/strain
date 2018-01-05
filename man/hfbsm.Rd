@@ -14,7 +14,7 @@
 hfbsm(sta, year, jday, ...)
 
 \method{hfbsm}{default}(sta, year, jday, st, duration, sampling = 1,
-  verbose = TRUE, ...)
+  verbose = TRUE, check.first = TRUE, ...)
 
 check_for_hfbsm(sta4, starttime, endtime)
 
@@ -54,6 +54,9 @@ time to elapse, which depends on \code{sampling}.}
 \item{sampling}{numeric; the sampling rate, in Hz, of the data to be downloaded; can be either 1 or 20}
 
 \item{verbose}{logical; should messages and warnings be given?}
+
+\item{check.first}{logical; should an attempt be made to check if the data exists prior to assembly?
+This assumes data lie below \url{http://ds.iris.edu/pbo/raw/bsm}}
 
 \item{object}{an object having class \code{'hfbsm.nfo'}}
 

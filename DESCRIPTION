@@ -1,8 +1,8 @@
 Package: strain
 Type: Package
 Title: Tools for working with strainmeter and pore-fluid pressure data
-Version: 0.2-6
-Date: 2016-11-10
+Version: 0.2-7
+Date: 2018-01-04
 Author: Andrew J. Barbour
 Maintainer: Andrew J. Barbour <andy.barbour@gmail.com>
 License: GPL (>= 2)
@@ -30,7 +30,10 @@ Imports:
     lubridate (>= 1.3.0),
     pborepo,
     zoo,
-    tidyverse
+    tidyverse,
+    RCurl,
+    cli,
+    crayon
 RoxygenNote: 6.0.1
 Suggests: testthat,
     covr

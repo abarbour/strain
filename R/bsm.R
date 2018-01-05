@@ -227,6 +227,8 @@ orientation_conventions <- function(){
 #' time to elapse, which depends on \code{sampling}.
 #' @param sampling numeric; the sampling rate, in Hz, of the data to be downloaded; can be either 1 or 20
 #' @param verbose logical; should messages and warnings be given?
+#' @param check.first logical; should an attempt be made to check if the data exists prior to assembly?
+#' This assumes data lie below \url{http://ds.iris.edu/pbo/raw/bsm}
 #' @param ... additional parameters 
 #' @param object an object having class \code{'hfbsm.nfo'}
 #' @param file.type character; the type of strain data to load: 
@@ -275,7 +277,7 @@ hfbsm <- function(sta, year, jday, ...) UseMethod("hfbsm")
 
 #' @rdname hfbsm
 #' @export
-hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRUE, ...){
+hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRUE, check.first=TRUE, ...){
   #
   POS <- function(y, jd, hms, delta=0, tz="UTC"){
     if (missing(hms)) hms <- "00:00:00"
@@ -307,7 +309,8 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
   # will be _through_ hour 1, an end at 1:59:59.
   # this ensures (?) the end time will be "00:59:59" 
   # instead, as the user expects it to be
-  min.dur <- ifelse(sampling==1, 3600, 60) - 1
+  is.1hz <- sampling==1
+  min.dur <- ifelse(is.1hz, 3600, 60) - 1
   duration <- ifelse(missing(duration), min.dur, max(min.dur, duration - 1))
   if (missing(st)) st <- "00:00:00"
   Dt.st <- POS(year, jday, st, 0)
@@ -316,6 +319,33 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
   if (as.Date(Sys.time(), tz = "UTC") == as.Date(Dt.st[['oDt']], tz = "UTC")){
     msg <- c("!!! Strain data are imported once per day; hence, if you are looking for data for the present UTC day, the script likely failed.")
     on.exit(warning(msg, immediate. = FALSE))
+  }
+  # Check if the script will succeed
+  #http://ds.iris.edu/pbo/raw/bsm/cofflt039bcn2007/2015/009/B039.2015009_20.tar
+  #http://ds.iris.edu/pbo/raw/bsm/cofflt039bcn2007/2015/009/B039.2015009_01.tar
+  #http://ds.iris.edu/pbo/raw/bsm/cofflt039bcn2007/2015/009/B039.2015009Day.tgz
+  #
+  run_cmd <- TRUE
+  if (check.first){
+    start_time <- strptime(paste(year, jday, st), "%Y %j %X", tz='UTC')
+    end_time <- start_time + duration
+    jdseq <- strftime(seq(as.Date(start_time, tz='UTC'), as.Date(end_time, tz='UTC'), by='days', tz='UTC'), "%Y:%j", tz='UTC')
+    ext <- ifelse(is.1hz,'_01.tar', '_20.tar')
+    urls_to_check <- sprintf("http://ds.iris.edu/pbo/raw/bsm/%s/%s/%s.%s%s", sta16, gsub(":","/",jdseq), sta4, gsub(":","",jdseq), ext)
+    url_checks <- sapply(urls_to_check, RCurl::url.exists)
+    if (any(url_checks)){
+      if (all(url_checks)){
+        if (verbose) message(crayon::green(cli::symbol$tick), " ", crayon::bold(sta4), " All server-side files exist; assembly should succeed")
+      } else {
+        if (verbose){
+          message(crayon::magenta(cli::symbol$fancy_question_mark), " ", crayon::bold(sta4), " One or more server-side files are missing; assembly may fail")
+          print(url_checks)
+        }
+      }
+    } else {
+      warning(crayon::red(cli::symbol$cross), " ", crayon::bold(sta4), " Processing stopped because server-side files (", start_time, " through ", end_time, ") are nonexistent")
+      run_cmd <- FALSE
+    }
   }
 	#
 	func <- "hfbsm" # the name of the script doing the assembly (which will call python code as needed)
@@ -342,8 +372,12 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
                 files=list(rawfi=NA, linfi=NA))
   # run the command
   if (verbose) message(paste("assembling", sta4, "@", sampling, "Hz:", t.st, t.en, "(", duration, " sec )", "..."))
-  results <- try(system(cmd, intern=TRUE))
-  success <- !inherits(results, "try-error")
+  success <- if (run_cmd){
+    results <- try(system(cmd, intern=TRUE))
+    !inherits(results, "try-error")
+  } else {
+    FALSE
+  }
   #
   if (success){
     #
@@ -381,7 +415,7 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
     toret$files$linfi <- fis[1]
     toret$files$rawfi <- fis[2]
   } else {
-    if (verbose) warning( paste("hfbsm script failed:", cmd) )
+    if (verbose & run_cmd) warning( paste("hfbsm script failed:", cmd) )
   }
   #
   toret <- list(cmd=cmd, cmd.success=success, results=toret, python=pyver)
@@ -394,7 +428,11 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
 check_for_hfbsm <- function(sta4, starttime, endtime){
   sta4 <- as.character(sta4)
   starttime <- as.Date.POSIXlt(starttime)
-  endtime <- as.Date.POSIXlt(endtime)
+  endtime <- if (missing(endtime)){
+      starttime
+  } else {
+    as.Date.POSIXlt(endtime)
+  }
   
   query <- sprintf("http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=%s&cha=BS*",sta4)
   #"http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=AVN2&cha=BS*"
@@ -406,8 +444,8 @@ check_for_hfbsm <- function(sta4, starttime, endtime){
     stop("failed query.")
   }
   readr::read_table(httr::content(G, encoding = "UTF-8")) %>%
-  #[1] "#n"          "s"           "l"           "c"           "q"
-  #[6] "sample-rate" "earliest"    "latest"      "updated"     "time-spans"
+    #[1] "#n"          "s"           "l"           "c"           "q"
+    #[6] "sample-rate" "earliest"    "latest"      "updated"     "time-spans"
     dplyr::rename(net=`#n`, sta4=`s`, cha=`c`) -> restbl
   
   trng <- with(restbl, range(c(earliest, latest)))
