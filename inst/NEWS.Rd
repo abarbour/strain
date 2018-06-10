@@ -14,6 +14,7 @@
 \section{CHANGES in strain VERSION 0.2-7 (2018-01-04)}{
   \itemize{
     \item Made the hfbsm process more robust, and easier to identify failure points.
+    \item Adjusted the repo url.
   }
 }
 \section{CHANGES in strain VERSION 0.2-1 (2013-08-22)}{

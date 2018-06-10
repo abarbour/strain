@@ -13,3 +13,11 @@ bottlefile.py: $(BOT)
 
 bottlefile_merge.py: $(BOTMRG)
 	cp $(BOTMRG) .
+
+TEST:
+	01.test
+
+clean:
+	rm -f B084.ALL_01.[lr].txt
+	rm -f prof.bottle*
+	rm -f *.pyc
