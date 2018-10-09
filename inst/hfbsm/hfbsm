@@ -371,6 +371,6 @@ paste ${name}.CH[0-3]_${samp}.r.txt | awk -f /tmp/tmpawk.pp >  ${allfi}.r.txt
 ls ${allfi}.[lr].txt
 
 # cleanup
-rm ${name}.CH[0-3]_${samp}.[lr].txt
+rm -f ${name}.CH[0-3]_${samp}.[lr].txt
 
 exit 0
