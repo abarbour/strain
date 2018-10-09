@@ -14,6 +14,8 @@ circle(dtheta = 1, origin = 0)
 \item{origin}{numeric; where the first point begins, in degrees}
 }
 \description{
+Miscellaneous utilities
+
 Return a unit circle.
 }
 \details{

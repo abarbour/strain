@@ -1,3 +1,5 @@
+prof.bottle
+prof.bottlemerge
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ./*.txt

@@ -1,28 +1,23 @@
 Package: strain
 Type: Package
-Title: Tools for working with strainmeter and pore-fluid pressure data
+Title: Tools for working with strainmeter and PBO borehole data
 Version: 0.2-7
-Date: 2018-01-04
+Date: 2018-10-09
 Author: Andrew J. Barbour
 Maintainer: Andrew J. Barbour <andy.barbour@gmail.com>
 License: GPL (>= 2)
 SystemRequirements: awk, csh, python (>= 2.3)
 URL: https://github.com/abarbour/strain (dev) and
     https://abarbour.github.io/pborepo for metadata.
-    For processing of raw data,
-    PIASD: http://igppweb.ucsd.edu/~agnew/Piasd/piasdmain.html
-    and
-    cleanstrain+: http://earthquake.usgs.gov/monitoring/edm/cleanstrain
-    are commonly used tools.
 Description: Methods and classes for strainmeter data.
     Currently, supported instruments include UCSD-style longbase
     laser strainmeters, and PBO-style borehole strainmeters. Support for
     PBO-style pore pressure data is
     included. Some functions  providing metadata support
-    attempt to make a connection with the `pborepo'.
+    attempt to make a connection with the 'pborepo'.
     For processing of raw data, the user is directed to
-    Duncan Agnew's `PIASD'
-    and John Langbein's `cleanstrain+' (see `URL' section).
+    Duncan Agnew's 'PIASD'
+    and John Langbein's 'cleanstrain+' (see 'URL' section).
 Depends:
     R (>= 2.14.1)
 Imports:
@@ -31,9 +26,11 @@ Imports:
     pborepo,
     zoo,
     tidyverse,
+    magrittr,
     RCurl,
     cli,
     crayon
-RoxygenNote: 6.0.1
+Encoding: UTF-8
+RoxygenNote: 6.1.0
 Suggests: testthat,
     covr

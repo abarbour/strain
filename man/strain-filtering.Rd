@@ -3,14 +3,14 @@
 \name{strain-filtering}
 \alias{strain-filtering}
 \alias{minfilt}
-\alias{minfilt}
 \alias{minfilt.default}
 \title{Minimum phase filtering}
 \usage{
-minfilt(y, scenario = c("ones_to_fivem", "fivem_to_onehr"), verbose = TRUE)
-
-\method{minfilt}{default}(y, scenario = c("ones_to_fivem", "fivem_to_onehr"),
+minfilt(y, scenario = c("ones_to_fivem", "fivem_to_onehr"),
   verbose = TRUE)
+
+\method{minfilt}{default}(y, scenario = c("ones_to_fivem",
+  "fivem_to_onehr"), verbose = TRUE)
 }
 \arguments{
 \item{y}{numeric}

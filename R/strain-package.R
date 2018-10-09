@@ -18,6 +18,10 @@
 #' 
 #' @import corpcor lubridate pborepo zoo
 # Matrix adds considerable load time -- is it necessary?? If so, use @importFrom?
+#' @importFrom magrittr %>%
+#' @importFrom graphics abline lines mtext par plot text
+#' @importFrom stats frequency is.ts plot.ts ts window
+#' @importFrom utils data read.table str
 #'
 #' @references Grant, E. B. (2010),
 #' Gladwin Tensor Strainmeter Calibration Using Seismic Data: 

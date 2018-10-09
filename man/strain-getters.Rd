@@ -21,6 +21,9 @@ get_itype(B)
 
 \item{...}{additional arguments}
 }
+\description{
+Functions to get information about a \code{bsm} object.
+}
 \author{
 A.J. Barbour <andy.barbour@gmail.com>
 }

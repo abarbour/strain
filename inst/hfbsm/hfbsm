@@ -157,7 +157,7 @@ while ( $year <= $eyear )
 		echo ${repos}
 		# -V prior to inetutils implementation... -v now, but wget better
 		#ftp -V ${repos}/${tarfile}
-		wget --no-verbose -O ${tarfile} ${repos}/${tarfile}
+		wget --no-check-certificate --no-verbose -O ${tarfile} ${repos}/${tarfile}
 		tar -xf ${tarfile}
 		rm -f ${tarfile}
 		@ day ++

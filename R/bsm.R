@@ -444,8 +444,6 @@ check_for_hfbsm <- function(sta4, starttime, endtime){
     stop("failed query.")
   }
   readr::read_table(httr::content(G, encoding = "UTF-8")) %>%
-    #[1] "#n"          "s"           "l"           "c"           "q"
-    #[6] "sample-rate" "earliest"    "latest"      "updated"     "time-spans"
     dplyr::rename(net=`#n`, sta4=`s`, cha=`c`) -> restbl
   
   trng <- with(restbl, range(c(earliest, latest)))
