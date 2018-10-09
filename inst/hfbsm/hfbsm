@@ -12,6 +12,7 @@
 #
 # Versions
 #
+# 2.3 -- Jun 2018 -- AJB -- repo url to https
 # 2.2 -- Dec 2017 -- AJB -- ftp to wget
 #	2.1 -- Nov 2014 -- AJB -- fixed repository change and csh octal issue
 #	2.0 -- Oct 2013 -- AJB
@@ -150,7 +151,9 @@ while ( $year <= $eyear )
 		#  set repos="http://www.iris.edu/pbo/raw/bsm/${long}/${year}/${day}"
 		#
 		# set repos="http://www.iris.washington.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
-		set repos="http://ds.iris.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+		#set repos="http://ds.iris.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
+		#
+		set repos="https://ds.iris.edu/pbo/raw/bsm/${long}/${year}/${fiday}"
 		#                 ^^^^ this location may change
 		#
 		set tarfile="${name}.${year}${fiday}_${samp}.tar"
