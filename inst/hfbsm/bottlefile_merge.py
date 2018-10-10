@@ -153,8 +153,10 @@ if __name__ == '__main__':
     (opts, args) = parser.parse_args()
 
     try:
-	if len(args) != 3:
-	    parser.error("incorrect number of arguments")
+    	largs = len(args)
+	if largs != 3:
+	    if largs > 0:
+	        parser.error("incorrect number of arguments")
 	    parser.print_help()
         else:
             m = BottleMerge()
