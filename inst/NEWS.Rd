@@ -11,6 +11,11 @@
 \title{News for package 'strain'}
 \encoding{UTF-8}
 
+\section{CHANGES in strain VERSION 0.2-8 (2018-11-05)}{
+  \itemize{
+    \item Fixed subtle bug in hfbsm script
+  }
+}
 \section{CHANGES in strain VERSION 0.2-7 (2018-01-04)}{
   \itemize{
     \item Made the hfbsm process more robust, and easier to identify failure points.
