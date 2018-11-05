@@ -12,10 +12,11 @@
 #
 # Versions
 #
+# 2.4 -- Nov 2018 -- AJB -- fixed a bug in the assembly which was excluding the 59th minute always (a matter of <= versus <)
 # 2.3 -- Jun 2018 -- AJB -- repo url to https
 # 2.2 -- Dec 2017 -- AJB -- ftp to wget
-#	2.1 -- Nov 2014 -- AJB -- fixed repository change and csh octal issue
-#	2.0 -- Oct 2013 -- AJB
+# 2.1 -- Nov 2014 -- AJB -- fixed repository change and csh octal issue
+# 2.0 -- Oct 2013 -- AJB
 #
 if ( $#argv == 0 || $#argv < 8 ) then
     echo
@@ -101,15 +102,16 @@ set ssec=`echo $start | awk 'BEGIN{FS=":"}{print $3}' `
 
 set ehour=`echo $tend | awk 'BEGIN{FS=":"}{print $1}' `
 set emin=`echo $tend | awk 'BEGIN{FS=":"}{print $2}' `
-set esec=`echo $start | awk 'BEGIN{FS=":"}{print $3}' `
+set esec=`echo $tend | awk 'BEGIN{FS=":"}{print $3}' `
 
 # minute is minimum length of output, so clip to nearest minute
 # to prevent a full day
+set eminorig=${emin}
 set emin=`echo $syear $sday $shour $smin $eyear $eday $ehour $emin | awk '{if ($1==$5){ if ($2==$6){ if ($3==$7) { if ($4==$8){ $8=$4+1}}}}; printf"%02i",$8}'`
 
 echo "${name}	${long}"
 echo "	from	${syear} ${sday} ${shour} ${smin}"
-echo "	to	${eyear} ${eday} ${ehour} ${emin}"
+echo "	to	${eyear} ${eday} ${ehour} ${emin}" # (${eminorig})"
 echo "	Hz	${samp}"
 
 # Python command, with profiling
@@ -222,21 +224,21 @@ endif
 
 if ( ${sampflag} == 1 ) then
     foreach c (CH0 CH1 CH2 CH3)
-		set year=$syear
-		set day=`echo ${sday} | awk '{print $1*1}'`
-		@ day = ${day} + ${dummy}
-		set limitday=366
-		@ limitday = ${limitday} + ${dummy}
-		set hour=`echo ${shour} | awk '{print $1*1}'`
-		@ hour = ${hour} + ${dummy}
-		set limithour=23
-		@ limithour = ${limithour} + ${dummy}
-		set flag=2
-		#echo ${c}
+	set year=$syear
+	set day=`echo ${sday} | awk '{print $1*1}'`
+	@ day = ${day} + ${dummy}
+	set limitday=366
+	@ limitday = ${limitday} + ${dummy}
+	set hour=`echo ${shour} | awk '{print $1*1}'`
+	@ hour = ${hour} + ${dummy}
+	set limithour=23
+	@ limithour = ${limithour} + ${dummy}
+	set flag=2
+	#echo ${c}
         while ( $year <= $eyear )
             if ( $year == $eyear ) set limitday=`echo ${eday} ${dummy} | awk '{print $1 + $2}'`
             while ( $day <= ${limitday} )
-				set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
+	        set fiday=`echo $day ${dummy} | awk '{ printf "%03i\n", $1-$2}' `
                 set sy=`echo $year  | awk '{ printf "%02i\n", $1-2000 }' `
                 if ($day == ${limitday}) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
                 while ( $hour <= ${limithour} )
@@ -261,40 +263,40 @@ if ( ${sampflag} == 1 ) then
     rm -f ${name}???????CH?
 else
     foreach c (CH0 CH1 CH2 CH3)
-		set year=$syear
-		set day=`echo $sday | awk '{print $1*1}'`
-		@ day = ${day} + ${dummy}
-		set limitday=366
-		@ limitday = ${limitday} + ${dummy}
-		set hour=$shour
-		@ hour = ${hour} + ${dummy}
-		set limithour=23
-		@ limithour = ${limithour} + ${dummy}
-		set min=$smin
-		@ min = ${min} + ${dummy}
-		set limitmin=59
-		@ limitmin = ${limitmin} + ${dummy}
-		set flag=2
-		#echo ${c}
+	set year=$syear
+	set day=`echo $sday | awk '{print $1*1}'`
+	@ day = ${day} + ${dummy}
+	set limitday=366
+	@ limitday = ${limitday} + ${dummy}
+	set hour=$shour
+	@ hour = ${hour} + ${dummy}
+	set limithour=23
+	@ limithour = ${limithour} + ${dummy}
+	set min=$smin
+	@ min = ${min} + ${dummy}
+	set limitmin=59
+	@ limitmin = ${limitmin} + ${dummy}
+	set flag=2
+	#echo "${c} ----- ${limitday} ${limithour} ${limitmin}"
         while ( $year <= $eyear )
             if ( $year == $eyear ) set limitday=`echo $eday ${dummy} | awk '{print $1 + $2}'`
             while ( $day <= ${limitday} )
                 set fiday=`echo $day ${dummy} | awk '{ printf "%03d\n", $1 - $2}' `
                 set sy=`echo $year  | awk '{ printf "%02d\n", $1-2000 }' `
-                if ( $day == ${limitday} ) set limithour=`echo $ehour ${dummy} | awk '{print $1 + $2}'`
+                if ( $day == ${limitday} ) set limithour=`echo ${ehour} ${dummy} | awk '{print $1 + $2}'`
                 while ( $hour <= ${limithour} )
-                    set fihour=`echo $hour ${dummy} | awk '{ printf"%02d\n",$1 - $2}' `
-                    if ( ${hour} == ${limithour} ) set limitmin=`echo $emin ${dummy} | awk '{print $1 + $2}'`
-                    while ( ${min} < ${limitmin} )
+                    set fihour=`echo ${hour} ${dummy} | awk '{ printf"%02d\n",$1 - $2}' `
+                    if ( ${hour} == ${limithour} ) set limitmin=`echo ${emin} ${dummy} | awk '{print $1 + $2}'`
+                    while ( ${min} <= ${limitmin} )
                         set fimin=`echo ${min} ${dummy} | awk '{ printf	"%02d\n", $1 - $2}'`
                         set sfi="${name}${sy}${fiday}${fihour}${fimin}${c}_${samp}"
                         if ( ${flag} == 2 ) then
-                            cp ${sfi} {$name}.${c}_${samp}
+                            cp ${sfi} ${name}.${c}_${samp}
                             set flag=1
                         else
                             ${PYCMD_BM} ${name}.${c}_${samp} ${sfi} ${name}.${c}_${samp}
                         endif
-					@ min++ 
+			@ min ++ 
                     end
                     @ hour ++
                     set min=${dummy}
