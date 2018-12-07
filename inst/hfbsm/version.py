@@ -9,5 +9,10 @@ def main():
     print (platform.python_compiler())
 
 if __name__ == '__main__':
+
     main()
+
+    if sys.version_info[0] > 2:
+       raise Exception("hfbsm codes are Python 2 only")
+
     sys.exit(0)
