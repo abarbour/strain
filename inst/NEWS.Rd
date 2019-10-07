@@ -11,6 +11,11 @@
 \title{News for package 'strain'}
 \encoding{UTF-8}
 
+\section{CHANGES in strain VERSION 0.2.9 (2019-10-07)}{
+  \itemize{
+    \item Fixing python errors
+  }
+}
 \section{CHANGES in strain VERSION 0.2-8 (2018-11-05)}{
   \itemize{
     \item Fixed subtle bug in hfbsm script

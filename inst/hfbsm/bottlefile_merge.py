@@ -129,40 +129,40 @@ class BottleMerge:
 
 if __name__ == '__main__':
 
-    usage = "usage: %prog [-h] [-g] [-b] bottle1 bottle2 outfile\n" + \
-            "\n" + \
-            "   If not overlapping, will append bottle2 to end of\n" + \
-            "   bottle1, creating new bottle file 'outfile'.\n" +\
-            "\n" + \
-            "   If overlapping, will examine bottle2 to see if it fills\n" + \
-            "   in gaps in bottle1, and create new bottle file 'outfile'."
-    from optparse import OptionParser
-    parser = OptionParser(usage)
-    parser.set_defaults(allow_gaps = True)
-    parser.set_defaults(bigendian = False)
-    parser.add_option("-g", "--gap-abort", \
-            help="The '-g' switch will cause operation to abort " + \
-            "if there is a gap between files.", \
-            action="store_false", dest="allow_gaps")
-    parser.add_option("-b", "--big-endian", \
-            help="The '-b' switch will result in the output bottle " + \
-            "file being written in big-endian " + \
-            "(SPARC/Solaris, PowerPC/Mac) format rather than " + \
-            "little-endian (Intel/Linux&Windows) format.", \
-            action="store_true", dest="bigendian")
-    (opts, args) = parser.parse_args()
+	usage = "usage: %prog [-h] [-g] [-b] bottle1 bottle2 outfile\n" + \
+			"\n" + \
+			"	If not overlapping, will append bottle2 to end of\n" + \
+			"	bottle1, creating new bottle file 'outfile'.\n" +\
+			"\n" + \
+			"	If overlapping, will examine bottle2 to see if it fills\n" + \
+			"	in gaps in bottle1, and create new bottle file 'outfile'."
+	from optparse import OptionParser
+	parser = OptionParser(usage)
+	parser.set_defaults(allow_gaps = True)
+	parser.set_defaults(bigendian = False)
+	parser.add_option("-g", "--gap-abort", \
+			help="The '-g' switch will cause operation to abort " + \
+			"if there is a gap between files.", \
+			action="store_false", dest="allow_gaps")
+	parser.add_option("-b", "--big-endian", \
+			help="The '-b' switch will result in the output bottle " + \
+			"file being written in big-endian " + \
+			"(SPARC/Solaris, PowerPC/Mac) format rather than " + \
+			"little-endian (Intel/Linux&Windows) format.", \
+			action="store_true", dest="bigendian")
+	(opts, args) = parser.parse_args()
 
-    try:
-    	largs = len(args)
-	if largs != 3:
-	    if largs > 0:
-	        parser.error("incorrect number of arguments")
-	    parser.print_help()
-        else:
-            m = BottleMerge()
-            m.bottle_merge(args[0], args[1], args[2], \
-                    allow_gaps=opts.allow_gaps, bigendian=opts.bigendian)
-    except:
-        print "ERROR:", sys.exc_info()[1]
-        raise
+	try:
+		largs = len(args)
+		if (largs != 3):
+			if (largs > 0):
+				parser.error("incorrect number of arguments")
+			parser.print_help()
+		else:
+			m = BottleMerge()
+			m.bottle_merge(args[0], args[1], args[2], \
+					allow_gaps=opts.allow_gaps, bigendian=opts.bigendian)
+	except:
+		print("ERROR:", sys.exc_info()[1])
+		raise
 

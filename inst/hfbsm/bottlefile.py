@@ -28,10 +28,10 @@ def write_bottle(filename, start, interval, num_pts, data_type, id, data, bigend
     """
 
     if num_pts != len(data):
-        raise PBO_FileContentsError("When writing bottle file %s - num_pts=%d, len(data)=%d" % (filename, num_pts, len(data)), filename)
+        raise PBO_FileContentsError("When writing bottle file %s - num_pts=%d, len(data)=%d" % (filename, num_pts, len(data)))
 
     if data_type not in [0, 1, 2]:
-        raise PBO_FileContentsError("When writing bottle file %s - invalid data type %d" % (filename, data_type), filename)
+        raise PBO_FileContentsError("When writing bottle file %s - invalid data type %d" % (filename, data_type))
 
     if bigendian:
         endian = '>'
@@ -45,7 +45,7 @@ def write_bottle(filename, start, interval, num_pts, data_type, id, data, bigend
                     header_size, start, interval, num_pts, \
                     data_type, BTL_MISSING[data_type], usgs_lock, id)
     if len(header) != header_size:
-        raise PBO_FileContentsError("Invalid header size?!?!", filename)
+        raise PBO_FileContentsError("Invalid header size?!?! %s" % (filename))
 
     file = open(filename, 'wb')
     file.write(header)
@@ -59,11 +59,10 @@ class Bottle:
     def __init__(self, filename):
         """
         """
-
         self.file_metadata = {}
         self.file_metadata['filename'] = filename
         if not os.path.isfile(self.file_metadata['filename']):
-            raise IOError, "Can not find file '%s'" % self.file_metadata['filename']
+            raise IOError("Can not find file '%s'" % self.file_metadata['filename'])
 
         self.file = open(self.file_metadata['filename'], 'rb')
         magic = self.file.read(2)
@@ -72,9 +71,9 @@ class Bottle:
         elif magic[0] == chr(0x5D) and magic[1] == chr(0x01):
             self.file_metadata['endian'] = '<'
         else:
-            print magic
-            print "Not recognized as a bottle file: %s" % self.file_metadata['filename']
-            raise PBO_FileContentsError("Not a bottle", self.file_metadata['filename'])
+            print(magic)
+            print("Not recognized as a bottle file: %s" % self.file_metadata['filename'])
+            raise(PBO_FileContentsError("Not a bottle %s" % self.file_metadata['filename']))
 
     ##################################################################
     def parse_filename(self):
@@ -145,22 +144,22 @@ class Bottle:
         self.file_metadata['start_timestamp'] = datetime.datetime.isoformat(BTL_EPOCH + datetime.timedelta(0, self.file_metadata['start']), ' ')
 
         if print_it:
-            print ""
-            print "file:        %s" % self.file_metadata['filename']
-            print "magic:       %x" % self.file_metadata['magic']
-            print "unused:      %d" % self.file_metadata['unused']
-            print "header_size: %d" % self.file_metadata['header_size']
-            print "start:       %s" % self.file_metadata['start_timestamp']
-            print "interval:    %g" % self.file_metadata['interval']
-            print "num_pts:     %d" % self.file_metadata['num_pts']
+            print("")
+            print("file:        %s" % self.file_metadata['filename'])
+            print("magic:       %x" % self.file_metadata['magic'])
+            print("unused:      %d" % self.file_metadata['unused'])
+            print("header_size: %d" % self.file_metadata['header_size'])
+            print("start:       %s" % self.file_metadata['start_timestamp'])
+            print("interval:    %g" % self.file_metadata['interval'])
+            print("num_pts:     %d" % self.file_metadata['num_pts'])
             if self.file_metadata['data_type'] in BTL_TYPE.keys():
-                print "data_type:   %s" % BTL_TYPE[self.file_metadata['data_type']]
+                print("data_type:   %s" % BTL_TYPE[self.file_metadata['data_type']])
             else:
-                print "data_type:   %d" % self.file_metadata['data_type']
-            print "missing:     %d" % self.file_metadata['missing']
-            print "usgs_lock:   %d" % self.file_metadata['usgs_lock']
-            print "id:          %d" % self.file_metadata['id']
-            print ""
+                print("data_type:   %d" % self.file_metadata['data_type'])
+            print("missing:     %d" % self.file_metadata['missing'])
+            print("usgs_lock:   %d" % self.file_metadata['usgs_lock'])
+            print("id:          %d" % self.file_metadata['id'])
+            print("")
 
         return self.file_metadata
 
@@ -189,18 +188,18 @@ class Bottle:
         for i in range(self.file_metadata['num_pts']):
             datum = self.file.read(BTL_TYPE_SIZE[self.file_metadata['data_type']])
             if datum == '':
-                print "error: read() returned empty string?"
+                print("error: read() returned empty string?")
                 continue
             if len(datum) != BTL_TYPE_SIZE[self.file_metadata['data_type']]:
-                print "error: read() returned unexpected number of bytes"
+                print("error: read() returned unexpected number of bytes")
                 continue
             value = struct.unpack(pack_format, datum)
             self.data.append(value[0])
             if print_it:
                 if timestamps:
-                    print print_format % (datetime.datetime.isoformat(BTL_EPOCH + start_offset + (i * interval), ' '), value[0])
+                    print(print_format % (datetime.datetime.isoformat(BTL_EPOCH + start_offset + (i * interval), ' '), value[0]))
                 else:
-                    print print_format % (value[0])
+                    print(print_format % (value[0]))
 
         return self.data
 
@@ -209,12 +208,12 @@ class Bottle:
 
 if __name__ == '__main__':
     def usage():
-        print "Usage: %s [ -h | -d | -t ] filename" % sys.argv[0]
-        print "      default: print header and all data with timestamps"
-        #print "       -py     print python version only"
-        print "       -h      print header info only"
-        print "       -d      print data only, no header, no timestamps"
-        print "       -t      print data only, no header, with timestamps"
+        print("Usage: %s [ -h | -d | -t ] filename" % sys.argv[0])
+        print("      default: print header and all data with timestamps")
+        #print("       -py     print python version only")
+        print("       -h      print header info only")
+        print("       -d      print data only, no header, no timestamps")
+        print("       -t      print data only, no header, with timestamps")
 
     if len(sys.argv) == 2:
         b = Bottle(sys.argv[1])

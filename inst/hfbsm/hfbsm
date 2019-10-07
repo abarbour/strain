@@ -118,10 +118,11 @@ echo "	Hz	${samp}"
 #  (> sudo easy_install cprofilev)
 #  > cprofilev prof.bottlemerge
 #  (Navigate to http://localhost:4000)
-set PYCMD_BM="python -m cProfile -o prof.bottlemerge ${pydir}/bottlefile_merge.py"
+set pyv="python2.7" #/usr/bin/env
+set PYCMD_BM="${pyv} -m cProfile -o prof.bottlemerge ${pydir}/bottlefile_merge.py"
 # -t turns on timestamps
 # can set -b if system is big-endian
-set PYCMD_B="python -m cProfile -o prof.bottle ${pydir}/bottlefile.py -t"
+set PYCMD_B="${pyv} -m cProfile -o prof.bottle ${pydir}/bottlefile.py -t"
 #
 
 ########## get data ######################
