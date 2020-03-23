@@ -5,11 +5,23 @@
 \alias{plot_orientations.default}
 \title{Plot the orientations of the instrument gauges.}
 \usage{
-plot_orientations(angs, gauge.labels = seq_along(angs), name = "",
-  opar = TRUE, circle.n = 30, ...)
+plot_orientations(
+  angs,
+  gauge.labels = seq_along(angs),
+  name = "",
+  opar = TRUE,
+  circle.n = 30,
+  ...
+)
 
-\method{plot_orientations}{default}(angs, gauge.labels = seq_along(angs),
-  name = "", opar = TRUE, circle.n = 30, ...)
+\method{plot_orientations}{default}(
+  angs,
+  gauge.labels = seq_along(angs),
+  name = "",
+  opar = TRUE,
+  circle.n = 30,
+  ...
+)
 }
 \arguments{
 \item{angs}{numeric; angles of gauges to plot}

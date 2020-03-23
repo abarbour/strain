@@ -13,8 +13,7 @@ linearize(X, gap = NULL, ref.strn = FALSE, ...)
 
 unlinearize(X, gap = NULL, constant = 0, unref.strn = TRUE, ...)
 
-\method{unlinearize}{default}(X, gap = NULL, constant = 0,
-  unref.strn = TRUE, ...)
+\method{unlinearize}{default}(X, gap = NULL, constant = 0, unref.strn = TRUE, ...)
 }
 \arguments{
 \item{X}{numeric; gauge strains}

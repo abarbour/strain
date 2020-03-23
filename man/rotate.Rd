@@ -7,8 +7,7 @@
 \usage{
 rotate(X1, X2 = NULL, theta.deg = 0, hand.rule = c("right", "left"))
 
-\method{rotate}{default}(X1, X2 = NULL, theta.deg = 0,
-  hand.rule = c("right", "left"))
+\method{rotate}{default}(X1, X2 = NULL, theta.deg = 0, hand.rule = c("right", "left"))
 }
 \arguments{
 \item{X1}{numeric; 1-axis components}

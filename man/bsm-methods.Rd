@@ -41,11 +41,9 @@
 
 \method{rotate}{bsm}(X1, ...)
 
-\method{geod_rotate}{bsm}(E11, E22, E12, geodesic.deg = 0,
-  NsEwNw = FALSE, ...)
+\method{geod_rotate}{bsm}(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE, ...)
 
-\method{strains}{bsm}(B, strn.type = c("gauge", "calib"),
-  zero.fill.na = TRUE, ...)
+\method{strains}{bsm}(B, strn.type = c("gauge", "calib"), zero.fill.na = TRUE, ...)
 
 \method{principals}{bsm}(S, ...)
 

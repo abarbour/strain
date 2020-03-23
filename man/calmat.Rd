@@ -19,9 +19,13 @@ calmat(X, station, ...)
 
 calmat_reshape(X, ...)
 
-\method{calmat_reshape}{default}(X, inv.type = NULL,
-  coeff.names = c("S11", "S21", "S31", "S41", "S12", "S22", "S32", "S42",
-  "S13", "S23", "S33", "S43"), ...)
+\method{calmat_reshape}{default}(
+  X,
+  inv.type = NULL,
+  coeff.names = c("S11", "S21", "S31", "S41", "S12", "S22", "S32", "S42", "S13", "S23",
+    "S33", "S43"),
+  ...
+)
 }
 \arguments{
 \item{X}{calibration table}

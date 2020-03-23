@@ -10,8 +10,7 @@ geod_rotate(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE, ...)
 
 geod_rotate2(BSM, geodesic.deg = 0, check.columns = FALSE, ...)
 
-\method{geod_rotate}{default}(E11, E22, E12, geodesic.deg = 0,
-  NsEwNw = FALSE, ...)
+\method{geod_rotate}{default}(E11, E22, E12, geodesic.deg = 0, NsEwNw = FALSE, ...)
 }
 \arguments{
 \item{E11}{numeric; 1-axis strain}

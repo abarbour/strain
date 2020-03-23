@@ -5,8 +5,7 @@
 \alias{projection_matrix}
 \title{Calculate Coulomb stresses on a plane from a given stress tensor}
 \usage{
-CoulombStress(S, n = NULL, mu = 0.6, B = 0.85, in.bar = FALSE,
-  unit.scale = 1)
+CoulombStress(S, n = NULL, mu = 0.6, B = 0.85, in.bar = FALSE, unit.scale = 1)
 
 projection_matrix(n = c(1, 1, 1))
 }

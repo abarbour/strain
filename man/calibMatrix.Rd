@@ -7,8 +7,16 @@
 \usage{
 calibMatrix(MC, ...)
 
-\method{calibMatrix}{default}(MC, MD = NULL, MH = NULL, axis_deg = 0,
-  delta_deg = 0, invert = FALSE, verbose = TRUE, ...)
+\method{calibMatrix}{default}(
+  MC,
+  MD = NULL,
+  MH = NULL,
+  axis_deg = 0,
+  delta_deg = 0,
+  invert = FALSE,
+  verbose = TRUE,
+  ...
+)
 }
 \arguments{
 \item{MC}{numeric;}

@@ -5,8 +5,15 @@
 \alias{principal_stresses}
 \title{Compute plane stress tensor from plane strain tensor}
 \usage{
-stresses(E11, E22, E12, G = 3e+10, nu = 0.25,
-  extension.positive = TRUE, as.mat = TRUE)
+stresses(
+  E11,
+  E22,
+  E12,
+  G = 3e+10,
+  nu = 0.25,
+  extension.positive = TRUE,
+  as.mat = TRUE
+)
 
 principal_stresses(S)
 }

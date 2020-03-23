@@ -4,7 +4,9 @@
 \name{minphs}
 \alias{minphs}
 \title{Minimum phase lowpass filter weights for strain data}
-\format{A list with filter weights by decimation factor}
+\format{
+A list with filter weights by decimation factor
+}
 \description{
 Minimum phase lowpass filter weights for strain data
 }

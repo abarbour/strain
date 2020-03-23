@@ -8,8 +8,13 @@
 \usage{
 plot_gaugeline(...)
 
-\method{plot_gaugeline}{default}(theta.deg = 0, gauge.label = NULL,
-  x = c(0, 0), y = c(-1, 1), ...)
+\method{plot_gaugeline}{default}(
+  theta.deg = 0,
+  gauge.label = NULL,
+  x = c(0, 0),
+  y = c(-1, 1),
+  ...
+)
 }
 \arguments{
 \item{...}{additional parameters passed to \code{lines}}

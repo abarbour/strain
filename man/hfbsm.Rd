@@ -13,23 +13,44 @@
 \usage{
 hfbsm(sta, year, jday, ...)
 
-\method{hfbsm}{default}(sta, year, jday, st, duration, sampling = 1,
-  verbose = TRUE, check.first = TRUE, ...)
+\method{hfbsm}{default}(
+  sta,
+  year,
+  jday,
+  st,
+  duration,
+  sampling = 1,
+  verbose = TRUE,
+  check.first = TRUE,
+  ...
+)
 
 check_for_hfbsm(sta4, starttime, endtime)
 
 load_hfbsm(object, ...)
 
-\method{load_hfbsm}{hfbsm.nfo}(object, file.type = c("lin", "raw"),
-  loc = ".", stop.on.empty = TRUE, ...)
+\method{load_hfbsm}{hfbsm.nfo}(
+  object,
+  file.type = c("lin", "raw"),
+  loc = ".",
+  stop.on.empty = TRUE,
+  ...
+)
 
-\method{plot}{hfbsm}(x, sc = 1, main = NULL, xlab = NULL,
-  note = NULL, v.markers = NULL, frame.plot = FALSE, ...)
+\method{plot}{hfbsm}(
+  x,
+  sc = 1,
+  main = NULL,
+  xlab = NULL,
+  note = NULL,
+  v.markers = NULL,
+  frame.plot = FALSE,
+  ...
+)
 
 update_file_location(object, new.location, ...)
 
-\method{update_file_location}{hfbsm.nfo}(object, new.location,
-  verbose = TRUE, ...)
+\method{update_file_location}{hfbsm.nfo}(object, new.location, verbose = TRUE, ...)
 }
 \arguments{
 \item{sta}{character; the station code.  This can be either

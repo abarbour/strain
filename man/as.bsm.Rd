@@ -10,8 +10,15 @@
 \usage{
 as.bsm(X, ...)
 
-\method{as.bsm}{default}(X, g0az = 0, station = "", i.type = "GTSM",
-  linearize = TRUE, cal.tbl = c("pbou"), ...)
+\method{as.bsm}{default}(
+  X,
+  g0az = 0,
+  station = "",
+  i.type = "GTSM",
+  linearize = TRUE,
+  cal.tbl = c("pbou"),
+  ...
+)
 
 is.bsm(X)
 
