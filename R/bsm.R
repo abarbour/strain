@@ -522,9 +522,6 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
 }
 
 #' @rdname hfbsm
-#' @aliases plot.hfbsm
-#' @method plot hfbsm
-#' @export
 #' @param x an object of class \code{'hfbsm'}
 #' @param sc numeric; a value to scale the strains by
 #' @param main character; the plot title
@@ -532,6 +529,7 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
 #' @param note character; a note to place in the bottom left corner
 #' @param v.markers numeric; dashed, red, vertical lines are drawn at these times
 #' @param frame.plot logical; should boxes be drawn around each frame?
+#' @export
 plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL, 
                        frame.plot=FALSE, ...){
   dat <-  sc*x$srcdat
