@@ -140,6 +140,7 @@ get_linstrain_iris <- function(Station, Channel, Start, Duration, samp=NULL, cle
   ch <- dplyr::mutate(ch, 
                        Sample = raw2lin(Sample, station=Station) * 1e9, 
                        Sample = Sample - Sample[1])
+  return(ch)
 }
 st <- '2009-08-03 17:40:00'
 ch4alt <- get_linstrain_iris('B004', 4, Start=st, Duration=3600)
@@ -169,7 +170,7 @@ to_ts <- function(d, ref.time, Hz=1){
   # join against dummy time index (fills with NA if missing)
   yfull <- dplyr::left_join(tfull, y, by='Rel.sec')
   z <- zoo::zoo(x=yfull$Sample, order.by = yfull$Rel.sec, frequency = Hz)
-  z
+  return(z)
 }
 ```
 
