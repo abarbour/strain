@@ -28,7 +28,7 @@ Imports:
     cli,
     crayon
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 Suggests: dplyr,
     readr,
     testthat,
