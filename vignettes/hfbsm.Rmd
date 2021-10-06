@@ -1,0 +1,277 @@
+---
+title: "Getting high-frequency borehole strain data"
+author: "Andrew J Barbour"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting high-frequency borehole strain data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width=7
+)
+knitr::opts_knit$set(global.par = TRUE)
+```
+```{r echo=FALSE}
+par(las=1)
+```
+
+
+There are multiple ways to assemble high-frequency borehole strainmeter (BSM) data from
+the Network of the Americas (NOTA) network.
+Here I review the capabilities provided by functions in the `strain` package (https://github.com/abarbour/strain), 
+and show an alternative method for accessing them via the IRIS-DMC timeseries webservice (http://service.iris.edu/irisws/timeseries/1/)
+
+## IRIS webservices
+
+We'll start with a method that doesn't depend on the `strain` package:
+IRIS-DMC, which offers strain timeseries through their webservices. 
+To download 1 Hz data for a single channel (e.g., channel 4), the URL would look something like this: (https://service.iris.edu/irisws/timeseries/1/query?net=PB&sta=B004&loc=T0&cha=LS4&start=2009-08-03T17:40:00&dur=2700&format=plot) where we've set the format to produce a plot in the browser^[Had we set `cha=BS4` we would've gotten
+20 Hz data, the highest sampling rate available.]. This shows teleseismic waves in Cascadia
+from the 2009 M6.9 Canal de Ballenas earthquake in the Gulf of Mexico. To download this we have to save a file
+locally and load in the table of values. The option `format=ascii` gives a table of timestamps and values, but my preference 
+is to use `format=geocsv` which contains more header information. One approach is:
+```{r ch4examp}
+library(readr)
+ch4_url <- paste('https://service.iris.edu/irisws/timeseries/1/query?net=PB',
+                 'sta=B004',
+                 'cha=LS4',
+                 'loc=T0',
+                 'start=2009-08-03T17:40:00',
+                 'duration=3600',
+                 'format=geocsv', sep="&")
+ch4_dest <- tempfile(fileext='.csv')
+
+# download and read-in csv
+download.file(ch4_url, destfile=ch4_dest)
+ch4 <- readr::read_csv(ch4_dest, comment = '#')
+
+# plot using built-in method of two-column posix-time data.frame
+plot(ch4, type='l')
+```
+
+Note the large spike which obscures the plot axis: this is because a value of `999999` is inserted at times of missing data. This can be fixed easily, and we'll remove the mean to have more sensible plot limits:
+```{r}
+remove_bad <- function(x) ifelse(x==999999,NA,x)
+
+library(dplyr)
+ch4 <- dplyr::mutate(ch4, 
+                     Sample = remove_bad(Sample), 
+                     Sample = Sample - mean(Sample, na.rm=TRUE))
+
+plot(ch4, type='l')
+```
+
+The record plotted above is in raw counts and does not represent linear, uniaxial strain.
+To convert to strain we need to linearize with a very straightforward equation that
+takes into account the known capacitance gap distance and the analog-to-digital digitization scale:
+```{r}
+raw2lin <- function(g, station){
+  diam <- 87e-3 # 87 mm
+  gap <- 100e-6 # 100 micron for some, 200 micron for others
+  # https://github.com/abarbour/pborepo/blob/master/data/gen/bsm_gaps
+  if (!missing(station)){
+    if (station %in% c('B001','B003','B004','B005','B006','B007','B009',
+                     'B010','B011','B012','B018',
+                     'B022','B024',
+                     'B035',
+                     'B081','B082','B086','B087')){
+      gap <- 2 * gap
+    }
+  } else {
+    warning('no station given; capacitance gap assumed to be {',
+            gap*1e6,
+            '} microns',
+            call. = FALSE, immediate. = FALSE)
+  }
+  G <- g / 1e8
+  (gap / diam) * G / (1 - G)
+}
+raw2lin(1)
+raw2lin(1,'B001')
+```
+
+Applying this to the raw strain timeseries, scaling to nanostrain (1 part-per-billion),
+and subtracting the first value gives the result we want:
+```{r}
+# linearize and convert to nanostrain, make relative to first observation
+ch4 <- dplyr::mutate(ch4, 
+                     Sample = raw2lin(Sample, station='B004') * 1e9, 
+                     Sample = Sample - Sample[1])
+plot(ch4, type='l')
+```
+
+Unfortunately, wildcards do not work in the IRIS-webservices schema.
+To get the full record at station B004 -- all four gauges -- we have to 
+repeat this procedure four times, and combine the records.
+```{r}
+get_linstrain_iris <- function(Station, Channel, Start, Duration, samp=NULL, clean=TRUE){
+  require(dplyr)
+  require(readr)
+  Samp <- match.arg(samp, c('1','20'))
+  Code <- ifelse(Samp=='1','L','B')
+  stopifnot(Channel %in% c(1,2,3,4))
+  ChanCode <- sprintf("%sS%s",Code,Channel)
+  
+  Start <- strftime(Start, "%FT%T")
+  
+  ch_url <- paste('https://service.iris.edu/irisws/timeseries/1/query?net=PB',
+                  sprintf('sta=%s', Station),
+                  sprintf('cha=%s', ChanCode),
+                 'loc=T0',
+                 sprintf('start=%s', Start),
+                 sprintf('duration=%s', Duration),
+                 'format=geocsv', sep="&")
+  message(ch_url)
+  ch_dest <- tempfile(fileext='.csv')
+
+  download.file(ch_url, destfile=ch_dest)
+  ch <- readr::read_csv(ch_dest, comment = '#')
+  if (clean){
+    ch <- dplyr::mutate(ch, 
+                        Sample = remove_bad(Sample), 
+                        Sample = Sample - mean(Sample, na.rm=TRUE))
+  }
+  ch <- dplyr::mutate(ch, 
+                       Sample = raw2lin(Sample, station=Station) * 1e9, 
+                       Sample = Sample - Sample[1])
+}
+st <- '2009-08-03 17:40:00'
+ch4alt <- get_linstrain_iris('B004', 4, Start=st, Duration=3600)
+plot(ch4alt, type='l')
+all.equal(ch4, ch4alt)
+```
+
+Now we can get the other channels,
+```{r}
+ch1alt <- get_linstrain_iris('B004', 1, Start=st, Duration=3600)
+ch2alt <- get_linstrain_iris('B004', 2, Start=st, Duration=3600)
+ch3alt <- get_linstrain_iris('B004', 3, Start=st, Duration=3600)
+```
+
+make a function to co-register the observation times,
+```{r}
+library(zoo)
+to_ts <- function(d, ref.time, Hz=1){
+  if (missing(ref.time)){
+    ref.time <- d$Time[1]
+  }
+  stref <- as.POSIXct(ref.time)
+  # calculate index of seconds relative to reference time
+  y <- dplyr::mutate(d, Rel.sec = as.numeric(difftime(Time, stref, units = 'secs')))
+  # build dummy time index to ensure completeness (e.g., if there are gaps)
+  tfull <- data.frame(Rel.sec=seq(from=min(y$Rel.sec), to=max(y$Rel.sec), by=1/Hz))
+  # join against dummy time index (fills with NA if missing)
+  yfull <- dplyr::left_join(tfull, y, by='Rel.sec')
+  z <- zoo::zoo(x=yfull$Sample, order.by = yfull$Rel.sec, frequency = Hz)
+  z
+}
+```
+
+and assemble the final product
+```{r}
+stp <- as.POSIXct(st) + 5 # add an arbitrary offset to illustrate alignment
+Ch1 <- to_ts(ch1alt, ref.time=stp)
+Ch2 <- to_ts(ch2alt, ref.time=stp)
+Ch3 <- to_ts(ch3alt, ref.time=stp)
+Ch4 <- to_ts(ch4alt, ref.time=stp)
+
+B <- zoo::merge.zoo(Ch1, Ch2, Ch3, Ch4, all=TRUE)
+head(B)
+plot(B)
+Bdf <- zoo::fortify.zoo(B, names='Rel.sec')
+head(Bdf)
+```
+
+Now that the four channels are assembled, we can do things like calculate the RMS strain
+```{r}
+Ch <- as.matrix(dplyr::select(Bdf, Ch1:Ch4))
+RMS <- sqrt(rowMeans(Ch * Ch, na.rm = TRUE))
+plot(Bdf$Rel.sec, RMS, type='l')
+```
+
+or apply a tidal calibration matrix
+```{r}
+# Isotropic calibration matrix
+# see http://bsm.unavco.org/bsm/level2/B004/B004.README.txt
+E.iso <- rbind(
+  c(0.2967, 0.5185, 0.2958, 0.2222),
+  c(-0.2887, 0.2983, 0.1688, -0.1784),
+  c(-0.2660, -0.2196, 0.3531, 0.1325)
+)
+```
+
+to transform the four gauge records into tensor strain combinations:
+```{r}
+S.iso <- Ch %*% t(E.iso)
+colnames(S.iso) <- c('Eee+Enn','Eee-Enn','2Een')
+
+plot(Bdf$Rel.sec, S.iso[,'Eee+Enn'], type='l', main='Areal strain')
+plot(Bdf$Rel.sec, S.iso[,'Eee-Enn'], type='l', main='Differential extension')
+plot(Bdf$Rel.sec, S.iso[,'2Een'], type='l', main='Engineering shear')
+```
+
+and to uniaxial strain components:
+```{r}
+e.iso <- rbind(
+  c(1/2,1/2,0),
+  c(1/2,-1/2,0),
+  c(0,0,1/2)
+)
+s.iso <- S.iso %*% e.iso
+colnames(s.iso) <- c('Eee','Enn','Een')
+
+plot(Bdf$Rel.sec, s.iso[,'Eee'], type='l', main='East extension')
+plot(Bdf$Rel.sec, s.iso[,'Enn'], type='l', main='North extension')
+plot(Bdf$Rel.sec, s.iso[,'Een'], type='l', main='East-North Shear')
+```
+
+
+## R package `strain`
+
+The `strain` package has additional capabilities to assemble high-frequency strain
+data. Being a set of development codes, however, the code is not ready to be published
+on CRAN (https://cran.r-project.org/); hence, it must installed with either the `remotes` package:
+```{r install}
+library(remotes)
+remotes::install_github('abarbour/strain')
+```
+or by downloading the repository and installing with R built-in command line tools, e.g. `R CMD INSTALL strain.tar.gz`.
+
+Then we can load the package and use its functionality:
+```{r}
+library(strain)
+```
+
+The main function is `hfbsm`, which calls build in scripts in the `inst/hfbsm/` directory (see https://github.com/abarbour/strain/tree/master/inst/hfbsm). Specifically, it calls the
+csh script `inst/hfbsm/hfbsm` which itself downloads the necessary raw data from the daily archives, and then
+calls `inst/hfbsm/bottlefile_merge.py` and `inst/hfbsm/bottlefile.py` sequentially.
+After the raw strains are assembled they are linearized in the same way before. This approach
+has the benefit of needing only a single command to get the data in question:
+```{r}
+res <- strain::hfbsm(sta = 'B004', 
+                     year=strftime(st, '%Y'), 
+                     jday=strftime(st, '%j'), # Julian day
+                     st=strftime(st, '%T'), # h:m:s
+                     duration=3000, sampling = 1)
+dat <- strain::load_hfbsm(res)
+plot(dat)
+```
+
+Note that because of the way the files are structured, the start of the data will not be exactly the start time requested.
+Additional processing may be needed to get the desired data window. Also note the result of `load_hfbsm` will be
+an object of class `hfbsm` which is a list containing the timeseries and timestamps, and other metadata
+```{r}
+class(dat)
+str(dat,2)
+
+# timeseries data are in 'srcdat' and can be easily windowed:
+plot(window(dat[['srcdat']], 4000, 5000), main='Strains at B004: Canal de Ballenas')
+```
+
+The same scripts work on the command line; see `inst/hfbsm/01.test`.

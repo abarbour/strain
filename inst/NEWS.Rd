@@ -11,6 +11,11 @@
 \title{News for package 'strain'}
 \encoding{UTF-8}
 
+\section{CHANGES in strain VERSION 0.2.10 (2021-10-05)}{
+  \itemize{
+    \item Added hfbsm vignette; fixed hfbsm gap flag for B035
+  }
+}
 \section{CHANGES in strain VERSION 0.2.9 (2019-10-07)}{
   \itemize{
     \item Fixing python errors

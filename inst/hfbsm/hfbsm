@@ -331,6 +331,9 @@ case [B][0][1][0128]
 case [B][0][2][24]
     set gap=0.0002
     breaksw
+case [B][0][3][5]
+    set gap=0.0002
+    breaksw
 case [B][0][8][1267]
     set gap=0.0002
     breaksw
