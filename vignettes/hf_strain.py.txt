@@ -12,7 +12,7 @@ def Linearize(strain_stream, blank_missing = True, in_nanostrain = True, demean 
 
 	def _choose_gap(station):
 		two_gaps = set(["B001","B003","B004","B005","B006","B007","B009","B010","B011","B012","B018","B022","B024","B035","B081","B082","B086","B087"])
-		gap = 1e-6
+		gap = 100e-6
 		if (station in two_gaps):
 			print("gap for station "+station+" is two micron")
 			gap = gap * 2
