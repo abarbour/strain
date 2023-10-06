@@ -1,0 +1,65 @@
+# -*- coding: utf-8 -*-
+#from __future__ import division
+from obspy.clients.fdsn import Client
+from obspy import UTCDateTime
+import numpy as np
+
+
+def Linearize(strain_stream, blank_missing = True, in_nanostrain = True, demean = True, **kwargs):
+	"""
+	"""
+	import numpy as np
+
+	def _choose_gap(station):
+		two_gaps = set(["B001","B003","B004","B005","B006","B007","B009","B010","B011","B012","B018","B022","B024","B035","B081","B082","B086","B087"])
+		gap = 1e-6
+		if (station in two_gaps):
+			print("gap for station "+station+" is two micron")
+			gap = gap * 2
+		
+		return gap;
+
+	print(str(strain_stream))
+
+	for trace in strain_stream:
+		channel = trace.stats['channel']
+		stagap = _choose_gap(trace.stats['station'])
+		diam = 87e-3
+		a2d = 1e8
+		# bad data arrive with this value:
+		inds = trace.data == 999999
+		dat = (trace.data / a2d)
+	
+		# convert from counts to linear strain
+		trace.data = 1.0 * (stagap / diam) * dat / (1 - dat)
+		#trace.stats.mseed.encoding = "FLOAT64"
+
+		if (blank_missing):
+			trace.data[inds] = np.nan
+
+		# it's critical that rescaling and demeaning _not_ occur before the conversion step above
+		if (in_nanostrain):
+			trace.data = 1.0e9 * trace.data
+
+		if (demean):
+			mean = np.nanmean(trace.data)
+			print("Channel %s mean: %s" % (channel, mean))
+			trace.data = trace.data - mean
+
+	return strain_stream
+
+
+
+t = UTCDateTime("2023-01-01T18:35:04") # OT of 2023 M5.4 Ferndale aftershock nc73827571
+start_time = t
+end_time = t + 40
+client = Client("IRIS")
+raw = client.get_waveforms("PB", "B045", "T0", "BS?", start_time, end_time)
+raw.plot()
+st = Linearize(raw)
+st.plot()
+#st.trigger('recstalta', sta=1, lta=4)
+#st.plot()
+#st.write("strains.mseed", format="MSEED")
+#st.write("strains.txt", format="TSPAIR")
+#'''
