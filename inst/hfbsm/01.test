@@ -1,2 +1,7 @@
 hfbsm B084 pinyon084bcs2006 2010 094 '23:00:00' 2010 095 '00:59:59' 1
+# earthscope switched to common cloud in late 2023 so this method
+# no longer works after ~Sep 2023 :((((
+#
+#hfbsm B084 pinyon084bcs2006 2024 340 '18:44:21' 2024 340 '19:15:00' 1
+#
 #hfbsm B073 varian073bcs2006 2009 105 13:00:00 2009 105 14:00:00 1

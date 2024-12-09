@@ -3,7 +3,7 @@
 #' @name bsm-methods
 #' @aliases bsm_methods
 #' @rdname bsm-methods
-#' 
+#'
 #' @param x  object of class \code{bsm}
 #' @param ...  additional arguments
 #'
@@ -19,10 +19,10 @@ print.bsm <- function(x, ...){
 }
 
 #' Convert an object to one with class \code{'bsm'}
-#' 
+#'
 #' @name as.bsm
 #' @aliases bsm
-#' 
+#'
 #' @param X  generic object
 #' @param g0az numeric; the orientation of the zeroth gauge
 #' @param station character; name of the station associated with the data
@@ -35,11 +35,11 @@ as.bsm <- function(X, ...) UseMethod("as.bsm")
 #' @rdname as.bsm
 #' @method as.bsm default
 #' @export
-as.bsm.default <- function(X, 
-                           g0az=0, 
-                           station="", 
-                           i.type="GTSM", 
-                           linearize=TRUE, 
+as.bsm.default <- function(X,
+                           g0az=0,
+                           station="",
+                           i.type="GTSM",
+                           linearize=TRUE,
                            cal.tbl=c("pbou"), # add more!
                            ...){
   i.type <- match.arg(i.type)
@@ -73,10 +73,10 @@ is.bsm <- function(X) inherits(X, "bsm")
 is.raw_strain <- function(X) inherits(X, "gauge")
 
 #' Return gauge orientations, restricted or not.
-#' 
+#'
 #' @details
 #' The restriction is done with \code{\link{strain_azimuth}}
-#' 
+#'
 #' @param B object
 #' @param restrict.range logical; should the values be in strain azimuths
 #' @export
@@ -117,18 +117,18 @@ plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="
   }
   lims <- c(-1,1)
   sc <- 1.2
-  if (opar){  
+  if (opar){
     oploc <- par(no.readonly = TRUE)
     par(mar=c(0,0,3,0), bty="n", xaxt="n", yaxt="n", pty="s")
     on.exit(par(oploc))
   }
   ccol <- ifelse(circle.n==0,NA,"gray")
   bsmcirc <- circle(ifelse(circle.n==0, 5, abs(circle.n)), angs[1])
-  plot(bsmcirc, 
+  plot(bsmcirc,
        main=sprintf("%s Gauge Orientations", name), asp=1, col=NA, #ccol,
        xlab="", ylab="", type="l", xlim=sc*lims, ylim=sc*lims, ...)
   stopifnot(length(angs)==length(gauge.labels))
-  toret <- invisible(sapply(seq_along(angs), 
+  toret <- invisible(sapply(seq_along(angs),
                    FUN=function(n, ...){plot_gaugeline(angs[n], as.character(gauge.labels[n]), ...)},
                    ...
                    ))
@@ -140,22 +140,22 @@ plot_orientations.default <- function(angs, gauge.labels=seq_along(angs), name="
 plot_orientations.bsm <- function(angs, ...){
   B <- angs
   angs <- gaugeOrientations(B, restrict.range=TRUE)
-  plot_orientations(angs, 
-                    gauge.labels=c("CH0","CH1","CH2","CH3"), 
-                    name=paste(get_station(B), get_itype(B)), 
+  plot_orientations(angs,
+                    gauge.labels=c("CH0","CH1","CH2","CH3"),
+                    name=paste(get_station(B), get_itype(B)),
                     ...)
   return(invisible(angs))
 }
 
 #' Plots lines for gauge orientations
-#' 
+#'
 #' @details The rotation is in a left-hand (cw) sense with zero being the y-axis.
 #' This is because in the field the gauges are generally oriented from magnetic
 #' North in the East direction.
 #'
 # because I'm dislexic:
 #' @aliases plot_guageline
-#' 
+#'
 #' @param theta.deg numeric; the angle to rotate from \eqn{x,y}
 #' @param gauge.label character; the label to associate with the line
 #' @param x numeric; default 1-axis range
@@ -187,14 +187,14 @@ orientation_conventions <- function(){
     #       \\ | /  dTheta=60
     #      ---|---1
     #       / | \\  dTheta=60
-    
+
   Hodgkinson et al 2013:
     #      1  4  3
     #       \\ | /  dTheta=60
     #      ---|---2
     #       / | \\  dTheta=60
 
-  Roeloffs 2010 (x1 in ch1 and x2 in ch3 directions):    
+  Roeloffs 2010 (x1 in ch1 and x2 in ch3 directions):
     #      gauges                 extensions
     #      0  3  2                2  3  0
     #       \\ | /  dTheta=60       \\ | /
@@ -205,14 +205,20 @@ orientation_conventions <- function(){
 
 
 #' Assemble high-frequency strain data
-#' 
+#'
 #' @details
-#' This uses a set of scripts included with the package, namely 
-#' \code{hfbsm}, and the python scripts 
+#' This uses a set of scripts included with the package, namely
+#' \code{hfbsm}, and the python scripts
 #' \code{bottlefile.py} and \code{bottlefile_merge.py},
-#' to create (from the raw source files) high frequency PBO strain 
+#' to create (from the raw source files) high frequency PBO strain
 #' records for each channel at a station.
-#' 
+#'
+#' Note that EarthScope switched to a cloud-based system in
+#' late 2023, and this will always fail after that switch even
+#' if the data exist; hence, the script will throw an error
+#' if that's true. An alternative solution may be possible
+#' via the earthscopestraintools python package.
+#'
 #' @param sta character; the station code.  This can be either
 #' the 4-character code (e.g., \code{'B084'}) of the
 #' 16-character code (e.g., \code{'pinyon084bcs2006'}) because it
@@ -229,30 +235,30 @@ orientation_conventions <- function(){
 #' @param verbose logical; should messages and warnings be given?
 #' @param check.first logical; should an attempt be made to check if the data exists prior to assembly?
 #' This assumes data lie below \url{http://ds.iris.edu/pbo/raw/bsm}
-#' @param ... additional parameters 
+#' @param ... additional parameters
 #' @param object an object having class \code{'hfbsm.nfo'}
-#' @param file.type character; the type of strain data to load: 
-#' \code{'lin'} for linearized data in units of linear uncorrected strain, or 
+#' @param file.type character; the type of strain data to load:
+#' \code{'lin'} for linearized data in units of linear uncorrected strain, or
 #' \code{'raw'} for raw data in units of nonlinear counts. See [1] for
 #' more information.
 #' @param loc (unused)
-#' 
-#' @author A.J. Barbour.  
+#'
+#' @author A.J. Barbour.
 #' \code{bottlefile.py} and \code{bottlefile_merge.py} were
 #' modified from those written by Jim Wright (previously at UNAVCO).
 #' @export
-#' 
-#' @references [1] 
-#' Barbour, A. J., and Agnew, D. C. (2011). 
-#' Noise levels on plate boundary observatory borehole strainmeters in southern California. 
+#'
+#' @references [1]
+#' Barbour, A. J., and Agnew, D. C. (2011).
+#' Noise levels on plate boundary observatory borehole strainmeters in southern California.
 #' \emph{Bulletin of the Seismological Society of America}.
 #' 101(5), 2453-2466. doi: 10.1785/0120110062
-#' 
-#' @return 
+#'
+#' @return
 #' \code{\link{hfbsm}}: A list with information about the results, having class \code{'hfbsm.nfo'}.
-#' 
+#'
 #' @seealso \code{\link{strain-package}}
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' # Download and assemble
@@ -272,7 +278,7 @@ orientation_conventions <- function(){
 #' # Find out where the scripts live:
 #' file.path(find.package('strain'), "hfbsm")
 #' }
-#' 
+#'
 hfbsm <- function(sta, year, jday, ...) UseMethod("hfbsm")
 
 #' @rdname hfbsm
@@ -289,7 +295,9 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
          oDt = Dt
     )
   }
-  #
+
+  if (Dt > ISOdatetime(2023,9,1,0,0,0)) stop('EarthScope switched to Common Cloud; files not on ds.iris.edu after ~2023-Sep')
+
   stadat <- pborepo::station_data2(sta, use.regexp=TRUE)
   if (nrow(stadat)==0){
     stop("no stations found for: ", sta)
@@ -307,7 +315,7 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
   # if the times given to 'hfbsm' script
   # are, say, "00:00:00" and "01:00:00" the result
   # will be _through_ hour 1, an end at 1:59:59.
-  # this ensures (?) the end time will be "00:59:59" 
+  # this ensures (?) the end time will be "00:59:59"
   # instead, as the user expects it to be
   is.1hz <- sampling==1
   min.dur <- ifelse(is.1hz, 3600, 60) - 1
@@ -331,7 +339,7 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
     end_time <- start_time + duration
     jdseq <- strftime(seq(as.Date(start_time, tz='UTC'), as.Date(end_time, tz='UTC'), by='days', tz='UTC'), "%Y:%j", tz='UTC')
     ext <- ifelse(is.1hz,'_01.tar', '_20.tar')
-    urls_to_check <- sprintf("http://ds.iris.edu/pbo/raw/bsm/%s/%s/%s.%s%s", sta16, gsub(":","/",jdseq), sta4, gsub(":","",jdseq), ext)
+    urls_to_check <- sprintf("https://ds.iris.edu/pbo/raw/bsm/%s/%s/%s.%s%s", sta16, gsub(":","/",jdseq), sta4, gsub(":","",jdseq), ext)
     url_checks <- sapply(urls_to_check, RCurl::url.exists)
     if (any(url_checks)){
       if (all(url_checks)){
@@ -352,10 +360,13 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
 	package.dir <- find.package('strain')
   hfbsm.dir <- pypath <- file.path(package.dir, func)
   script <- file.path(hfbsm.dir, func)
-  
-  pyver <- try(system(file.path(pypath,"version.py"), intern=TRUE, ignore.stderr=TRUE))
+
+  # check that python is installed
+  csys <- file.path(pypath,"version.py")
+  message(csys)
+  pyver <- try(system(csys, intern=TRUE, ignore.stderr=TRUE))
   if (inherits(pyver, "try-error")) stop( "python version-poke failed; check that python is installed" )
-  
+
   #hfbsm Bnum 16-character-code start_year  start_day_of_yr  start_time  end_year end_day_of_year end_time [samp]
 	#hfbsm B073 varian073bcs2006  2009 105 13:00:00 2009 105 16:00:00 [[1] pypath]
   TSTR <- function(Dt){sprintf("%s %s '%s'", Dt[['year']], Dt[['jday']], Dt[['hms']])}
@@ -397,7 +408,7 @@ hfbsm.default <- function(sta, year, jday, st, duration, sampling=1, verbose=TRU
     toret$SamplingHz <- hz
     #
     # this is the length of results if only one file-url is returned
-    nres <- 7 
+    nres <- 7
     # ^^^ this will change if more echo content is returned from hfbsm (if it's changed)
     # this is the length of results as returned (can have more than one url)
     nreso <- length(results)
@@ -433,7 +444,7 @@ check_for_hfbsm <- function(sta4, starttime, endtime){
   } else {
     as.Date.POSIXlt(endtime)
   }
-  
+
   query <- sprintf("http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=%s&cha=BS*",sta4)
   #"http://service.iris.edu/irisws/availability/1/extent?network=PB&sta=AVN2&cha=BS*"
   G <- httr::GET(query)
@@ -445,7 +456,7 @@ check_for_hfbsm <- function(sta4, starttime, endtime){
   }
   readr::read_table(httr::content(G, encoding = "UTF-8")) %>%
     dplyr::rename(net=`#n`, sta4=`s`, cha=`c`) -> restbl
-  
+
   trng <- with(restbl, range(c(earliest, latest)))
   data.frame(Station=sta4, Start = starttime, End = endtime) %>%
       dplyr::mutate(Start.OK = (Start >= min(trng)) & (Start < max(trng)),
@@ -489,8 +500,8 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
   }
   #
   #print(file)
-  dat <- read.table(fi, header=TRUE, 
-                    colClasses=c("character", rep("numeric", 5)), 
+  dat <- read.table(fi, header=TRUE,
+                    colClasses=c("character", rep("numeric", 5)),
                     comment.char="#", na.strings=nas)
   #
   if (nrow(dat) == 0){
@@ -506,7 +517,7 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
   na.inds <- which(X, arr.ind=TRUE)
   dat[X] <- NA
   #
-  toret <- list(srcdat=ts(dat[ , paste0("CH",0:3)], frequency=hz), 
+  toret <- list(srcdat=ts(dat[ , paste0("CH",0:3)], frequency=hz),
                 Datetime = POS(dat[ , 'Datetime']),
                 RelInd = hz*dat[ , 'RelInd']
                 )
@@ -517,7 +528,7 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
   attr(toret, "frequency") <- hz
   attr(toret, "cmd") <- cmd
   class(toret) <- c("hfbsm", otype)
-  
+
   return(invisible(toret))
 }
 
@@ -530,7 +541,7 @@ load_hfbsm.hfbsm.nfo <- function(object, file.type=c("lin","raw"), loc=".", stop
 #' @param v.markers numeric; dashed, red, vertical lines are drawn at these times
 #' @param frame.plot logical; should boxes be drawn around each frame?
 #' @export
-plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL, 
+plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL,
                        frame.plot=FALSE, ...){
   dat <-  sc*x$srcdat
   if (!is.ts(dat)) dat <- ts(dat, frequency=attr(x, "frequency"))
@@ -541,7 +552,7 @@ plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL,
     lines(x, col = col, bg = bg, pch = pch, type = type, ...)
     if (!is.null(v.markers)) abline(v=as.numeric(v.markers), col="red", lty=2, lwd=1.5)
   }
-  plot.ts(dat, main=main, xlab=xlab, frame.plot=frame.plot, 
+  plot.ts(dat, main=main, xlab=xlab, frame.plot=frame.plot,
           oma.multi = c(6, 1.2, 5, 1.2), las=1, panel=my.ts.panel, ...)
   #if (!is.null(v.markers)) abline(v=as.numeric(v.markers), col="red", lty=2, lwd=1.5)
   mtext(attr(x, "sta4"), adj=0, line=1)
@@ -550,7 +561,7 @@ plot.hfbsm <- function(x, sc=1, main=NULL, xlab=NULL, note=NULL, v.markers=NULL,
 
 #' @rdname hfbsm
 #' @param new.location the new path to set for the source-data files in \code{object}; can be
-#' any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple 
+#' any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple
 #' sub-directories while ensuring the path is constructed correctly
 #' (i.e., with \code{\link{file.path}})
 #' @export
@@ -567,7 +578,7 @@ update_file_location.hfbsm.nfo <- function(object, new.location, verbose=TRUE, .
     message("old location(s):  ", unique(c(dirname(rawfi), dirname(linfi))))
     message("new location:     ", new.location)
   }
-  object[['results']][['files']] <- list(rawfi = file.path(new.location, basename(rawfi)), 
+  object[['results']][['files']] <- list(rawfi = file.path(new.location, basename(rawfi)),
                                          linfi = file.path(new.location, basename(linfi)))
   return(object)
 }

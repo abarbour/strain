@@ -81,8 +81,8 @@ This assumes data lie below \url{http://ds.iris.edu/pbo/raw/bsm}}
 
 \item{object}{an object having class \code{'hfbsm.nfo'}}
 
-\item{file.type}{character; the type of strain data to load: 
-\code{'lin'} for linearized data in units of linear uncorrected strain, or 
+\item{file.type}{character; the type of strain data to load:
+\code{'lin'} for linearized data in units of linear uncorrected strain, or
 \code{'raw'} for raw data in units of nonlinear counts. See [1] for
 more information.}
 
@@ -103,7 +103,7 @@ more information.}
 \item{frame.plot}{logical; should boxes be drawn around each frame?}
 
 \item{new.location}{the new path to set for the source-data files in \code{object}; can be
-any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple 
+any list-coercible object (i.e., with \code{\link{as.list}}) to specify multiple
 sub-directories while ensuring the path is constructed correctly
 (i.e., with \code{\link{file.path}})}
 }
@@ -114,11 +114,17 @@ sub-directories while ensuring the path is constructed correctly
 Assemble high-frequency strain data
 }
 \details{
-This uses a set of scripts included with the package, namely 
-\code{hfbsm}, and the python scripts 
+This uses a set of scripts included with the package, namely
+\code{hfbsm}, and the python scripts
 \code{bottlefile.py} and \code{bottlefile_merge.py},
-to create (from the raw source files) high frequency PBO strain 
+to create (from the raw source files) high frequency PBO strain
 records for each channel at a station.
+
+Note that EarthScope switched to a cloud-based system in
+late 2023, and this will always fail after that switch even
+if the data exist; hence, the script will throw an error
+if that's true. An alternative solution may be possible
+via the earthscopestraintools python package.
 }
 \examples{
 \dontrun{
@@ -142,9 +148,9 @@ file.path(find.package('strain'), "hfbsm")
 
 }
 \references{
-[1] 
-Barbour, A. J., and Agnew, D. C. (2011). 
-Noise levels on plate boundary observatory borehole strainmeters in southern California. 
+[1]
+Barbour, A. J., and Agnew, D. C. (2011).
+Noise levels on plate boundary observatory borehole strainmeters in southern California.
 \emph{Bulletin of the Seismological Society of America}.
 101(5), 2453-2466. doi: 10.1785/0120110062
 }
@@ -152,7 +158,7 @@ Noise levels on plate boundary observatory borehole strainmeters in southern Cal
 \code{\link{strain-package}}
 }
 \author{
-A.J. Barbour.  
+A.J. Barbour.
 \code{bottlefile.py} and \code{bottlefile_merge.py} were
 modified from those written by Jim Wright (previously at UNAVCO).
 }

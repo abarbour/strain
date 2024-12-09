@@ -5,17 +5,17 @@
 #'
 #' @details
 #' See the following pages for details on
-#' 
+#'
 #' @section Filtering:
 #' \code{\link{strain-filtering}} is a good place to start to learn about
 #' filtration tools.
 #'
-#' @docType package
+"_PACKAGE"
 #' @name strain-package
 #' @aliases strain strainmeter
-#' 
-#' @author Andrew J. Barbour <andy.barbour@@gmail.com> 
-#' 
+#'
+#' @author Andrew J. Barbour <andy.barbour@@gmail.com>
+#'
 #' @import corpcor lubridate pborepo zoo
 # Matrix adds considerable load time -- is it necessary?? If so, use @importFrom?
 #' @importFrom magrittr %>%
@@ -24,28 +24,28 @@
 #' @importFrom utils data read.table str
 #'
 #' @references Grant, E. B. (2010),
-#' Gladwin Tensor Strainmeter Calibration Using Seismic Data: 
+#' Gladwin Tensor Strainmeter Calibration Using Seismic Data:
 #' Instrument Calibration Methods and Wave Gradiometry Applications,
 #' PhD thesis, University of Memphis.
-#' 
-#' @references Hart, R. H. G., M. T. Gladwin, R. L. Gwyther, D. C. Agnew, and F. K. Wyatt (1996), 
-#' Tidal calibration of borehole strain meters: 
-#'  Removing the effects of small-scale inhomogeneity, 
+#'
+#' @references Hart, R. H. G., M. T. Gladwin, R. L. Gwyther, D. C. Agnew, and F. K. Wyatt (1996),
+#' Tidal calibration of borehole strain meters:
+#'  Removing the effects of small-scale inhomogeneity,
 #' J. Geophys. Res., 101(B11), 25553-25571, doi:10.1029/96JB02273.
-#' 
-#' @references Hodgkinson, K., J. Langbein, B. Henderson, D. Mencin, and A. Borsa (2013), 
-#' Tidal calibration of plate boundary observatory borehole strainmeters, 
+#'
+#' @references Hodgkinson, K., J. Langbein, B. Henderson, D. Mencin, and A. Borsa (2013),
+#' Tidal calibration of plate boundary observatory borehole strainmeters,
 #' J. Geophys. Res. Solid Earth, 118, 447-458, doi:10.1029/2012JB009651.
-#' 
-#' @references Langbein, J. (2010), 
-#' Effect of error in theoretical Earth tide on calibration of borehole strainmeters, 
+#'
+#' @references Langbein, J. (2010),
+#' Effect of error in theoretical Earth tide on calibration of borehole strainmeters,
 #' Geophys. Res. Lett., 37, L21303, doi:10.1029/2010GL044454.
-#' 
-#' @references Roeloffs, E. (2010), 
-#' Tidal calibration of Plate Boundary Observatory borehole strainmeters: 
-#' Roles of vertical and shear coupling, 
+#'
+#' @references Roeloffs, E. (2010),
+#' Tidal calibration of Plate Boundary Observatory borehole strainmeters:
+#' Roles of vertical and shear coupling,
 #' J. Geophys. Res., 115, B06405, doi:10.1029/2009JB006407.
-#' 
+#'
 # @references some ref
 # \url{http://biomet.oxfordjournals.org/content/82/1/201}
 #'
@@ -57,7 +57,7 @@ NULL
 .strnEnv = new.env()
 
 #' Constants used as defaults
-#' 
+#'
 #' @details The helper function \code{\link{strain.constants}}
 #' shows (the structure of, optionally)
 #' and returns \code{.strainconstants}.
@@ -101,7 +101,7 @@ strain.constants <- function(do.str=TRUE){
 
 ##
 ## Datasets
-## 
+##
 ##   Filter weights
 #
 #' @title Minimum phase lowpass filter weights for strain data
